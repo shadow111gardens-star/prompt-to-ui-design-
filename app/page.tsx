@@ -27,6 +27,10 @@ import {
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/navbar/theme-toggle";
 import Image from "next/image";
+import WorkflowSection from "@/components/landing/workflow-section";
+import PricingSection from "@/components/landing/pricing-section";
+import TestimonialsSection from "@/components/landing/testimonials-section";
+import FAQSection from "@/components/landing/faq-section";
 
 export default function LandingPage() {
   const [activeTab, setActiveTab] = useState<
@@ -301,7 +305,7 @@ export class PromoCardComponent {}`,
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative overflow-hidden flex flex-col font-sans transition-colors duration-300">
+    <div className="min-h-screen bg-background text-foreground relative overflow-x-clip flex flex-col font-sans transition-colors duration-300">
       {/* Background radial gradients for aesthetics */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-primary/10 blur-3xl pointer-events-none -z-10 dark:bg-primary/5" />
       <div className="absolute bottom-1/3 left-0 w-[500px] h-[500px] rounded-full bg-secondary/20 blur-3xl pointer-events-none -z-10 dark:bg-primary/5" />
@@ -369,12 +373,6 @@ export class PromoCardComponent {}`,
             className="text-xs font-semibold text-muted-foreground hover:text-foreground transition"
           >
             Architecture
-          </Link>
-          <Link
-            href="#about"
-            className="text-xs font-semibold text-muted-foreground hover:text-foreground transition"
-          >
-            About Me
           </Link>
         </nav>
 
@@ -639,273 +637,38 @@ export class PromoCardComponent {}`,
           </div>
         </section>
 
-        {/* Local-First Architecture Detail Section */}
-        <section
-          id="architecture"
-          className="space-y-16 py-8 border-t border-border/40"
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Left Diagram / Technical Stack Mock */}
-            <div className="lg:col-span-6 order-last lg:order-first grid grid-cols-2 gap-4">
-              <div className="bg-card border border-border rounded-2xl p-6 space-y-4 flex flex-col justify-between hover:shadow-xs transition">
-                <div className="size-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-500/20">
-                  <Database className="size-5" />
-                </div>
-                <div className="space-y-2">
-                  <h4 className="font-bold text-sm text-foreground">
-                    SQLite Storage
-                  </h4>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
-                    Zero cloud database latency. OpenUI writes layouts, guides,
-                    and history configurations directly to your local
-                    data/openui.db folder.
-                  </p>
-                </div>
-              </div>
+        <WorkflowSection />
 
-              <div className="bg-card border border-border rounded-2xl p-6 space-y-4 flex flex-col justify-between hover:shadow-xs transition">
-                <div className="size-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-500/20">
-                  <ShieldCheck className="size-5" />
-                </div>
-                <div className="space-y-2">
-                  <h4 className="font-bold text-sm text-foreground">
-                    Prisma Client ORM
-                  </h4>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
-                    Robust local queries. Schema migrations and type generation
-                    run inside your native node_modules workspace, keeping data
-                    reliable.
-                  </p>
-                </div>
-              </div>
+        <PricingSection />
 
-              <div className="bg-card border border-border rounded-2xl p-6 space-y-4 flex flex-col justify-between hover:shadow-xs transition">
-                <div className="size-10 rounded-xl bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center justify-center border border-orange-500/20">
-                  <Cpu className="size-5" />
-                </div>
-                <div className="space-y-2">
-                  <h4 className="font-bold text-sm text-foreground">
-                    100% Offline Generation
-                  </h4>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
-                    Set OLLAMA_ENABLED=true in .env.local to route canvas
-                    requests through local Ollama vision models (e.g. minicpm-v)
-                    entirely offline.
-                  </p>
-                </div>
-              </div>
+        <TestimonialsSection />
 
-              <div className="bg-card border border-border rounded-2xl p-6 space-y-4 flex flex-col justify-between hover:shadow-xs transition">
-                <div className="size-10 rounded-xl bg-[#db2800]/10 text-[#db2800] flex items-center justify-center border border-[#db2800]/20">
-                  <Eye className="size-5" />
-                </div>
-                <div className="space-y-2">
-                  <h4 className="font-bold text-sm text-foreground">
-                    WCAG Contrast Checker
-                  </h4>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
-                    Evaluates contrast compliance (AA/AAA) on text color
-                    swatches dynamically, ensuring accessible layouts on the
-                    fly.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Description Column */}
-            <div className="lg:col-span-6 space-y-6">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase border border-blue-500/20">
-                <Database className="size-3.5" />
-                <span>Architecture</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-heading font-black text-foreground leading-tight">
-                Secure, Local-First, & Offline Prototyping
-              </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                OpenUI runs as a fully contained Next.js project on your
-                machine. Your assets, color preset choices, sketches, and
-                designs never leave your local environment. Zero usage-limit
-                tiers, no cloud subscription databases, and no forced sign-ins.
-              </p>
-              <div className="p-5 border border-border/80 bg-secondary/25 rounded-2xl space-y-3">
-                <h4 className="text-xs font-bold text-foreground">
-                  Ready to spin up?
-                </h4>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Run a single setup command to migrate your SQLite database
-                  schema, generate types, and prepare the local Prisma client
-                  before booting the development server.
-                </p>
-                <div className="bg-zinc-950 p-3 rounded-lg border border-zinc-800 text-[11px] font-mono text-zinc-300 flex justify-between items-center select-all">
-                  <span>npm run setup && npm run dev</span>
-                  <span className="text-[9px] bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded font-bold uppercase select-none">
-                    CMD
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Creator & Promotion Section */}
-        <section
-          id="about"
-          className="rounded-3xl border border-border bg-linear-to-br from-card to-secondary/35 p-8 lg:p-12 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center relative overflow-hidden"
-        >
-          <div className="lg:col-span-2 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase border border-emerald-500/20">
-              <ShieldCheck className="size-3.5" />
-              <span>Meet the Author</span>
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-3xl font-heading font-black text-foreground">
-                Alap Putatunda
-              </h3>
-              <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">
-                Founder of Scale with Alap & Creator of Vibe44
-              </p>
-            </div>
-
-            <blockquote className="text-sm text-muted-foreground border-l-2 border-primary/50 pl-4 italic leading-relaxed">
-              &quot;Hey, I&apos;m Alap — creator of Vibe44 and founder of Scale
-              with Alap. I run one fully-managed system for high-ticket local
-              service businesses: a 24/7 AI agent that captures, qualifies, and
-              books every inbound lead straight into your calendar. And you only
-              pay for the outcome: booked appointments.&quot;
-            </blockquote>
-
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <a
-                href="https://scalewithalap.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-foreground font-bold hover:underline"
-              >
-                <span>scalewithalap.com</span>
-                <ExternalLink className="size-3" />
-              </a>
-              <span className="text-muted-foreground/30">•</span>
-              <a
-                href="https://vibe44.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-primary font-bold hover:underline"
-              >
-                <span>vibe44.com</span>
-                <ExternalLink className="size-3" />
-              </a>
-            </div>
-          </div>
-
-          <div className="lg:col-span-1 space-y-4 bg-card border border-border p-6 rounded-2xl shadow-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-foreground">
-                Vibe44 Boilerplate
-              </span>
-              <span className="text-[10px] bg-primary/10 text-primary border border-primary/20 px-2.5 py-0.5 rounded-full font-bold">
-                Boilerplate
-              </span>
-            </div>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              Looking to ship an AI SaaS in a weekend? Check out{" "}
-              <strong>Vibe44</strong>, the ultimate agent-native Next.js
-              boilerplate. Pre-wired with 5-provider billing, RAG voice chat,
-              Impersonation filters, and OWASP Top 10 compliance.
-            </p>
-            <a
-              href="https://vibe44.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center w-full py-2.5 rounded-lg bg-primary hover:bg-primary/95 text-white font-bold text-xs shadow-xs active:scale-98 transition"
-            >
-              Learn More
-            </a>
-          </div>
-        </section>
+        <FAQSection />
       </main>
 
       {/* Footer */}
       <footer className="w-full border-t border-border bg-card/45 py-12 px-6 lg:px-12 text-xs text-muted-foreground select-none relative z-10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8 text-left">
-          <div className="space-y-3">
-            <Link
-              href="/"
-              className="hover:scale-[1.01] active:scale-95 transition flex items-center shrink-0 w-max"
-            >
-              <Image
-                src="/logo-light.png"
-                alt="OpenUI Logo"
-                width={663}
-                height={182}
-                className="h-6 w-auto block dark:hidden object-contain"
-              />
-              <Image
-                src="/logo-dark.png"
-                alt="OpenUI Logo"
-                width={663}
-                height={182}
-                className="h-6 w-auto hidden dark:block object-contain"
-              />
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 mb-8 text-left">
+          <div className="space-y-3 sm:col-span-2">
+            <Link href="/" className="flex w-max items-center transition hover:scale-[1.01]">
+              <Image src="/logo-light.png" alt="OpenUI Logo" width={663} height={182} className="block h-6 w-auto object-contain dark:hidden"/>
+              <Image src="/logo-dark.png" alt="OpenUI Logo" width={663} height={182} className="hidden h-6 w-auto object-contain dark:block"/>
             </Link>
-            <p className="text-muted-foreground/85 leading-relaxed max-w-[200px] mt-2">
-              Local-first, provider-agnostic UI prototyping platform powered by
-              AI.
-            </p>
+            <p className="mt-2 max-w-[280px] text-muted-foreground/85 leading-relaxed">AI-powered UI design platform for generating, editing, and exporting beautiful interfaces. Turn your ideas into production-ready designs.</p>
           </div>
-          <div className="space-y-3 flex flex-col">
-            <h5 className="font-bold text-foreground">Navigation</h5>
-            <Link
-              href="#features"
-              className="hover:underline hover:text-foreground transition"
-            >
-              Features
-            </Link>
-            <Link
-              href="#workflow"
-              className="hover:underline hover:text-foreground transition"
-            >
-              Workflow
-            </Link>
-            <Link
-              href="#code-export"
-              className="hover:underline hover:text-foreground transition"
-            >
-              Code Export
-            </Link>
-            <Link
-              href="#architecture"
-              className="hover:underline hover:text-foreground transition"
-            >
-              Architecture
-            </Link>
-          </div>
-          <div className="space-y-3 flex flex-col">
-            <h5 className="font-bold text-foreground">Creator Projects</h5>
-            <a
-              href="https://vibe44.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline hover:text-foreground transition"
-            >
-              Vibe44 Boilerplate
-            </a>
-            <a
-              href="https://scalewithalap.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline hover:text-foreground transition"
-            >
-              Scale with Alap Agency
-            </a>
-          </div>
-          <div className="space-y-3">
-            <h5 className="font-bold text-foreground">Repository & License</h5>
-            <p className="leading-relaxed">
-              OpenUI is open-source and released under the MIT License. Fork,
-              share, or build on top of it.
-            </p>
-          </div>
+          {[
+            { title: 'Product', items: ['Features', 'Pricing', 'Changelog', 'Roadmap'] },
+            { title: 'Resources', items: ['Documentation', 'Templates', 'Showcase', 'Community'] },
+            { title: 'Company', items: ['About', 'Blog', 'Careers', 'Contact'] },
+            { title: 'Legal', items: ['Terms', 'Privacy', 'Security', 'Cookies'] },
+          ].map(({title,items}) => <div key={title} className="space-y-3 flex flex-col">
+            <h5 className="font-bold text-foreground">{title}</h5>
+            {items.map(item => item==='Features'||item==='Pricing'
+              ? <Link key={item} href={item==='Features'?'#features':'#pricing'} className="hover:underline hover:text-foreground transition">{item}</Link>
+              : item==='Contact'
+                ? <a key={item} href="https://x.com/abhay8769" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-foreground transition">{item}</a>
+                : <span key={item}>{item}</span>)}
+          </div>)}
         </div>
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-border/40 text-[11px]">
           <span>OpenUI v1.0.0 · Local-first design environment</span>
@@ -915,3 +678,4 @@ export class PromoCardComponent {}`,
     </div>
   );
 }
+

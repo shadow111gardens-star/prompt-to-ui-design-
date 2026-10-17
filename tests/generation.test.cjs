@@ -412,3 +412,12 @@ test('screen image export captures the design root and produces all-screen archi
  } finally {global.document=previous;}
 });
 
+test('pricing yearly toggle applies 30 percent savings and leaves lifetime one-time',()=>{
+ const {getPricing,pricingAmount}=load('lib/pricing.ts');
+ assert.equal(getPricing('plus','monthly').displayCents,900);
+ assert.equal(getPricing('pro','monthly').displayCents,2500);
+ assert.deepEqual(getPricing('plus','yearly'),{displayCents:630,chargedCents:7560,recurring:true,yearly:true});
+ assert.equal(getPricing('pro','yearly').chargedCents,21000);
+ assert.deepEqual(getPricing('lifetime','monthly'),getPricing('lifetime','yearly'));
+ assert.equal(pricingAmount(630),'$6.30');assert.equal(pricingAmount(3900),'$39');
+});

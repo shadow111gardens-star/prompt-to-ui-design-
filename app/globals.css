@@ -161,6 +161,22 @@
   }
 }
 
+@keyframes testimonial-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes testimonial-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+.testimonial-track-left { animation: testimonial-left 42s linear infinite; }
+.testimonial-track-right { animation: testimonial-right 46s linear infinite; }
+.testimonial-viewport { mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent); }
+@media (prefers-reduced-motion: reduce) {
+  .testimonial-track { animation: none; }
+  .testimonial-viewport { overflow-x: auto; }
+}
+
 .animate-marching-ants {
   stroke-dasharray: 4 4;
   animation: marching-ants 0.3s linear infinite;

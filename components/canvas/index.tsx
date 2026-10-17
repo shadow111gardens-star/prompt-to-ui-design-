@@ -39,6 +39,7 @@ const CanvasContent = () => {
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const projectId = searchParams.get("project") || "";
+  const [landingDraft,setLandingDraft]=useState('');
 
   // Broadcast design token updates to all generated-UI iframes
   useTokenInjection();
@@ -74,6 +75,10 @@ const CanvasContent = () => {
     generateWorkflow,
     exportDesign,
   } = useGlobalChat();
+  useEffect(()=>{
+    const draft=sessionStorage.getItem(`openui-project-draft:${projectId}`);
+    if(draft){setLandingDraft(draft);setIsChatOpen(true);sessionStorage.removeItem(`openui-project-draft:${projectId}`);}
+  },[projectId,setIsChatOpen]);
 
   useEffect(() => {
     if (!projectId) return;
@@ -379,7 +384,7 @@ const CanvasContent = () => {
       {!isChatOpen && <ElementPropertiesPanel />}
 
       {/* Right Chat Sidebar */}
-      <ProjectChat projectId={projectId} targetScreenId={activeGeneratedUIId} isOpen={isChatOpen} onClose={closeChat}/>
+      <ProjectChat projectId={projectId} initialPrompt={landingDraft} targetScreenId={activeGeneratedUIId} isOpen={isChatOpen} onClose={closeChat}/>
 
       {/* Minimap */}
       <Minimap

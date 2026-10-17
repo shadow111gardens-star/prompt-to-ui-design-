@@ -10,12 +10,13 @@ import { ChatChange, parseChatPlan, prepareChatChanges, ProjectChatPlan, Project
 import { parseSSEStream } from '@/lib/stream-utils';
 
 type Proposal={plan:ProjectChatPlan;changes:ChatChange[]};
-export default function ProjectChat({projectId,isOpen,onClose,targetScreenId}:{projectId:string;isOpen:boolean;onClose:()=>void;targetScreenId:string|null}) {
+export default function ProjectChat({projectId,isOpen,onClose,targetScreenId,initialPrompt=''}:{projectId:string;isOpen:boolean;onClose:()=>void;targetScreenId:string|null;initialPrompt?:string}) {
   const dispatch=useAppDispatch();const store=useStore.withTypes<AppStore>()();const inspector=useElementInspector();
   const messages:ProjectChatMessage[]=useAppSelector(state=>state.shapes.projectMessages);
   const [input,setInput]=useState('');const [busy,setBusy]=useState(false);const [progress,setProgress]=useState('');
   const [proposal,setProposal]=useState<Proposal|null>(null);const [retry,setRetry]=useState<string|null>(null);
   const request=useRef<AbortController|null>(null);const scroll=useRef<HTMLDivElement>(null);const lastRequest=useRef('');
+  useEffect(()=>{if(initialPrompt)setInput(initialPrompt);},[initialPrompt]);
   const append=(content:string,error=false,role:'user'|'assistant'='assistant')=>dispatch(addProjectChatMessage({projectId,message:{id:crypto.randomUUID(),role,content,error,timestamp:new Date().toISOString()}}));
   const current=()=>store.getState().shapes.activeProjectId===projectId;
   useEffect(()=>()=>{request.current?.abort();},[]);

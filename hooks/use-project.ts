@@ -51,7 +51,7 @@ export const useProjectCreation = () => {
   const projectsState = useAppSelector((state) => state.projects);
   const router = useRouter();
 
-  const createProject = async (name?: string) => {
+  const createProject = async (name?: string, initialPrompt?: string) => {
     dispatch(createProjectStart());
     try {
       const thumbnail = generateGradientThumbnail();
@@ -109,6 +109,7 @@ export const useProjectCreation = () => {
       toast.success(`${result.name} created successfully!`);
       
       // Automatically navigate and open the project canvas
+      if(initialPrompt)sessionStorage.setItem(`openui-project-draft:${result.projectId}`,initialPrompt);
       router.push(`/dashboard/workspace/canvas?project=${result.projectId}`);
     } catch (error) {
       console.error(error);
