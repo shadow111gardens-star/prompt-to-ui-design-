@@ -1,0 +1,48 @@
+{
+    "all-png":  {
+                    "files":  [
+                                  "01-Inspector QA · Mobile.png",
+                                  "02-Inspector QA · Tablet.png",
+                                  "03-Settings.png"
+                              ],
+                    "count":  3,
+                    "nonEmpty":  true
+                },
+    "jpg":  {
+                "format":  "[ImageFormat: b96b3cae-0728-11d3-9d7b-0000f81ef32e]",
+                "width":  750,
+                "bytes":  100092,
+                "height":  1292
+            },
+    "png":  {
+                "format":  "[ImageFormat: b96b3caf-0728-11d3-9d7b-0000f81ef32e]",
+                "width":  750,
+                "bytes":  106602,
+                "height":  1292
+            },
+    "all-svg":  {
+                    "files":  [
+                                  "01-Inspector QA · Mobile.svg",
+                                  "02-Inspector QA · Tablet.svg",
+                                  "03-Settings.svg"
+                              ],
+                    "count":  3,
+                    "nonEmpty":  true
+                },
+    "all-jpg":  {
+                    "files":  [
+                                  "01-Inspector QA · Mobile.jpg",
+                                  "02-Inspector QA · Tablet.jpg",
+                                  "03-Settings.jpg"
+                              ],
+                    "count":  3,
+                    "nonEmpty":  true
+                },
+    "svg":  {
+                "noScript":  true,
+                "root":  "svg",
+                "hasEditedText":  true,
+                "validXml":  true,
+                "hasForeignObject":  true
+            }
+}

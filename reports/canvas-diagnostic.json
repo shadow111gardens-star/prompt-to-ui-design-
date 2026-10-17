@@ -1,0 +1,28 @@
+{
+  "status": 200,
+  "seconds": 15.65,
+  "wireLength": 7031,
+  "htmlLength": 3843,
+  "usage": {
+    "streamId": "canvas-diagnostic",
+    "type": "usage",
+    "usage": {
+      "inputTokens": 1681,
+      "inputTokenDetails": {
+        "noCacheTokens": 1681,
+        "cacheReadTokens": 0
+      },
+      "outputTokens": 1359,
+      "outputTokenDetails": {
+        "textTokens": 1359,
+        "reasoningTokens": 0
+      },
+      "totalTokens": 3040,
+      "reasoningTokens": 0,
+      "cachedInputTokens": 0
+    },
+    "finishReason": "stop",
+    "providerAttemptsLimit": 1
+  },
+  "error": null
+}

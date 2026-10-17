@@ -1,0 +1,419 @@
+[browser] ⨯ unhandledRejection: AbortError: signal is aborted without reason
+    at DesignSystemPage.useEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/_1wtf1wd._.js:3044:62)
+    at Object.react_stack_bottom_frame (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15093:17)
+    at runWithFiberInDEV (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at commitHookEffectListUnmount (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:7280:166)
+    at commitHookPassiveUnmountEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:7293:60)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8934:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8935:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8935:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8942:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8942:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8935:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8942:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8935:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8935:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8935:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8935:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8942:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8935:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8935:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8942:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8942:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8935:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8935:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8942:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8942:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8942:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8935:17)
+    at recursivelyTraverseDisconnectPassiveEffects (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8926:68)
+    at disconnectPassiveEffect (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8942:17)
+Error [AI_APICallError]: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+    at ignore-listed frames {
+  cause: undefined,
+  url: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:streamGenerateContent?alt=sse',
+  requestBodyValues: {
+    generationConfig: {
+      maxOutputTokens: undefined,
+      temperature: 0.7,
+      topK: undefined,
+      topP: undefined,
+      frequencyPenalty: undefined,
+      presencePenalty: undefined,
+      stopSequences: undefined,
+      seed: undefined,
+      responseMimeType: undefined,
+      responseSchema: undefined,
+      responseModalities: undefined,
+      thinkingConfig: undefined
+    },
+    contents: [ [Object] ],
+    systemInstruction: { parts: [Array] },
+    safetySettings: undefined,
+    tools: undefined,
+    toolConfig: undefined,
+    cachedContent: undefined,
+    labels: undefined,
+    serviceTier: undefined
+  },
+  statusCode: 503,
+  responseHeaders: {
+    'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+    'content-length': '198',
+    'content-type': 'text/event-stream',
+    date: 'Fri, 16 Oct 2026 18:09:30 GMT',
+    server: 'scaffolding on HTTPServer2',
+    'server-timing': 'gfet4t7; dur=6542',
+    vary: 'Origin, X-Origin, Referer',
+    'x-content-type-options': 'nosniff',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-xss-protection': '0'
+  },
+  responseBody: '{\n' +
+    '  "error": {\n' +
+    '    "code": 503,\n' +
+    '    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",\n' +
+    '    "status": "UNAVAILABLE"\n' +
+    '  }\n' +
+    '}\n',
+  isRetryable: true,
+  data: {
+    error: {
+      code: 503,
+      message: 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.',
+      status: 'UNAVAILABLE'
+    }
+  }
+}
+[browser] Image with src "/logo-light.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+Error [AI_APICallError]: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+    at ignore-listed frames {
+  cause: undefined,
+  url: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:streamGenerateContent?alt=sse',
+  requestBodyValues: {
+    generationConfig: {
+      maxOutputTokens: undefined,
+      temperature: 0.7,
+      topK: undefined,
+      topP: undefined,
+      frequencyPenalty: undefined,
+      presencePenalty: undefined,
+      stopSequences: undefined,
+      seed: undefined,
+      responseMimeType: undefined,
+      responseSchema: undefined,
+      responseModalities: undefined,
+      thinkingConfig: undefined
+    },
+    contents: [ [Object] ],
+    systemInstruction: { parts: [Array] },
+    safetySettings: undefined,
+    tools: undefined,
+    toolConfig: undefined,
+    cachedContent: undefined,
+    labels: undefined,
+    serviceTier: undefined
+  },
+  statusCode: 503,
+  responseHeaders: {
+    'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+    'content-length': '198',
+    'content-type': 'text/event-stream',
+    date: 'Fri, 16 Oct 2026 18:20:37 GMT',
+    server: 'scaffolding on HTTPServer2',
+    'server-timing': 'gfet4t7; dur=663',
+    vary: 'Origin, X-Origin, Referer',
+    'x-content-type-options': 'nosniff',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-xss-protection': '0'
+  },
+  responseBody: '{\n' +
+    '  "error": {\n' +
+    '    "code": 503,\n' +
+    '    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",\n' +
+    '    "status": "UNAVAILABLE"\n' +
+    '  }\n' +
+    '}\n',
+  isRetryable: true,
+  data: {
+    error: {
+      code: 503,
+      message: 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.',
+      status: 'UNAVAILABLE'
+    }
+  }
+}
+Error [AI_APICallError]: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+    at ignore-listed frames {
+  cause: undefined,
+  url: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:streamGenerateContent?alt=sse',
+  requestBodyValues: {
+    generationConfig: {
+      maxOutputTokens: undefined,
+      temperature: 0.7,
+      topK: undefined,
+      topP: undefined,
+      frequencyPenalty: undefined,
+      presencePenalty: undefined,
+      stopSequences: undefined,
+      seed: undefined,
+      responseMimeType: undefined,
+      responseSchema: undefined,
+      responseModalities: undefined,
+      thinkingConfig: undefined
+    },
+    contents: [ [Object] ],
+    systemInstruction: { parts: [Array] },
+    safetySettings: undefined,
+    tools: undefined,
+    toolConfig: undefined,
+    cachedContent: undefined,
+    labels: undefined,
+    serviceTier: undefined
+  },
+  statusCode: 503,
+  responseHeaders: {
+    'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+    'content-length': '198',
+    'content-type': 'text/event-stream',
+    date: 'Fri, 16 Oct 2026 18:20:38 GMT',
+    server: 'scaffolding on HTTPServer2',
+    'server-timing': 'gfet4t7; dur=1063',
+    vary: 'Origin, X-Origin, Referer',
+    'x-content-type-options': 'nosniff',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-xss-protection': '0'
+  },
+  responseBody: '{\n' +
+    '  "error": {\n' +
+    '    "code": 503,\n' +
+    '    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",\n' +
+    '    "status": "UNAVAILABLE"\n' +
+    '  }\n' +
+    '}\n',
+  isRetryable: true,
+  data: {
+    error: {
+      code: 503,
+      message: 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.',
+      status: 'UNAVAILABLE'
+    }
+  }
+}
+Error [AI_APICallError]: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+    at ignore-listed frames {
+  cause: undefined,
+  url: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent?alt=sse',
+  requestBodyValues: {
+    generationConfig: {
+      maxOutputTokens: undefined,
+      temperature: 0.7,
+      topK: undefined,
+      topP: undefined,
+      frequencyPenalty: undefined,
+      presencePenalty: undefined,
+      stopSequences: undefined,
+      seed: undefined,
+      responseMimeType: undefined,
+      responseSchema: undefined,
+      responseModalities: undefined,
+      thinkingConfig: undefined
+    },
+    contents: [ [Object] ],
+    systemInstruction: { parts: [Array] },
+    safetySettings: undefined,
+    tools: undefined,
+    toolConfig: undefined,
+    cachedContent: undefined,
+    labels: undefined,
+    serviceTier: undefined
+  },
+  statusCode: 503,
+  responseHeaders: {
+    'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+    'content-length': '198',
+    'content-type': 'text/event-stream',
+    date: 'Fri, 16 Oct 2026 18:20:41 GMT',
+    server: 'scaffolding on HTTPServer2',
+    'server-timing': 'gfet4t7; dur=3029',
+    vary: 'Origin, X-Origin, Referer',
+    'x-content-type-options': 'nosniff',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-xss-protection': '0'
+  },
+  responseBody: '{\n' +
+    '  "error": {\n' +
+    '    "code": 503,\n' +
+    '    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",\n' +
+    '    "status": "UNAVAILABLE"\n' +
+    '  }\n' +
+    '}\n',
+  isRetryable: true,
+  data: {
+    error: {
+      code: 503,
+      message: 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.',
+      status: 'UNAVAILABLE'
+    }
+  }
+}
+[browser] Error generating workflow page 3: Error: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+    at processMessage (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/_02k_awt._.js:992:44)
+    at parseSSEStream (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/_02k_awt._.js:1010:17)
+    at async (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/_02k_awt._.js:2610:43)
+    at async generateWorkflow (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/_02k_awt._.js:2648:29) (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/_02k_awt._.js:2640:29)
+[browser] Uncaught TypeError: Cannot read properties of undefined (reading 'includes')
+    at ElementPropertiesPanel (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/_0goo01o._.js?id=%255Bproject%255D%252Fcomponents%252Fcanvas%252Felement-inspector%252Fpanel.tsx+%255Bapp-client%255D+%2528ecmascript%2529:414:56)
+    at Object.react_stack_bottom_frame (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9061:186)
+    at performSyncWorkOnRoot (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10179:316)
+    at processRootScheduleInMicrotask (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10200:106)
+    at <unknown> (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10274:158)
+    at CanvasContent (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/_0goo01o._.js:12080:230)
+    at InfiniteCanvas (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/_0goo01o._.js:12123:221)
+    at Page (app\(protected)\dashboard\[session]\(workspace)\canvas\page.tsx:32:7)
+  30 |   return (
+  31 |     <ProjectProvider initialProject={project}>
+> 32 |       <InfiniteCanvas />
+     |       ^
+  33 |     </ProjectProvider>
+  34 |   );
+  35 | };
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+    at completeWork (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6945:102)
+    at runWithFiberInDEV (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at completeUnitOfWork (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9622:23)
+    at performUnitOfWork (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9557:28)
+    at workLoopSync (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9061:186)
+    at performSyncWorkOnRoot (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10179:316)
+    at flushSyncWork$1 (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9230:86)
+    at Object.scheduleRefresh (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:299:13)
+    at <unknown> (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:391:33)
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:384:38)
+    at applyUpdate (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:878:31)
+    at <unknown> (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:886:13) (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6945:102)
+[browser] Image with src "/logo-light.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+Error updating style guide: SyntaxError: Unexpected end of JSON input
+    at JSON.parse (<anonymous>)
+    at PATCH (app\api\projects\[id]\style-guide\route.ts:27:32)
+  25 |   try {
+  26 |     const { id } = await params;
+> 27 |     const body = await request.json();
+     |                                ^
+  28 |     const { styleGuide } = body;
+  29 |     if (!styleGuide) {
+  30 |       return NextResponse.json(
+[browser] Image with src "/logo-light.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] Image with src "/logo-light.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] Unexpected import of module [project]/node_modules/html-to-image/es/index.js [app-client] (ecmascript, async loader) from module [project]/components/canvas/shapes/generatedui/index.tsx [app-client] (ecmascript), which was deleted by an HMR update (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] Unexpected import of module [project]/node_modules/html-to-image/es/index.js [app-client] (ecmascript) from module [project]/components/canvas/shapes/generatedui/index.tsx [app-client] (ecmascript), which was deleted by an HMR update (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] Unexpected import of module [project]/node_modules/html-to-image/es/index.js [app-client] (ecmascript, async loader) from module [project]/components/canvas/shapes/generatedui/index.tsx [app-client] (ecmascript), which was deleted by an HMR update (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] Unexpected import of module [project]/node_modules/html-to-image/es/index.js [app-client] (ecmascript) from module [project]/components/canvas/shapes/generatedui/index.tsx [app-client] (ecmascript), which was deleted by an HMR update (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] Unexpected import of module [project]/node_modules/html-to-image/es/index.js [app-client] (ecmascript, async loader) from module [project]/components/canvas/shapes/generatedui/index.tsx [app-client] (ecmascript), which was deleted by an HMR update (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] Unexpected import of module [project]/node_modules/html-to-image/es/index.js [app-client] (ecmascript) from module [project]/components/canvas/shapes/generatedui/index.tsx [app-client] (ecmascript), which was deleted by an HMR update (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] Image with src "/logo-dark.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] SerializableStateInvariantMiddleware took 373ms, which is more than the warning threshold of 32ms. 
+If your state or actions are very large, you may want to disable the middleware as it might cause too much of a slowdown in development mode. See https://redux-toolkit.js.org/api/getDefaultMiddleware for instructions.
+It is disabled in production builds, so you don't need to worry about that. (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] Image with src "/logo-dark.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] Image with src "/logo-light.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] Image with src "/logo-light.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading (file://C:/Users/Abhay Solanki/Downloads/openui-main/openui-main/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+Error [AI_APICallError]: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+    at ignore-listed frames {
+  cause: undefined,
+  url: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent?alt=sse',
+  requestBodyValues: {
+    generationConfig: {
+      maxOutputTokens: 24000,
+      temperature: undefined,
+      topK: undefined,
+      topP: undefined,
+      frequencyPenalty: undefined,
+      presencePenalty: undefined,
+      stopSequences: undefined,
+      seed: undefined,
+      responseMimeType: undefined,
+      responseSchema: undefined,
+      responseModalities: undefined,
+      thinkingConfig: undefined
+    },
+    contents: [ [Object] ],
+    systemInstruction: { parts: [Array] },
+    safetySettings: undefined,
+    tools: undefined,
+    toolConfig: undefined,
+    cachedContent: undefined,
+    labels: undefined,
+    serviceTier: undefined
+  },
+  statusCode: 503,
+  responseHeaders: {
+    'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+    'content-length': '198',
+    'content-type': 'text/event-stream',
+    date: 'Fri, 16 Oct 2026 19:30:45 GMT',
+    server: 'scaffolding on HTTPServer2',
+    'server-timing': 'gfet4t7; dur=1832',
+    vary: 'Origin, X-Origin, Referer',
+    'x-content-type-options': 'nosniff',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-xss-protection': '0'
+  },
+  responseBody: '{\n' +
+    '  "error": {\n' +
+    '    "code": 503,\n' +
+    '    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",\n' +
+    '    "status": "UNAVAILABLE"\n' +
+    '  }\n' +
+    '}\n',
+  isRetryable: true,
+  data: {
+    error: {
+      code: 503,
+      message: 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.',
+      status: 'UNAVAILABLE'
+    }
+  }
+}

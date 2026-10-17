@@ -1,0 +1,42 @@
+{
+  "prompt": "Design a polished responsive SaaS analytics dashboard named Pulse. Include a sidebar (Overview, Analytics, Customers, Settings), a header with date range and Export button, four KPI cards (Revenue, Active users, Conversion, Churn), a seven-day revenue chart, and a recent-orders table with five rows and status badges. Use realistic sample data, clear hierarchy, accessible contrast and labels. On mobile collapse the sidebar and stack cards. Follow the project design tokens. Return only the generated UI HTML.",
+  "provider": "google",
+  "model": "google/gemini-3.1-flash-lite",
+  "status": 200,
+  "elapsedSeconds": 5.237,
+  "providerRequestsSubmitted": 1,
+  "automaticRetries": 0,
+  "htmlCharacters": 5399,
+  "metadata": {
+    "streamId": "generation-audit",
+    "type": "usage",
+    "usage": {
+      "inputTokens": 1440,
+      "inputTokenDetails": {
+        "noCacheTokens": 1440,
+        "cacheReadTokens": 0
+      },
+      "outputTokens": 1719,
+      "outputTokenDetails": {
+        "textTokens": 1719,
+        "reasoningTokens": 0
+      },
+      "totalTokens": 3159,
+      "reasoningTokens": 0,
+      "cachedInputTokens": 0
+    },
+    "finishReason": "stop",
+    "providerAttemptsLimit": 1
+  },
+  "checks": {
+    "nonempty": true,
+    "wrapper": true,
+    "brand": true,
+    "fourMetrics": true,
+    "table": true,
+    "responsive": true,
+    "noScripts": true,
+    "noMarkdown": true
+  },
+  "error": null
+}

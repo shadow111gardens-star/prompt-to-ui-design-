@@ -1,0 +1,34 @@
+{
+  "apiCalls": 1,
+  "editedHeading": true,
+  "editedButton": true,
+  "syntaxErrors": [],
+  "usage": {
+    "streamId": "inspector-react-retest",
+    "type": "usage",
+    "providerAttempts": 1,
+    "usage": {
+      "inputTokens": 2801,
+      "inputTokenDetails": {
+        "noCacheTokens": 2801,
+        "cacheReadTokens": 0
+      },
+      "outputTokens": 2464,
+      "outputTokenDetails": {
+        "textTokens": 2464,
+        "reasoningTokens": 0
+      },
+      "totalTokens": 5265,
+      "reasoningTokens": 0,
+      "cachedInputTokens": 0
+    },
+    "finishReason": "stop"
+  },
+  "literalImportantRetained": false,
+  "computedStyleVerified": true,
+  "renderedStyles": {
+    "color": "rgb(225, 29, 72)",
+    "font": "Georgia, serif",
+    "size": "32px"
+  }
+}

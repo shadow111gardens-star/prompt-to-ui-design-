@@ -1,0 +1,136 @@
+import { useState } from 'react';
+
+export default function App() {
+  const [email, setEmail] = useState<string>('edited@demo.test');
+
+  const handleBeginSession = () => {
+    alert('Session started!');
+  };
+
+  return (
+    <>
+      <style>{`
+        body{margin:0;font-family:Arial,sans-serif;background:#f7f8fc;color:#182034}
+        main{padding:24px;box-sizing:border-box}
+        h1{font-size:28px;margin:0 0 12px}
+        .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+        .card{background:white;border:1px solid #dce1eb;border-radius:16px;padding:16px}
+        .action{background:#2563eb;color:white;border:0;border-radius:10px;padding:12px 18px}
+        .photo{display:block;width:160px;height:80px;object-fit:cover;border-radius:8px}
+        nav{display:flex;gap:12px;margin-bottom:16px}
+        input{padding:8px;border:1px solid #ccd2df;border-radius:6px}
+        svg{vertical-align:middle}
+        p{font-size:14px}
+
+        :root{--color-primary:#7C3AED;--color-secondary:#F7F8FC;--color-text:#182034;--color-accent:#7C3AED;--color-success:#10B981;--color-warning:#F59E0B;--color-error:#EF4444;--color-info:#3B82F6;--color-surface-variant:#FFFFFF;--color-muted:#f4f4f5;--color-border:#e4e4e7;--font-heading:'Inter', sans-serif;--font-body:'DM Sans', sans-serif;--border-radius-card:16px;--border-radius-button:18px;--spacing-unit:16px;--ft-bg:var(--color-secondary);--ft-surface:var(--color-surface-variant);--ft-lime:var(--color-primary);--ft-text:var(--color-text)}
+        [data-generated-ui]{background-color:var(--color-secondary);color:var(--color-text);font-family:var(--font-body)}
+        .profile-card,.stat-box{background:var(--color-surface-variant);border-radius:var(--border-radius-card)}
+        .btn-lime{background:var(--color-primary);color:#ffffff;border-radius:var(--border-radius-button)}
+        body{font-family:var(--font-body);color:var(--color-text)}
+        h1,h2,h3,h4,h5,h6{font-family:var(--font-heading)}
+        .c-bg{background-color:var(--color-secondary)}.c-fg,.c-card-fg{color:var(--color-text)}
+        .c-card-bg{background-color:var(--color-surface-variant);border-radius:var(--border-radius-card)}
+        .c-primary-bg{background-color:var(--color-primary)}.c-primary-fg{color:#ffffff}
+        .c-accent-bg{background-color:var(--color-accent)}.c-muted-bg{background-color:var(--color-muted)}.c-border{border-color:var(--color-border)}
+        button.c-primary-bg,a.c-primary-bg{border-radius:var(--border-radius-button)}
+        #fittrack-review .ft-board{--ft-bg:var(--color-secondary);--ft-surface:var(--color-surface-variant);--ft-lime:var(--color-primary);--ft-text:var(--color-text);font-family:var(--font-body)}
+        #fittrack-review .ft-title,#fittrack-review h1,#fittrack-review h2,#fittrack-review h3{font-family:var(--font-heading);color:var(--color-text)}
+        #fittrack-review .ft-panel,#fittrack-review .ft-exercise{border-radius:var(--border-radius-card)}
+        #fittrack-review .ft-primary{border-radius:var(--border-radius-button);color:#ffffff}
+
+        [data-openui-element="oui-e-2"]{gap:8px}
+        [data-openui-element="oui-e-5"]{font-size:32px;color:#e11d48;font-family:Georgia, serif;font-weight:700;line-height:1.4;letter-spacing:1px;text-align:center}
+        [data-openui-element="oui-e-8"]{translate:12px 8px;width:280px;height:228.2px;box-sizing:border-box;max-width:100%;min-height:min-content}
+        [data-openui-element="oui-e-11"]{background-color:#7c3aed;border-radius:18px}
+        [data-openui-element="oui-e-12"]{width:24px;box-sizing:border-box;max-width:100%;height:24px}
+        [data-openui-element="oui-e-15"]{width:120px;box-sizing:border-box;max-width:100%;height:60px}
+      `}</style>
+      <main data-openui-element="oui-e-1">
+        <nav aria-label="Demo navigation" data-openui-element="oui-e-2">
+          <a data-openui-element="oui-e-3" href="https://example.com/details">Details</a>
+          <a href="#settings" data-openui-element="oui-e-4">Settings</a>
+        </nav>
+        <h1 data-openui-element="oui-e-5">Edited mobile heading</h1>
+        <p data-openui-element="oui-e-6">Independent screen content.</p>
+        <div className="cards" data-openui-element="oui-e-7">
+          <section
+            className="card"
+            aria-label="Demo card"
+            data-openui-element="oui-e-8"
+          >
+            <h2 data-openui-element="oui-e-9">Training summary</h2>
+            <p data-openui-element="oui-e-10">Move this card without moving its neighbor.</p>
+            <button
+              className="action"
+              data-openui-element="oui-e-11"
+              onClick={handleBeginSession}
+              type="button"
+            >
+              <svg
+                width="16"
+                height="16"
+                data-openui-element="oui-e-12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"
+                  data-openui-element="oui-e-13"
+                />
+              </svg>
+              <span data-openui-element="oui-e-14">Begin session</span>
+            </button>
+            <img
+              className="photo"
+              data-openui-element="oui-e-15"
+              alt="Edited image"
+              src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%2260%22%3E%3Crect width=%22120%22 height=%2260%22 fill=%22%237c3aed%22/%3E%3C/svg%3E"
+            />
+            <label data-openui-element="oui-e-16">
+              Email{' '}
+              <input
+                type="email"
+                data-openui-element="oui-e-17"
+                placeholder="you@demo.test"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </label>
+          </section>
+          <section className="card" aria-label="Neighbor card" data-openui-element="oui-e-18">
+            <h2 data-openui-element="oui-e-19">Weekly chart</h2>
+            <svg
+              aria-label="Weekly bars"
+              viewBox="0 0 200 80"
+              width="200"
+              height="80"
+              data-openui-element="oui-e-20"
+            >
+              <rect
+                x="10"
+                y="30"
+                width="24"
+                height="50"
+                fill="#2563eb"
+                data-openui-element="oui-e-21"
+              />
+              <rect
+                x="50"
+                y="10"
+                width="24"
+                height="70"
+                fill="#2563eb"
+                data-openui-element="oui-e-22"
+              />
+            </svg>
+            <p id="details" data-openui-element="oui-e-23">
+              This section must stay intact.
+            </p>
+          </section>
+        </div>
+      </main>
+    </>
+  );
+}

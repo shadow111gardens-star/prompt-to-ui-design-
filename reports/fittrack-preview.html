@@ -1,0 +1,193 @@
+<div id="fittrack-review">
+<div class="nav nav-pills" role="tablist" aria-label="FitTrack design version">
+<button class="nav-link active" id="fittrack-final-tab" role="tab" aria-controls="fittrack-final" aria-selected="true" type="button">Complete preview</button>
+<button class="nav-link" id="fittrack-original-tab" role="tab" aria-controls="fittrack-original" aria-selected="false" type="button">Original AI output</button>
+<button class="nav-link" id="fittrack-prompt-tab" role="tab" aria-controls="fittrack-prompt" aria-selected="false" type="button">Prompt & tokens</button>
+</div>
+<div id="fittrack-final" role="tabpanel" aria-labelledby="fittrack-final-tab">
+<style>
+#fittrack-review .ft-board{--ft-bg:#101114;--ft-surface:#1c1d22;--ft-lime:#c6ff4d;--ft-text:#fff;--ft-muted:#a5a7af;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding:20px 0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--ft-text)}
+#fittrack-review .ft-phone{background:var(--ft-bg);border-radius:30px;overflow:hidden;min-width:0;position:relative;display:flex;flex-direction:column;box-shadow:0 8px 30px #0003}
+#fittrack-review .ft-content{padding:0 20px;flex:1}#fittrack-review .ft-status{display:flex;justify-content:space-between;padding:19px 24px 23px;font-size:11px;font-weight:700;letter-spacing:.3px}
+#fittrack-review .ft-header{display:flex;align-items:center;justify-content:space-between;margin:0 0 24px}#fittrack-review .ft-eyebrow{font-size:10px;color:var(--ft-muted);letter-spacing:1.8px;text-transform:uppercase;margin:0 0 6px}
+#fittrack-review .ft-title{font-size:27px;font-weight:700;letter-spacing:-1.2px;line-height:1.12;margin:0;color:white}#fittrack-review .ft-sub{font-size:12px;color:var(--ft-muted);margin:7px 0 0;line-height:1.5}#fittrack-review .ft-lime{color:var(--ft-lime)}
+#fittrack-review .ft-avatar{background:linear-gradient(140deg,#c6ff4d,#647d29);color:#152000;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;font-size:12px;font-weight:800;flex-shrink:0}
+#fittrack-review .ft-panel{background:var(--ft-surface);border-radius:21px;padding:18px;margin-bottom:15px}#fittrack-review .ft-row{display:flex;justify-content:space-between;align-items:center;gap:9px}#fittrack-review .ft-label{font-size:12px;font-weight:600;margin:0}#fittrack-review .ft-tag{font-size:9px;letter-spacing:.4px;border-radius:20px;padding:5px 8px;background:#c6ff4d16;color:var(--ft-lime);white-space:nowrap}
+#fittrack-review .ft-ring{width:154px;height:154px;border-radius:50%;margin:20px auto;background:conic-gradient(from -90deg,var(--ft-lime) 0 82%,#34363d 82% 100%);padding:9px;box-sizing:border-box;transform:rotate(-5deg)}#fittrack-review .ft-ring-inner{background:var(--ft-surface);height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;transform:rotate(5deg)}#fittrack-review .ft-ring-number{font-size:36px;font-weight:750;letter-spacing:-1.5px;line-height:1.1}#fittrack-review .ft-ring-caption{font-size:10px;color:var(--ft-muted);margin-top:5px}
+#fittrack-review .ft-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center}#fittrack-review .ft-metric{border-right:1px solid #ffffff12}#fittrack-review .ft-metric:last-child{border:0}#fittrack-review .ft-metric strong{display:block;font-size:17px;margin:6px 0 4px;letter-spacing:-.5px}#fittrack-review .ft-metric span{font-size:9px;color:var(--ft-muted)}#fittrack-review .ft-icon{width:17px;height:17px;display:inline-block;vertical-align:middle}#fittrack-review .ft-icon-small{width:14px;height:14px}
+#fittrack-review .ft-chart{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:20px;align-items:end}#fittrack-review .ft-chart-col{text-align:center;font-size:9px;color:var(--ft-muted)}#fittrack-review .ft-track{height:89px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:9px}#fittrack-review .ft-bar{width:15px;border-radius:6px;background:#454a37}#fittrack-review .ft-bar.today{background:var(--ft-lime)}#fittrack-review .ft-chart-summary{display:flex;justify-content:space-between;font-size:10px;margin-top:17px;padding-top:13px;border-top:1px solid #ffffff10;color:var(--ft-muted)}
+#fittrack-review .ft-primary{width:100%;border:0;background:var(--ft-lime);color:#141b05;border-radius:14px;font:700 12px inherit;min-height:46px;display:flex;align-items:center;justify-content:center;gap:9px;cursor:inherit;margin-bottom:15px;font-family:inherit;font-size:12px;font-weight:700}#fittrack-review .ft-primary:hover{background:#d6ff80}#fittrack-review .ft-primary:focus-visible,#fittrack-review .ft-nav button:focus-visible{outline:2px solid white;outline-offset:3px}
+#fittrack-review .ft-mini-feature{display:flex;align-items:center;gap:11px;padding:13px 0 17px}#fittrack-review .ft-mini-icon{background:#c6ff4d14;color:var(--ft-lime);border-radius:12px;padding:12px}#fittrack-review .ft-mini-feature strong{display:block;font-size:11px}#fittrack-review .ft-mini-feature p{font-size:10px;color:var(--ft-muted);margin:5px 0}
+#fittrack-review .ft-nav{padding:15px 16px 19px;display:flex;justify-content:space-around;border-top:1px solid #ffffff0c;margin-top:8px}#fittrack-review .ft-nav button{background:none;border:0;color:#7d808a;display:flex;align-items:center;flex-direction:column;gap:6px;font-size:9px;font-family:inherit;padding:6px 10px;border-radius:9px;cursor:inherit}#fittrack-review .ft-nav button.ft-selected{color:var(--ft-lime)}#fittrack-review .ft-homebar{height:4px;width:90px;background:#fff7;border-radius:10px;margin:0 auto 10px}
+#fittrack-review .ft-search{display:flex;gap:9px;align-items:center;background:var(--ft-surface);border-radius:12px;padding:13px;margin:0 0 15px;color:var(--ft-muted);font-size:11px}#fittrack-review .ft-search input{min-width:0;width:100%;background:none;border:0;color:white;font-size:11px;font-family:inherit;outline-offset:4px}#fittrack-review .ft-categories{display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap}#fittrack-review .ft-chip{border:0;padding:8px 10px;border-radius:20px;color:#bfc1c9;background:var(--ft-surface);font-size:10px;font-family:inherit;cursor:inherit}#fittrack-review .ft-chip.active{background:var(--ft-lime);color:#152000}
+#fittrack-review .ft-hero{position:relative;overflow:hidden;border-radius:20px;background:linear-gradient(125deg,#303729,#1a211c);min-height:175px;margin-bottom:20px;padding:18px;box-sizing:border-box}#fittrack-review .ft-hero:after{content:'';position:absolute;width:150px;height:150px;right:-40px;top:-60px;border:1px solid #c6ff4d22;border-radius:50%}#fittrack-review .ft-hero h3{position:relative;z-index:1;font-size:24px;line-height:1.12;letter-spacing:-.8px;max-width:150px;margin:13px 0 8px;color:white}#fittrack-review .ft-hero p{position:relative;z-index:1;font-size:10px;color:#c3c9bb;margin:0}#fittrack-review .ft-hero .ft-tag{position:relative;z-index:1;font-size:8px}#fittrack-review .ft-athlete{position:absolute;right:-4px;bottom:-2px;width:144px;height:164px;color:#bdcd9e}
+#fittrack-review .ft-section-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 13px}#fittrack-review .ft-section-head h3{font-size:14px;margin:0;color:white}#fittrack-review .ft-section-head span{font-size:10px;color:var(--ft-lime)}#fittrack-review .ft-exercise{display:flex;gap:11px;background:var(--ft-surface);padding:10px;border-radius:15px;margin-bottom:10px;align-items:center}#fittrack-review .ft-thumbnail{width:60px;height:65px;flex-shrink:0;background:linear-gradient(145deg,#404738,#252d24);border-radius:10px;overflow:hidden;display:grid;place-items:center}#fittrack-review .ft-thumbnail svg{width:57px;height:60px}#fittrack-review .ft-exercise h4{font-size:12px;margin:0 0 7px;color:white}#fittrack-review .ft-exercise p{font-size:9px;margin:0;color:var(--ft-muted)}#fittrack-review .ft-exercise .ft-level{display:block;margin-top:8px;font-size:9px;color:#d6dcce}#fittrack-review .ft-session{font-size:10px;text-align:center;color:var(--ft-lime);min-height:14px;margin:11px 0}#fittrack-review .ft-spacer{height:7px}
+#fittrack-review .ft-profile-header{text-align:center;padding:0 0 22px}#fittrack-review .ft-profile-avatar{width:76px;height:76px;border:3px solid var(--ft-lime);margin:0 auto 13px;padding:4px;border-radius:50%;background:var(--ft-surface)}#fittrack-review .ft-profile-avatar div{background:linear-gradient(135deg,#525e3d,#273520);border-radius:50%;height:100%;display:grid;place-items:center;font-size:24px;font-weight:650;color:#d9e7c1}#fittrack-review .ft-profile-header h2{font-size:22px;margin:0 0 7px;color:white;letter-spacing:-.5px}#fittrack-review .ft-profile-header p{font-size:11px;color:var(--ft-muted);margin:0 0 12px}#fittrack-review .ft-progress{height:7px;background:#35363b;border-radius:9px;margin:15px 0 9px;overflow:hidden}#fittrack-review .ft-progress div{height:100%;background:var(--ft-lime);width:75%;border-radius:9px}#fittrack-review .ft-goal-footer{display:flex;justify-content:space-between;font-size:10px;color:var(--ft-muted)}
+#fittrack-review .ft-profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:5px 0 17px;text-align:center}#fittrack-review .ft-profile-stats strong{font-size:21px;display:block;letter-spacing:-.7px}#fittrack-review .ft-profile-stats span{font-size:9px;color:var(--ft-muted);display:block;margin-top:6px}#fittrack-review .ft-badges{display:flex;justify-content:space-around;margin-bottom:23px;gap:8px}#fittrack-review .ft-badge{text-align:center;font-size:9px;color:var(--ft-muted)}#fittrack-review .ft-badge-mark{color:var(--ft-lime);background:#c6ff4d12;border-radius:17px;display:grid;place-items:center;height:55px;width:57px;margin:0 auto 8px}#fittrack-review .ft-setting{display:flex;gap:10px;align-items:center;padding:13px 0;color:#d8dae0;font-size:11px;border-bottom:1px solid #ffffff0b}#fittrack-review .ft-setting:last-child{border:0}#fittrack-review .ft-setting span{flex:1}#fittrack-review .ft-setting .ft-icon{color:#9b9da6}#fittrack-review .ft-setting .ft-chevron{color:#6b6e78}
+#fittrack-review .ft-board .ft-phone.ft-focused{outline:2px solid var(--ft-lime);outline-offset:3px}#fittrack-review .ft-original-frame{width:100%;height:1100px;border:0}#fittrack-review .ft-prompt-text{white-space:pre-wrap;line-height:1.6;font-size:13px}#fittrack-review .ft-token-line{margin:14px 0}
+@media(max-width:850px){#fittrack-review .ft-board{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:580px){#fittrack-review .ft-board{grid-template-columns:minmax(0,390px);justify-content:center;padding:16px 5px}#fittrack-review .ft-phone{border-radius:25px}}@media(prefers-reduced-motion:no-preference){#fittrack-review .ft-primary{transition:background .15s}}
+</style>
+<div class="ft-board">
+<section class="ft-phone" data-ft-screen="home" aria-label="FitTrack Home Dashboard">
+<div class="ft-status"><span>9:41</span><span>●●● ▰</span></div>
+<div class="ft-content">
+<header class="ft-header"><div><p class="ft-eyebrow">FRIDAY, OCT 16</p><h2 class="ft-title">Let's move,<br>Alex <span class="ft-lime">↗</span></h2></div><div class="ft-avatar" aria-label="Alex Johnson">AJ</div></header>
+<div class="ft-panel"><div class="ft-row"><h3 class="ft-label">Daily activity</h3><span class="ft-tag">ON TRACK</span></div><div class="ft-ring" role="img" aria-label="82 percent of daily step goal"><div class="ft-ring-inner"><span class="ft-ring-number">82<span style="font-size:18px">%</span></span><span class="ft-ring-caption">of your daily goal</span></div></div><div class="ft-metrics"><div class="ft-metric"><i data-lucide="footprints" class="ft-icon ft-lime" aria-hidden="true"></i><strong>8,240</strong><span>Steps / 10,000</span></div><div class="ft-metric"><i data-lucide="flame" class="ft-icon ft-lime" aria-hidden="true"></i><strong>486</strong><span>kcal burned</span></div><div class="ft-metric"><i data-lucide="timer" class="ft-icon ft-lime" aria-hidden="true"></i><strong>42<span style="font-size:10px"> min</span></strong><span>Active time</span></div></div></div>
+<div class="ft-panel"><div class="ft-row"><h3 class="ft-label">Your week in motion</h3><span style="font-size:10px;color:#a5a7af">12–18 Oct</span></div><div class="ft-chart" role="img" aria-label="Active minutes: Monday 35, Tuesday 48, Wednesday 24, Thursday 56, Friday 42, Saturday and Sunday not yet recorded"><div class="ft-chart-col"><div class="ft-track"><div class="ft-bar" style="height:56%" data-tooltip="Monday · 35 min"></div></div>M</div><div class="ft-chart-col"><div class="ft-track"><div class="ft-bar" style="height:77%" data-tooltip="Tuesday · 48 min"></div></div>T</div><div class="ft-chart-col"><div class="ft-track"><div class="ft-bar" style="height:38%" data-tooltip="Wednesday · 24 min"></div></div>W</div><div class="ft-chart-col"><div class="ft-track"><div class="ft-bar" style="height:90%" data-tooltip="Thursday · 56 min"></div></div>T</div><div class="ft-chart-col ft-lime"><div class="ft-track"><div class="ft-bar today" style="height:67%" data-tooltip="Friday · 42 min"></div></div>F</div><div class="ft-chart-col"><div class="ft-track"><div class="ft-bar" style="height:6%"></div></div>S</div><div class="ft-chart-col"><div class="ft-track"><div class="ft-bar" style="height:6%"></div></div>S</div></div><div class="ft-chart-summary"><span>205 active minutes</span><span class="ft-lime">↑ 18% vs last week</span></div></div>
+<button class="ft-primary cursor-interaction" data-ft-target="workout"><i data-lucide="play" class="ft-icon" aria-hidden="true"></i>Start Workout<span style="margin-left:auto;margin-right:14px">↗</span></button>
+<div class="ft-mini-feature"><div class="ft-mini-icon"><i data-lucide="zap" class="ft-icon" aria-hidden="true"></i></div><div><strong>A little more. A little stronger.</strong><p>You're 1,760 steps from today's goal.</p></div></div>
+</div><nav class="ft-nav" aria-label="Home screen navigation"><button class="ft-selected cursor-interaction" data-ft-target="home"><i data-lucide="house" class="ft-icon" aria-hidden="true"></i>Home</button><button class="cursor-interaction" data-ft-target="workout"><i data-lucide="dumbbell" class="ft-icon" aria-hidden="true"></i>Workout</button><button class="cursor-interaction" data-ft-target="profile"><i data-lucide="user-round" class="ft-icon" aria-hidden="true"></i>Profile</button></nav><div class="ft-homebar"></div>
+</section>
+<section class="ft-phone" data-ft-screen="workout" aria-label="FitTrack Workout Screen">
+<div class="ft-status"><span>9:41</span><span>●●● ▰</span></div><div class="ft-content">
+<header class="ft-header"><div><p class="ft-eyebrow">TRAIN WITH INTENTION</p><h2 class="ft-title">Find your<br><span class="ft-lime">next challenge.</span></h2></div></header>
+<label class="ft-search"><i data-lucide="search" class="ft-icon-small" aria-hidden="true"></i><input type="search" aria-label="Search workouts" placeholder="Search workouts"></label>
+<div class="ft-categories" role="group" aria-label="Workout categories"><button class="ft-chip active cursor-interaction" data-category="all" aria-pressed="true">All</button><button class="ft-chip cursor-interaction" data-category="strength" aria-pressed="false">Strength</button><button class="ft-chip cursor-interaction" data-category="cardio" aria-pressed="false">Cardio</button><button class="ft-chip cursor-interaction" data-category="mobility" aria-pressed="false">Mobility</button></div>
+<div class="ft-hero"><span class="ft-tag">COACH'S PICK</span><h3>Build strength.<br>Feel unstoppable.</h3><p>Full body · 35 min · Intermediate</p><svg class="ft-athlete" viewBox="0 0 160 180" role="img" aria-label="Athlete performing a dumbbell lunge"><defs><linearGradient id="ft-sport-shirt" x2="1" y2="1"><stop stop-color="#c6ff4d"/><stop offset="1" stop-color="#617b2d"/></linearGradient></defs><path d="M5 168H158M20 140H150" stroke="#52603e" opacity=".4"/><circle cx="98" cy="27" r="12" fill="#c49f7c"/><path d="M86 15q14-10 25 5l-1 8-7-8-15 2z" fill="#151c13"/><path d="M88 43l20 2 9 47-36 4-10-21z" fill="url(#ft-sport-shirt)"/><path d="M84 50L67 75 51 60M109 51l17 25 18-15" fill="none" stroke="#c49f7c" stroke-width="11" stroke-linecap="round"/><path d="M91 95L68 120l-10 36M108 95l16 34 22 21" fill="none" stroke="#141a14" stroke-width="17" stroke-linecap="round"/><path d="M48 160h18M141 154h15" stroke="#dde5cd" stroke-width="8" stroke-linecap="round"/><path d="M39 59h23M132 59h25" stroke="#11180f" stroke-width="6"/><path d="M42 50v18M57 50v18M136 50v18M153 50v18" stroke="#8e9c7c" stroke-width="6" stroke-linecap="round"/></svg></div>
+<div class="ft-section-head"><h3>Made for your momentum</h3><span>3 sessions</span></div>
+<article class="ft-exercise" data-workout-category="strength"><div class="ft-thumbnail"><svg viewBox="0 0 60 64" role="img" aria-label="Strength training athlete"><circle cx="32" cy="12" r="6" fill="#c9aa8e"/><path d="M25 22h14l4 21H22z" fill="#c6ff4d"/><path d="M25 25L15 34M38 25l10 9" stroke="#c9aa8e" stroke-width="6" stroke-linecap="round"/><path d="M27 44l-4 17M36 44l5 17" stroke="#abb598" stroke-width="6"/><path d="M8 34h13M42 34h13" stroke="#101114" stroke-width="8"/></svg></div><div style="flex:1"><h4>Full Body Strength</h4><p>35 min · 8 exercises</p><span class="ft-level">● ● ○ &nbsp; Intermediate</span></div><i data-lucide="chevron-right" class="ft-icon-small" aria-hidden="true"></i></article>
+<article class="ft-exercise" data-workout-category="cardio"><div class="ft-thumbnail" style="background:linear-gradient(140deg,#3d4651,#22282f)"><svg viewBox="0 0 60 64" role="img" aria-label="Running athlete"><circle cx="37" cy="11" r="6" fill="#c9aa8e"/><path d="M29 20l11 5-8 18-13-6z" fill="#b1bbcf"/><path d="M29 24l-11 4-6-7M38 27l7 9 9-4" fill="none" stroke="#c9aa8e" stroke-width="5" stroke-linecap="round"/><path d="M24 39l-10 10-7 1M31 42l9 7-2 11" fill="none" stroke="#c6ff4d" stroke-width="6" stroke-linecap="round"/></svg></div><div style="flex:1"><h4>HIIT Energy Boost</h4><p>20 min · 6 exercises</p><span class="ft-level">● ● ● &nbsp; Advanced</span></div><i data-lucide="chevron-right" class="ft-icon-small" aria-hidden="true"></i></article>
+<article class="ft-exercise" data-workout-category="mobility"><div class="ft-thumbnail" style="background:linear-gradient(145deg,#564b3e,#2d2923)"><svg viewBox="0 0 60 64" role="img" aria-label="Athlete stretching on a mat"><path d="M3 57h54" stroke="#747b63" stroke-width="4"/><circle cx="34" cy="19" r="6" fill="#c9aa8e"/><path d="M28 28h12l-3 14H24z" fill="#c6ff4d"/><path d="M28 29L17 38M39 28l11-9" stroke="#c9aa8e" stroke-width="5" stroke-linecap="round"/><path d="M28 42L13 53h15M35 42l14 11H35" fill="none" stroke="#b7bdab" stroke-width="6" stroke-linecap="round"/></svg></div><div style="flex:1"><h4>Reset & Recover</h4><p>15 min · 5 stretches</p><span class="ft-level">● ○ ○ &nbsp; Beginner</span></div><i data-lucide="chevron-right" class="ft-icon-small" aria-hidden="true"></i></article>
+<div class="ft-session" aria-live="polite">Ready for your Full Body Strength session</div><button class="ft-primary cursor-interaction" data-start-session><i data-lucide="play" class="ft-icon" aria-hidden="true"></i>Start Session · 35 min</button>
+</div><nav class="ft-nav" aria-label="Workout screen navigation"><button class="cursor-interaction" data-ft-target="home"><i data-lucide="house" class="ft-icon" aria-hidden="true"></i>Home</button><button class="ft-selected cursor-interaction" data-ft-target="workout"><i data-lucide="dumbbell" class="ft-icon" aria-hidden="true"></i>Workout</button><button class="cursor-interaction" data-ft-target="profile"><i data-lucide="user-round" class="ft-icon" aria-hidden="true"></i>Profile</button></nav><div class="ft-homebar"></div></section>
+<section class="ft-phone" data-ft-screen="profile" aria-label="FitTrack Profile Screen">
+<div class="ft-status"><span>9:41</span><span>●●● ▰</span></div><div class="ft-content"><header class="ft-header"><h2 class="ft-title" style="font-size:22px">Your profile</h2><i data-lucide="settings-2" class="ft-icon" aria-hidden="true"></i></header>
+<div class="ft-profile-header"><div class="ft-profile-avatar"><div>AJ</div></div><h2>Alex Johnson</h2><p>Building a stronger me, every day.</p><span class="ft-tag">FITTRACK PRO ↗</span></div>
+<div class="ft-panel"><div class="ft-row"><h3 class="ft-label">Consistency is your superpower</h3><i data-lucide="target" class="ft-icon ft-lime" aria-hidden="true"></i></div><p class="ft-sub" style="font-size:10px">Weekly goal · Complete 4 workouts</p><div class="ft-progress" role="progressbar" aria-label="Weekly workout goal" aria-valuenow="3" aria-valuemin="0" aria-valuemax="4"><div></div></div><div class="ft-goal-footer"><span>3 of 4 completed</span><span class="ft-lime">75%</span></div></div>
+<div class="ft-section-head"><h3>This week, so far</h3><span>↑ Looking strong</span></div><div class="ft-profile-stats"><div><strong>3</strong><span>Workouts</span></div><div><strong>118<span style="font-size:11px">m</span></strong><span>Training time</span></div><div><strong>1,245</strong><span>kcal burned</span></div></div>
+<div class="ft-section-head"><h3>Earned, not given.</h3><span>3 badges</span></div><div class="ft-badges"><div class="ft-badge"><div class="ft-badge-mark"><i data-lucide="flame" aria-hidden="true"></i></div>7-day streak</div><div class="ft-badge"><div class="ft-badge-mark"><i data-lucide="medal" aria-hidden="true"></i></div>First 10</div><div class="ft-badge"><div class="ft-badge-mark"><i data-lucide="footprints" aria-hidden="true"></i></div>50k steps</div></div>
+<div class="ft-panel" style="padding:3px 15px;margin-bottom:15px"><div class="ft-setting"><i data-lucide="user-round" class="ft-icon" aria-hidden="true"></i><span>Personal details</span><i data-lucide="chevron-right" class="ft-icon-small ft-chevron" aria-hidden="true"></i></div><div class="ft-setting"><i data-lucide="target" class="ft-icon" aria-hidden="true"></i><span>Fitness goals</span><i data-lucide="chevron-right" class="ft-icon-small ft-chevron" aria-hidden="true"></i></div><label class="ft-setting"><i data-lucide="bell" class="ft-icon" aria-hidden="true"></i><span>Workout reminders</span><input type="checkbox" checked aria-label="Workout reminders" style="accent-color:#c6ff4d;width:16px;height:16px"></label><div class="ft-setting"><i data-lucide="shield-check" class="ft-icon" aria-hidden="true"></i><span>Privacy & security</span><i data-lucide="chevron-right" class="ft-icon-small ft-chevron" aria-hidden="true"></i></div></div>
+</div><nav class="ft-nav" aria-label="Profile screen navigation"><button class="cursor-interaction" data-ft-target="home"><i data-lucide="house" class="ft-icon" aria-hidden="true"></i>Home</button><button class="cursor-interaction" data-ft-target="workout"><i data-lucide="dumbbell" class="ft-icon" aria-hidden="true"></i>Workout</button><button class="ft-selected cursor-interaction" data-ft-target="profile"><i data-lucide="user-round" class="ft-icon" aria-hidden="true"></i>Profile</button></nav><div class="ft-homebar"></div></section>
+</div>
+</div>
+<div id="fittrack-original" role="tabpanel" aria-labelledby="fittrack-original-tab" hidden><iframe class="ft-original-frame" title="Unmodified provider-generated FitTrack screens" sandbox="" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;style&gt;body{margin:0}*{box-sizing:border-box}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div id=&quot;fittrack-app&quot; style=&quot;display: flex; flex-wrap: wrap; gap: 2rem; padding: 2rem; justify-content: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #050505;&quot;&gt;
+  &lt;style&gt;
+    #fittrack-app { --bg: #101114; --surface: #1C1D22; --accent: #C6FF4D; --text: #FFFFFF; --text-dim: #A0A0A0; }
+    .screen { width: 375px; background: var(--bg); border-radius: 40px; padding: 24px; color: var(--text); border: 1px solid #333; }
+    .nav { display: flex; justify-content: space-around; padding-top: 24px; border-top: 1px solid #333; margin-top: 24px; }
+    .card { background: var(--surface); padding: 20px; border-radius: 20px; margin-bottom: 16px; }
+    .btn { background: var(--accent); color: #000; padding: 14px; border-radius: 12px; font-weight: 700; text-align: center; cursor: pointer; display: block; text-decoration: none; }
+    .ring { width: 120px; height: 120px; border-radius: 50%; border: 8px solid var(--surface); border-top-color: var(--accent); margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; }
+    .chart { display: flex; align-items: flex-end; justify-content: space-between; height: 60px; gap: 8px; }
+    .bar { background: var(--surface); width: 100%; border-radius: 4px; position: relative; }
+    .bar-fill { background: var(--accent); position: absolute; bottom: 0; width: 100%; border-radius: 4px; }
+    h2 { font-size: 1.5rem; margin: 0 0 16px 0; }
+    .icon { width: 24px; height: 24px; stroke: var(--text); fill: none; stroke-width: 2; }
+  &lt;/style&gt;
+
+  &lt;!-- HOME SCREEN --&gt;
+  &lt;section class=&quot;screen&quot; data-screen=&quot;home&quot;&gt;
+    &lt;header style=&quot;display:flex; justify-content:space-between; align-items:center;&quot;&gt;
+      &lt;div&gt;&lt;p style=&quot;color:var(--text-dim); margin:0;&quot;&gt;Welcome back&lt;/p&gt;&lt;h2&gt;Alex&lt;/h2&gt;&lt;/div&gt;
+      &lt;div style=&quot;width:40px; height:40px; border-radius:50%; background:#333;&quot;&gt;&lt;/div&gt;
+    &lt;/header&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;div class=&quot;ring&quot;&gt;84%&lt;/div&gt;
+      &lt;p style=&quot;text-align:center; margin-top:10px;&quot;&gt;Daily Goal Active&lt;/p&gt;
+      &lt;div style=&quot;display:flex; justify-content:space-around; margin-top:20px;&quot;&gt;
+        &lt;div&gt;&lt;div style=&quot;font-size:1.2rem; font-weight:700;&quot;&gt;8.2k&lt;/div&gt;&lt;small style=&quot;color:var(--text-dim)&quot;&gt;Steps&lt;/small&gt;&lt;/div&gt;
+        &lt;div&gt;&lt;div style=&quot;font-size:1.2rem; font-weight:700;&quot;&gt;420&lt;/div&gt;&lt;small style=&quot;color:var(--text-dim)&quot;&gt;Kcal&lt;/small&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;h3 style=&quot;margin-top:0;&quot;&gt;Weekly Progress&lt;/h3&gt;
+      &lt;div class=&quot;chart&quot;&gt;
+        &lt;div class=&quot;bar&quot; style=&quot;height:40px;&quot;&gt;&lt;div class=&quot;bar-fill&quot; style=&quot;height:60%;&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;div class=&quot;bar&quot; style=&quot;height:40px;&quot;&gt;&lt;div class=&quot;bar-fill&quot; style=&quot;height:80%;&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;div class=&quot;bar&quot; style=&quot;height:40px;&quot;&gt;&lt;div class=&quot;bar-fill&quot; style=&quot;height:40%;&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;div class=&quot;bar&quot; style=&quot;height:40px;&quot;&gt;&lt;div class=&quot;bar-fill&quot; style=&quot;height:90%;&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;div class=&quot;bar&quot; style=&quot;height:40px;&quot;&gt;&lt;div class=&quot;bar-fill&quot; style=&quot;height:70%;&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;div class=&quot;bar&quot; style=&quot;height:40px;&quot;&gt;&lt;div class=&quot;bar-fill&quot; style=&quot;height:50%;&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;div class=&quot;bar&quot; style=&quot;height:40px;&quot;&gt;&lt;div class=&quot;bar-fill&quot; style=&quot;height:100%;&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;a href=&quot;#&quot; class=&quot;btn&quot; data-target=&quot;workout&quot;&gt;Start Workout&lt;/a&gt;
+    &lt;nav class=&quot;nav&quot;&gt;
+      &lt;span data-target=&quot;home&quot;&gt;Home&lt;/span&gt;
+      &lt;span data-target=&quot;workout&quot;&gt;Workouts&lt;/span&gt;
+      &lt;span data-target=&quot;profile&quot;&gt;Profile&lt;/span&gt;
+    &lt;/nav&gt;
+  &lt;/section&gt;
+
+  &lt;!-- WORKOUT SCREEN --&gt;
+  &lt;section class=&quot;screen&quot; data-screen=&quot;workout&quot;&gt;
+    &lt;h2&gt;Discover&lt;/h2&gt;
+    &lt;div class=&quot;card&quot; style=&quot;display:flex; align-items:center; gap:12px;&quot;&gt;
+      &lt;div style=&quot;width:50px; height:50px; background:#333; border-radius:10px;&quot;&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;strong&gt;HIIT Cardio&lt;/strong&gt;&lt;p style=&quot;margin:0; font-size:0.8rem; color:var(--text-dim);&quot;&gt;30 min • Advanced&lt;/p&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;card&quot; style=&quot;display:flex; align-items:center; gap:12px;&quot;&gt;
+      &lt;div style=&quot;width:50px; height:50px; background:#333; border-radius:10px;&quot;&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;strong&gt;Strength Flow&lt;/strong&gt;&lt;p style=&quot;margin:0; font-size:0.8rem; color:var(--text-dim);&quot;&gt;45 min • Intermediate&lt;/p&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;card&quot; style=&quot;display:flex; align-items:center; gap:12px;&quot;&gt;
+      &lt;div style=&quot;width:50px; height:50px; background:#333; border-radius:10px;&quot;&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;strong&gt;Mobility Core&lt;/strong&gt;&lt;p style=&quot;margin:0; font-size:0.8rem; color:var(--text-dim);&quot;&gt;20 min • Beginner&lt;/p&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;p&gt;Session Status: &lt;strong&gt;Ready&lt;/strong&gt;&lt;/p&gt;
+      &lt;a href=&quot;#&quot; class=&quot;btn&quot; data-target=&quot;workout&quot;&gt;Start Session&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;nav class=&quot;nav&quot;&gt;
+      &lt;span data-target=&quot;home&quot;&gt;Home&lt;/span&gt;
+      &lt;span data-target=&quot;workout&quot;&gt;Workouts&lt;/span&gt;
+      &lt;span data-target=&quot;profile&quot;&gt;Profile&lt;/span&gt;
+    &lt;/nav&gt;
+  &lt;/section&gt;
+
+  &lt;!-- PROFILE SCREEN --&gt;
+  &lt;section class=&quot;screen&quot; data-screen=&quot;profile&quot;&gt;
+    &lt;h2&gt;Profile&lt;/h2&gt;
+    &lt;div class=&quot;card&quot; style=&quot;text-align:center;&quot;&gt;
+      &lt;div style=&quot;width:80px; height:80px; border-radius:50%; background:#333; margin:0 auto 10px;&quot;&gt;&lt;/div&gt;
+      &lt;h3&gt;Alex Johnson&lt;/h3&gt;
+      &lt;p style=&quot;color:var(--text-dim);&quot;&gt;Pro Member&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;h3 style=&quot;margin-top:0;&quot;&gt;Goals&lt;/h3&gt;
+      &lt;div style=&quot;height:8px; background:#333; border-radius:4px; margin:10px 0;&quot;&gt;
+        &lt;div style=&quot;width:70%; height:8px; background:var(--accent); border-radius:4px;&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;p style=&quot;font-size:0.9rem;&quot;&gt;70% to Weekly Target (15/20 sessions)&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;div style=&quot;display:flex; justify-content:space-between;&quot;&gt;
+        &lt;span&gt;Achievements&lt;/span&gt;
+        &lt;span style=&quot;color:var(--accent);&quot;&gt;5/12&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;nav class=&quot;nav&quot;&gt;
+      &lt;span data-target=&quot;home&quot;&gt;Home&lt;/span&gt;
+      &lt;span data-target=&quot;workout&quot;&gt;Workouts&lt;/span&gt;
+      &lt;span data-target=&quot;profile&quot;&gt;Profile&lt;/span&gt;
+    &lt;/nav&gt;
+  &lt;/section&gt;
+&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"></iframe></div>
+<div id="fittrack-prompt" role="tabpanel" aria-labelledby="fittrack-prompt-tab" hidden><p class="ft-token-line"><strong>1 API call · 530 input + 2,008 output = 2,538 tokens · 10.28 seconds</strong></p><p>Model: Gemini 3.1 Flash Lite. Complete preview includes local UI corrections with no additional AI call. Workout artwork is vector illustration, not generated photography.</p><div class="ft-prompt-text">Create a premium, modern fitness tracking mobile app called FitTrack.
+
+Design 3 connected screens:
+1. Home Dashboard: Show a personalized greeting, daily activity progress, step count, calories burned, workout duration, a weekly activity chart, and a prominent Start Workout button.
+2. Workout Screen: Show workout categories, exercise cards with thumbnails, duration, difficulty level, and a clear Start Session button.
+3. Profile Screen: Show a profile header, fitness goal progress, weekly workout statistics, achievements, and settings.
+
+Visual requirements:
+- Premium, production-quality UI similar to a top-tier fitness startup.
+- Dark background (#101114), subtle surfaces (#1C1D22), electric lime accent (#C6FF4D), white typography.
+- Strong visual hierarchy, consistent spacing, rounded cards, realistic data, and polished icons.
+- Use meaningful workout images where image generation is supported.
+- Avoid empty spaces, oversized blank cards, generic layouts, and placeholder content.
+- Make every screen visually complete and responsive.
+- Ensure all three screens share the same design system.
+
+Generate the actual UI, not a description of the UI.
+</div></div>
+<script>
+(function(){
+const root=document.getElementById('fittrack-review');
+root.querySelectorAll('[data-ft-target]').forEach(button=>button.addEventListener('click',()=>{const screen=root.querySelector('[data-ft-screen="'+button.dataset.ftTarget+'"]');root.querySelectorAll('.ft-phone').forEach(p=>p.classList.remove('ft-focused'));screen.classList.add('ft-focused');screen.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'nearest'});}));
+const filter=()=>{const category=root.querySelector('[data-category].active').dataset.category;const term=root.querySelector('input[type="search"]').value.toLowerCase();root.querySelectorAll('[data-workout-category]').forEach(card=>card.hidden=!(category==='all'||category===card.dataset.workoutCategory)||!card.textContent.toLowerCase().includes(term));};
+root.querySelectorAll('[data-category]').forEach(button=>button.addEventListener('click',()=>{root.querySelectorAll('[data-category]').forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button));});filter();}));root.querySelector('input[type="search"]').addEventListener('input',filter);
+let session=false;root.querySelector('[data-start-session]').addEventListener('click',event=>{session=!session;root.querySelector('.ft-session').textContent=session?'Session active · Full Body Strength':'Ready for your Full Body Strength session';event.currentTarget.textContent=session?'Pause Session':'Start Session · 35 min';});
+})();
+</script>
+</div>

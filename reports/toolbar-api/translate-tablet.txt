@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toolbar Test</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #0b0c0e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+
+  .c-bg { background: #101114; }
+  .c-fg { color: #ffffff; }
+  .c-card-bg { background: #1C1D22; }
+  .c-primary-bg { background: #C6FF4D; }
+  .c-primary-fg { color: #101114; }
+
+  .demo {
+    width: 768px;
+    min-height: 600px;
+    padding: 32px;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .demo h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .demo > p {
+    font-size: 14px;
+    color: #9ca3af;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    flex-grow: 1;
+    align-content: start;
+    margin-bottom: 32px;
+  }
+
+  .card {
+    padding: 24px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .card h2 {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: #9ca3af;
+    line-height: 1.5;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+
+  .card button {
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    width: fit-content;
+  }
+
+  .c-primary-bg:hover {
+    opacity: 0.9;
+  }
+
+  nav {
+    display: flex;
+    gap: 12px;
+    background: rgba(28, 29, 34, 0.7);
+    padding: 12px;
+    border-radius: 14px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  nav button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    background: transparent;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  nav button:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  nav button:first-child {
+    background: rgba(198, 255, 77, 0.1);
+    color: #C6FF4D;
+    border: 1px solid rgba(198, 255, 77, 0.2);
+  }
+</style>
+</head>
+<body>
+<div data-generated-ui>
+  <main class="demo c-bg c-fg">
+    <div class="header-area">
+      <h1>Toolbar Test</h1>
+      <p>Synthetic software test fixture. No personal information.</p>
+    </div>
+    
+    <div class="content-grid">
+      <section class="card c-card-bg">
+        <div>
+          <h2>Demo section</h2>
+          <p>Example interface content structured for tablet viewports.</p>
+        </div>
+        <button class="c-primary-bg c-primary-fg">Demo action</button>
+      </section>
+
+      <section class="card c-card-bg">
+        <div>
+          <h2>Secondary Module</h2>
+          <p>Additional test fixture pane layout alignment.</p>
+        </div>
+        <button class="c-primary-bg c-primary-fg">Test Action</button>
+      </section>
+    </div>
+
+    <nav>
+      <button>Home</button>
+      <button>Settings</button>
+    </nav>
+  </main>
+</div>
+</body>
+</html>

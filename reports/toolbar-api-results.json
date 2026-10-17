@@ -1,0 +1,74 @@
+[
+  {
+    "name": "convert-react",
+    "status": "PASS",
+    "seconds": 6.269,
+    "characters": 2252
+  },
+  {
+    "name": "convert-vue",
+    "status": "PASS",
+    "seconds": 6.317,
+    "characters": 1861
+  },
+  {
+    "name": "convert-angular",
+    "status": "PASS",
+    "seconds": 8.913,
+    "characters": 2235
+  },
+  {
+    "name": "convert-svelte",
+    "status": "PASS",
+    "seconds": 7.906,
+    "characters": 1972
+  },
+  {
+    "name": "translate-mobile",
+    "status": "PASS",
+    "seconds": 11.376,
+    "characters": 3844
+  },
+  {
+    "name": "translate-tablet",
+    "status": "PASS",
+    "seconds": 9.443,
+    "characters": 3587
+  },
+  {
+    "name": "translate-web",
+    "status": "PASS",
+    "seconds": 11.087,
+    "characters": 4845
+  },
+  {
+    "name": "workflow-0",
+    "status": "PASS",
+    "seconds": 15.839,
+    "characters": 13327
+  },
+  {
+    "name": "workflow-1",
+    "status": "PASS",
+    "seconds": 17.662,
+    "characters": 11164
+  },
+  {
+    "name": "workflow-3",
+    "status": "PASS",
+    "seconds": 17.074,
+    "characters": 10993
+  },
+  {
+    "name": "chat-redesign",
+    "status": "PASS",
+    "seconds": 23.495,
+    "characters": 4108
+  },
+  {
+    "name": "workflow-2",
+    "status": "PASS",
+    "seconds": 18.278,
+    "characters": 11779
+  }
+]

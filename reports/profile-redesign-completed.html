@@ -1,0 +1,87 @@
+<div id="fittrack-review">
+<style>
+    #fittrack-review { margin: 0; background: #101114; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #fff; }
+    #fittrack-review * { box-sizing: border-box; }
+    #fittrack-review .ft-phone { width: 375px; min-height: 812px; background: #101114; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+    #fittrack-review .ft-content { padding: 20px; flex: 1; overflow-y: auto; }
+    
+    /* Header/Profile */
+    #fittrack-review .ft-profile-hero { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-top: 20px; }
+    #fittrack-review .ft-profile-avatar { width: 64px; height: 64px; border-radius: 20px; background: #1C1D22; border: 1px solid #2a2c33; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #C6FF4D; font-size: 20px; }
+    #fittrack-review .ft-profile-info h2 { margin: 0; font-size: 18px; letter-spacing: -0.3px; }
+    #fittrack-review .ft-profile-info p { margin: 4px 0 0; font-size: 11px; color: #a5a7af; }
+
+    /* Stats Grid */
+    #fittrack-review .ft-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    #fittrack-review .ft-stat-card { background: #1C1D22; padding: 16px 12px; border-radius: 16px; text-align: center; }
+    #fittrack-review .ft-stat-card strong { display: block; font-size: 16px; margin-bottom: 4px; }
+    #fittrack-review .ft-stat-card span { font-size: 9px; color: #a5a7af; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* Goal Card */
+    #fittrack-review .ft-goal-card { background: #1C1D22; padding: 20px; border-radius: 20px; margin-bottom: 24px; border: 1px solid #25262b; }
+    #fittrack-review .ft-goal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    #fittrack-review .ft-progress-bar { height: 8px; background: #101114; border-radius: 4px; margin: 12px 0; overflow: hidden; }
+    #fittrack-review .ft-progress-fill { height: 100%; background: #C6FF4D; width: 75%; border-radius: 4px; }
+
+    /* Badges */
+    #fittrack-review .ft-badges-row { display: flex; gap: 12px; margin-bottom: 24px; }
+    #fittrack-review .ft-badge-item { flex: 1; background: #1C1D22; padding: 12px; border-radius: 16px; text-align: center; font-size: 9px; color: #a5a7af; }
+    #fittrack-review .ft-badge-icon { margin-bottom: 8px; color: #C6FF4D; }
+
+    /* Settings */
+    #fittrack-review .ft-settings-list { background: #1C1D22; border-radius: 20px; padding: 0 16px; margin-bottom: 24px; }
+    #fittrack-review .ft-setting-row { display: flex; align-items: center; gap: 12px; padding: 16px 0; border-bottom: 1px solid #25262b; font-size: 13px; }
+    #fittrack-review .ft-setting-row:last-child { border: none; }
+    #fittrack-review .ft-icon { color: #C6FF4D; }
+
+    /* Navigation */
+    #fittrack-review .ft-nav { display: flex; justify-content: space-around; padding: 16px; border-top: 1px solid #1C1D22; background: #101114; }
+    #fittrack-review .ft-nav button { background: none; border: none; color: #7d808a; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; cursor: pointer; }
+    #fittrack-review .ft-nav button.active { color: #C6FF4D; }
+#fittrack-review .ft-phone{width:100%;min-height:1007px}#fittrack-review .ft-nav button{font-family:inherit}#fittrack-review .ft-badge-icon{display:flex;justify-content:center;margin-bottom:10px}#fittrack-review .ft-setting-row .ft-icon{display:inline-flex}#fittrack-review .ft-profile-info p{line-height:1.5}#fittrack-review .ft-content{overflow:visible}</style>
+
+<section class="ft-phone"><div style="display:flex;justify-content:space-between;padding:19px 24px 7px;font-size:11px;font-weight:700"><span>9:41</span><span>●●● ▰</span></div>
+    <div class="ft-content">
+        <div class="ft-profile-hero">
+            <div class="ft-profile-avatar">AJ</div>
+            <div class="ft-profile-info">
+                <h2>Alex Johnson</h2>
+                <p>FitTrack Pro · Your fitness journey</p>
+            </div>
+        </div>
+
+        <div class="ft-stats-grid">
+            <div class="ft-stat-card"><strong>3</strong><span>Workouts</span></div>
+            <div class="ft-stat-card"><strong>118m</strong><span>Duration</span></div>
+            <div class="ft-stat-card"><strong>1245</strong><span>Kcal</span></div>
+        </div>
+
+        <div class="ft-goal-card">
+            <div class="ft-goal-header">
+                <span style="font-size: 12px; font-weight: 600;">Weekly Goal</span>
+                <span style="color: #C6FF4D; font-size: 12px; font-weight: 700;">3/4 Workouts</span>
+            </div>
+            <div class="ft-progress-bar"><div class="ft-progress-fill"></div></div>
+        </div>
+
+        <div class="ft-badges-row">
+            <div class="ft-badge-item"><div class="ft-badge-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flame" aria-hidden="true"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"></path></svg></div>7-day Streak</div>
+            <div class="ft-badge-item"><div class="ft-badge-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-medal" aria-hidden="true"><path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"></path><path d="M11 12 5.12 2.2"></path><path d="m13 12 5.88-9.8"></path><path d="M8 7h8"></path><circle cx="12" cy="17" r="5"></circle><path d="M12 18v-2h-.5"></path></svg></div>First 10</div>
+            <div class="ft-badge-item"><div class="ft-badge-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-footprints" aria-hidden="true"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"></path><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"></path><path d="M16 17h4"></path><path d="M4 13h4"></path></svg></div>50k Steps</div>
+        </div>
+
+        <div class="ft-settings-list">
+            <div class="ft-setting-row"><span class="ft-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round" aria-hidden="true"><circle cx="12" cy="8" r="5"></circle><path d="M20 21a8 8 0 0 0-16 0"></path></svg></span> <span>Personal Details</span></div>
+            <div class="ft-setting-row"><span class="ft-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-target" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></span> <span>Fitness Goals</span></div>
+            <div class="ft-setting-row"><span class="ft-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg></span> <span>Notifications</span></div>
+            <div class="ft-setting-row"><span class="ft-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg></span> <span>Privacy & Security</span></div>
+        </div>
+    </div>
+
+    <nav class="ft-nav">
+        <button><span><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></span>Home</button>
+        <button><span><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dumbbell" aria-hidden="true"><path d="M17.596 12.768a2 2 0 1 0 2.829-2.829l-1.768-1.767a2 2 0 0 0 2.828-2.829l-2.828-2.828a2 2 0 0 0-2.829 2.828l-1.767-1.768a2 2 0 1 0-2.829 2.829z"></path><path d="m2.5 21.5 1.4-1.4"></path><path d="m20.1 3.9 1.4-1.4"></path><path d="M5.343 21.485a2 2 0 1 0 2.829-2.828l1.767 1.768a2 2 0 1 0 2.829-2.829l-6.364-6.364a2 2 0 1 0-2.829 2.829l1.768 1.767a2 2 0 0 0-2.828 2.829z"></path><path d="m9.6 14.4 4.8-4.8"></path></svg></span>Workout</button>
+        <button class="active"><span><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round" aria-hidden="true"><circle cx="12" cy="8" r="5"></circle><path d="M20 21a8 8 0 0 0-16 0"></path></svg></span>Profile</button>
+    </nav>
+</section>
+</div>

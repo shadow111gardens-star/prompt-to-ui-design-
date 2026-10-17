@@ -1,0 +1,60 @@
+import { useState } from 'react';
+
+export default function ToolbarTest(): JSX.Element {
+  const [actionCount, setActionCount] = useState<number>(0);
+  const [activeTab, setActiveTab] = useState<'home' | 'settings'>('home');
+
+  const handleDemoAction = () => {
+    setActionCount((prev) => prev + 1);
+  };
+
+  return (
+    <>
+      <style>{`
+        .c-bg { background: #101114; }
+        .c-fg { color: #ffffff; }
+        .c-card-bg { background: #1C1D22; }
+        .c-primary-bg { background: #C6FF4D; }
+        .c-primary-fg { color: #101114; }
+        .demo { font-family: Arial, sans-serif; padding: 20px; max-width: 375px; }
+        .card { padding: 16px; border-radius: 16px; }
+      `}</style>
+      <main className="demo c-bg c-fg">
+        <h1 className="text-xl font-bold mb-2">Toolbar Test</h1>
+        <p className="text-sm opacity-80 mb-4">Synthetic software test fixture. No personal information.</p>
+        
+        <section className="card c-card-bg mb-4">
+          <h2 className="text-lg font-semibold mb-2">Demo section</h2>
+          <p className="text-sm opacity-80 mb-4">
+            Example interface content. {actionCount > 0 && `Action clicked ${actionCount} times.`}
+          </p>
+          <button 
+            onClick={handleDemoAction}
+            className="c-primary-bg c-primary-fg px-4 py-2 rounded font-medium transition-opacity active:opacity-90 cursor-pointer"
+          >
+            Demo action
+          </button>
+        </section>
+
+        <nav className="flex gap-2">
+          <button 
+            onClick={() => setActiveTab('home')}
+            className={`px-4 py-2 rounded text-sm font-medium transition-colors cursor-pointer ${
+              activeTab === 'home' ? 'bg-zinc-800 text-white' : 'bg-transparent text-zinc-400 hover:text-white'
+            }`}
+          >
+            Home
+          </button>
+          <button 
+            onClick={() => setActiveTab('settings')}
+            className={`px-4 py-2 rounded text-sm font-medium transition-colors cursor-pointer ${
+              activeTab === 'settings' ? 'bg-zinc-800 text-white' : 'bg-transparent text-zinc-400 hover:text-white'
+            }`}
+          >
+            Settings
+          </button>
+        </nav>
+      </main>
+    </>
+  );
+}

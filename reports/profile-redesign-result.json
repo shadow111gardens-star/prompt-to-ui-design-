@@ -1,0 +1,28 @@
+{
+  "checks": {
+    "identity": true,
+    "background": true,
+    "surface": true,
+    "accent": true,
+    "goals": true,
+    "achievements": true,
+    "settings": true,
+    "navigation": true
+  },
+  "usage": {
+    "inputTokens": 13636,
+    "inputTokenDetails": {
+      "noCacheTokens": 13636,
+      "cacheReadTokens": 0
+    },
+    "outputTokens": 1897,
+    "outputTokenDetails": {
+      "textTokens": 1897,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 15533,
+    "reasoningTokens": 0,
+    "cachedInputTokens": 0
+  },
+  "calls": 1
+}

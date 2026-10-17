@@ -1,0 +1,67 @@
+import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-toolbar-test',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <main class="demo c-bg c-fg p-5 max-w-[375px] font-sans">
+      <h1 class="text-xl font-bold mb-2">Toolbar Test</h1>
+      <p class="text-sm opacity-80 mb-4">Synthetic software test fixture. No personal information.</p>
+      
+      <section class="card c-card-bg p-4 rounded-2xl mb-6">
+        <h2 class="text-lg font-semibold mb-2">Demo section</h2>
+        <p class="text-sm opacity-80 mb-4">Example interface content.</p>
+        <button 
+          (click)="onDemoAction()"
+          class="c-primary-bg c-primary-fg px-4 py-2 rounded-lg font-medium transition-opacity active:opacity-90">
+          Demo action
+        </button>
+        @if (actionClicked()) {
+          <p class="text-xs text-[#C6FF4D] mt-2">Action triggered!</p>
+        }
+      </section>
+
+      <nav class="flex gap-2">
+        <button 
+          (click)="setActiveTab('home')"
+          [class.opacity-100]="activeTab() === 'home'"
+          [class.opacity-60]="activeTab() !== 'home'"
+          class="px-4 py-2 rounded-lg bg-[#1C1D22] text-white text-sm font-medium transition-opacity">
+          Home
+        </button>
+        <button 
+          (click)="setActiveTab('settings')"
+          [class.opacity-100]="activeTab() === 'settings'"
+          [class.opacity-60]="activeTab() !== 'settings'"
+          class="px-4 py-2 rounded-lg bg-[#1C1D22] text-white text-sm font-medium transition-opacity">
+          Settings
+        </button>
+      </nav>
+    </main>
+  `,
+  styles: [`
+    .c-bg { background: #101114; }
+    .c-fg { color: #ffffff; }
+    .c-card-bg { background: #1C1D22; }
+    .c-primary-bg { background: #C6FF4D; }
+    .c-primary-fg { color: #101114; }
+    .demo { font-family: Arial, sans-serif; }
+  `]
+})
+export class ToolbarTestComponent {
+  actionClicked = signal<boolean>(false);
+  activeTab = signal<string>('home');
+
+  onDemoAction(): void {
+    this.actionClicked.set(true);
+    setTimeout(() => {
+      this.actionClicked.set(false);
+    }, 2000);
+  }
+
+  setActiveTab(tab: string): void {
+    this.activeTab.set(tab);
+  }
+}

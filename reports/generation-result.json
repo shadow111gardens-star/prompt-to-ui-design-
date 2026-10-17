@@ -1,0 +1,55 @@
+{
+  "prompt": "Design a polished responsive SaaS analytics dashboard named Pulse. Include a sidebar (Overview, Analytics, Customers, Settings), a header with date range and Export button, four KPI cards (Revenue, Active users, Conversion, Churn), a seven-day revenue chart, and a recent-orders table with five rows and status badges. Use realistic sample data, clear hierarchy, accessible contrast and labels. On mobile collapse the sidebar and stack cards. Follow the project design tokens. Use an inline SVG or CSS bar chart with exactly seven labeled daily values, not a placeholder. Give major components unique descriptive IDs. Make the header wrap on narrow screens. Use only the provided token colors including status badges. Return only the generated UI HTML.",
+  "provider": "google",
+  "model": "google/gemini-3.1-flash-lite",
+  "status": 200,
+  "elapsedSeconds": 11.542,
+  "providerRequestsSubmitted": 1,
+  "automaticRetries": 0,
+  "htmlCharacters": 6514,
+  "metadata": {
+    "streamId": "generation-audit",
+    "type": "usage",
+    "usage": {
+      "inputTokens": 1504,
+      "inputTokenDetails": {
+        "noCacheTokens": 1504,
+        "cacheReadTokens": 0
+      },
+      "outputTokens": 2243,
+      "outputTokenDetails": {
+        "textTokens": 2243,
+        "reasoningTokens": 0
+      },
+      "totalTokens": 3747,
+      "reasoningTokens": 0,
+      "cachedInputTokens": 0
+    },
+    "finishReason": "stop",
+    "providerAttemptsLimit": 1
+  },
+  "checks": {
+    "nonempty": true,
+    "wrapper": true,
+    "brand": true,
+    "fourMetrics": true,
+    "table": true,
+    "realChart": false,
+    "componentIds": true,
+    "responsive": true,
+    "noScripts": true,
+    "noMarkdown": true,
+    "cssChartMarksPresent": true
+  },
+  "error": null,
+  "qualityReview": {
+    "cssChartPresent": true,
+    "cssChartSizingIssue": true,
+    "mobileNavigationNotCollapsed": true,
+    "unlabeledSelect": true,
+    "statusColorsOutsideTokens": true,
+    "locallyRepairedFile": "preview.html",
+    "visualBrowserVerification": "Blocked: browser could not reach local preview server",
+    "interactiveExport": "Static design only; export action is not implemented"
+  }
+}

@@ -1,0 +1,132 @@
+<div data-generated-ui>
+<style>
+  .c-bg { background-color: #faf8f5; }
+  .c-fg { color: #2e2925; }
+  .c-card-bg { background-color: #ffffff; }
+  .c-card-fg { color: #2e2925; }
+  .c-primary-bg { background-color: #db2800; }
+  .c-primary-fg { color: #ffffff; }
+  .c-border { border: 1px solid #e4e4e7; }
+  .c-muted-bg { background-color: #f4f4f5; }
+  .status-success { background-color: #d1fae5; color: #065f46; }
+  .status-warning { background-color: #fef3c7; color: #92400e; }
+  
+  body { font-family: 'DM Sans', sans-serif; }
+  h1, h2, h3 { font-family: 'Host Grotesk', sans-serif; }
+  
+  .sidebar-link:hover { background-color: #f4f4f5; color: #db2800; }
+  .btn-hover:hover { opacity: 0.9; cursor: pointer; }
+</style>
+
+<div class="c-bg min-h-screen flex flex-col md:flex-row">
+  <!-- Sidebar -->
+  <aside id="pulse-sidebar" class="w-full md:w-64 c-card-bg c-border p-6 flex flex-col gap-8 flex-shrink-0">
+    <h2 class="text-2xl font-bold">Pulse.</h2>
+    <nav class="space-y-4">
+      <a href="#" class="block p-3 rounded-md sidebar-link font-medium">Overview</a>
+      <a href="#" class="block p-3 rounded-md sidebar-link font-medium">Analytics</a>
+      <a href="#" class="block p-3 rounded-md sidebar-link font-medium">Customers</a>
+      <a href="#" class="block p-3 rounded-md sidebar-link font-medium">Settings</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-6 md:p-12">
+    <!-- Header -->
+    <header id="pulse-header" class="flex flex-wrap items-center justify-between gap-6 mb-12">
+      <div>
+        <h1 class="text-4xl font-bold">Dashboard</h1>
+        <p class="c-fg opacity-80">Welcome back, check your performance metrics.</p>
+      </div>
+      <div class="flex gap-4">
+        <select class="p-3 c-card-bg c-border rounded-md">
+          <option>Last 7 Days</option>
+          <option>Last 30 Days</option>
+        </select>
+        <button id="export-btn" class="c-primary-bg c-primary-fg px-8 py-3 rounded-full font-bold btn-hover">Export Report</button>
+      </div>
+    </header>
+
+    <!-- KPI Cards -->
+    <section id="pulse-kpi-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div class="c-card-bg p-6 rounded-[18px] c-border shadow-sm">
+        <p class="text-sm uppercase tracking-wider opacity-70">Revenue</p>
+        <h3 class="text-2xl font-bold mt-2">$42,500</h3>
+      </div>
+      <div class="c-card-bg p-6 rounded-[18px] c-border shadow-sm">
+        <p class="text-sm uppercase tracking-wider opacity-70">Active Users</p>
+        <h3 class="text-2xl font-bold mt-2">1,240</h3>
+      </div>
+      <div class="c-card-bg p-6 rounded-[18px] c-border shadow-sm">
+        <p class="text-sm uppercase tracking-wider opacity-70">Conversion</p>
+        <h3 class="text-2xl font-bold mt-2">3.2%</h3>
+      </div>
+      <div class="c-card-bg p-6 rounded-[18px] c-border shadow-sm">
+        <p class="text-sm uppercase tracking-wider opacity-70">Churn</p>
+        <h3 class="text-2xl font-bold mt-2">0.8%</h3>
+      </div>
+    </section>
+
+    <!-- Chart Section -->
+    <section id="pulse-chart" class="c-card-bg p-8 rounded-[18px] c-border shadow-md mb-12">
+      <h3 class="text-xl font-semibold mb-8">Weekly Revenue</h3>
+      <div class="flex items-end justify-between h-48 gap-4 px-4">
+        <div class="flex flex-col items-center gap-2"><div class="w-12 c-primary-bg rounded-t-md" style="height: 60%"></div><span class="text-xs">Mon</span></div>
+        <div class="flex flex-col items-center gap-2"><div class="w-12 c-primary-bg rounded-t-md" style="height: 80%"></div><span class="text-xs">Tue</span></div>
+        <div class="flex flex-col items-center gap-2"><div class="w-12 c-primary-bg rounded-t-md" style="height: 40%"></div><span class="text-xs">Wed</span></div>
+        <div class="flex flex-col items-center gap-2"><div class="w-12 c-primary-bg rounded-t-md" style="height: 90%"></div><span class="text-xs">Thu</span></div>
+        <div class="flex flex-col items-center gap-2"><div class="w-12 c-primary-bg rounded-t-md" style="height: 75%"></div><span class="text-xs">Fri</span></div>
+        <div class="flex flex-col items-center gap-2"><div class="w-12 c-primary-bg rounded-t-md" style="height: 50%"></div><span class="text-xs">Sat</span></div>
+        <div class="flex flex-col items-center gap-2"><div class="w-12 c-primary-bg rounded-t-md" style="height: 65%"></div><span class="text-xs">Sun</span></div>
+      </div>
+    </section>
+
+    <!-- Table Section -->
+    <section id="pulse-orders-table" class="c-card-bg p-6 rounded-[18px] c-border shadow-sm overflow-x-auto">
+      <h3 class="text-xl font-semibold mb-6">Recent Orders</h3>
+      <table class="w-full text-left">
+        <thead>
+          <tr class="c-border-b">
+            <th class="pb-4">Order ID</th>
+            <th class="pb-4">Customer</th>
+            <th class="pb-4">Amount</th>
+            <th class="pb-4">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="c-border-t">
+            <td class="py-4">#8821</td>
+            <td class="py-4">Alice Johnson</td>
+            <td class="py-4">$120.00</td>
+            <td class="py-4"><span class="px-3 py-1 rounded-full status-success text-xs font-bold">Completed</span></td>
+          </tr>
+          <tr class="c-border-t">
+            <td class="py-4">#8822</td>
+            <td class="py-4">Bob Smith</td>
+            <td class="py-4">$85.50</td>
+            <td class="py-4"><span class="px-3 py-1 rounded-full status-warning text-xs font-bold">Pending</span></td>
+          </tr>
+          <tr class="c-border-t">
+            <td class="py-4">#8823</td>
+            <td class="py-4">Charlie Day</td>
+            <td class="py-4">$210.00</td>
+            <td class="py-4"><span class="px-3 py-1 rounded-full status-success text-xs font-bold">Completed</span></td>
+          </tr>
+          <tr class="c-border-t">
+            <td class="py-4">#8824</td>
+            <td class="py-4">Diana Prince</td>
+            <td class="py-4">$45.00</td>
+            <td class="py-4"><span class="px-3 py-1 rounded-full status-success text-xs font-bold">Completed</span></td>
+          </tr>
+          <tr class="c-border-t">
+            <td class="py-4">#8825</td>
+            <td class="py-4">Edward Norton</td>
+            <td class="py-4">$300.00</td>
+            <td class="py-4"><span class="px-3 py-1 rounded-full status-warning text-xs font-bold">Pending</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+</div>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics Dashboard - VitalFit</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    background: #090A0D;
+    color: #FFFFFF;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .app-container {
+    width: 375px;
+    background: #101114;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: 90px;
+  }
+
+  /* Header */
+  .header {
+    padding: 20px 20px 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #C6FF4D;
+    color: #101114;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .user-info h1 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFFFFF;
+    line-height: 1.2;
+  }
+
+  .user-info p {
+    font-size: 12px;
+    color: #9BA1A6;
+  }
+
+  .notification-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: #1C1D22;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    cursor: pointer;
+  }
+
+  /* Scrollable Content */
+  .content {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Section Title */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+
+  .time-filter {
+    font-size: 12px;
+    color: #C6FF4D;
+    background: rgba(198, 255, 77, 0.1);
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-weight: 500;
+  }
+
+  /* KPI Grid */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .card {
+    background: #1C1D22;
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .kpi-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .kpi-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .kpi-icon.lime { background: rgba(198, 255, 77, 0.15); color: #C6FF4D; }
+  .kpi-icon.blue { background: rgba(77, 166, 255, 0.15); color: #4DA6FF; }
+
+  .kpi-trend {
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .kpi-trend.positive { color: #C6FF4D; }
+  .kpi-trend.neutral { color: #9BA1A6; }
+
+  .kpi-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+
+  .kpi-label {
+    font-size: 12px;
+    color: #9BA1A6;
+  }
+
+  /* Chart Card */
+  .chart-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .chart-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .chart-main-val {
+    font-size: 24px;
+    font-weight: 700;
+    color: #FFFFFF;
+    letter-spacing: -0.5px;
+  }
+
+  .chart-sub-val {
+    font-size: 12px;
+    color: #9BA1A6;
+  }
+
+  .bar-chart {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 90px;
+    padding-top: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 6px;
+  }
+
+  .bar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .bar-track {
+    height: 70px;
+    width: 24px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    background: #2A2D35;
+    transition: height 0.3s ease;
+  }
+
+  .bar-group.active .bar-fill {
+    background: #C6FF4D;
+  }
+
+  .bar-label {
+    font-size: 11px;
+    color: #9BA1A6;
+  }
+
+  .bar-group.active .bar-label {
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+
+  /* Progress List Card */
+  .progress-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .progress-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+
+  .progress-title {
+    color: #FFFFFF;
+    font-weight: 500;
+  }
+
+  .progress-percentage {
+    color: #9BA1A6;
+    font-weight: 500;
+  }
+
+  .progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: #C6FF4D;
+  }
+
+  .progress-bar-fill.blue { background: #4DA6FF; }
+  .progress-bar-fill.purple { background: #B84DFF; }
+
+  /* Bottom Navigation Bar */
+  .bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 74px;
+    background: #101114;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 10px 10px 10px;
+    z-index: 10;
+  }
+
+  .nav-item {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: #9BA1A6;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 500;
+    width: 60px;
+  }
+
+  .nav-item svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .nav-item.active {
+    color: #C6FF4D;
+  }
+
+  .nav-item.active svg {
+    stroke: #C6FF4D;
+  }
+
+  /* Utility */
+  .c-primary-bg { background: #C6FF4D; }
+  .c-primary-fg { color: #101114; }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="user-profile">
+      <div class="avatar">AS</div>
+      <div class="user-info">
+        <h1>Alex Smith</h1>
+        <p>Analytics Overview</p>
+      </div>
+    </div>
+    <button class="notification-btn" aria-label="Notifications">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Main Scrollable Area -->
+  <main class="content">
+    
+    <!-- Top KPIs -->
+    <div class="kpi-grid">
+      <div class="card kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-icon lime">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+          </div>
+          <span class="kpi-trend positive">+12.4%</span>
+        </div>
+        <div class="kpi-value">8,432</div>
+        <div class="kpi-label">Avg. Daily Steps</div>
+      </div>
+
+      <div class="card kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-icon blue">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+          <span class="kpi-trend neutral">4h 12m</span>
+        </div>
+        <div class="kpi-value">2,850</div>
+        <div class="kpi-label">Calories Burned (kcal)</div>
+      </div>
+    </div>
+
+    <!-- Main Chart Section -->
+    <section class="card chart-card">
+      <div class="section-header">
+        <h2 class="section-title">Weekly Performance</h2>
+        <span class="time-filter">This Week</span>
+      </div>
+      <div class="chart-stats">
+        <div>
+          <div class="chart-main-val">94.2%</div>
+          <div class="chart-sub-val">Goal Achievement Index</div>
+        </div>
+        <div class="kpi-trend positive">+4.1% vs last wk</div>
+      </div>
+      
+      <div class="bar-chart" aria-label="Weekly activity bar chart">
+        <div class="bar-group">
+          <div class="bar-track"><div class="bar-fill" style="height: 60%;"></div></div>
+          <span class="bar-label">M</span>
+        </div>
+        <div class="bar-group">
+          <div class="bar-track"><div class="bar-fill" style="height: 80%;"></div></div>
+          <span class="bar-label">T</span>
+        </div>
+        <div class="bar-group">
+          <div class="bar-track"><div class="bar-fill" style="height: 45%;"></div></div>
+          <span class="bar-label">W</span>
+        </div>
+        <div class="bar-group active">
+          <div class="bar-track"><div class="bar-fill" style="height: 95%;"></div></div>
+          <span class="bar-label">T</span>
+        </div>
+        <div class="bar-group">
+          <div class="bar-track"><div class="bar-fill" style="height: 70%;"></div></div>
+          <span class="bar-label">F</span>
+        </div>
+        <div class="bar-group">
+          <div class="bar-track"><div class="bar-fill" style="height: 85%;"></div></div>
+          <span class="bar-label">S</span>
+        </div>
+        <div class="bar-group">
+          <div class="bar-track"><div class="bar-fill" style="height: 50%;"></div></div>
+          <span class="bar-label">S</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detailed Progress Goals -->
+    <section class="card progress-card">
+      <div class="section-header">
+        <h2 class="section-title">Metric Breakdown</h2>
+        <span class="time-filter">Updated Today</span>
+      </div>
+      
+      <div class="progress-item">
+        <div class="progress-info">
+          <span class="progress-title">Cardiovascular Load</span>
+          <span class="progress-percentage">88%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 88%;"></div>
+        </div>
+      </div>
+
+      <div class="progress-item">
+        <div class="progress-info">
+          <span class="progress-title">Recovery Efficiency</span>
+          <span class="progress-percentage">74%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill blue" style="width: 74%;"></div>
+        </div>
+      </div>
+
+      <div class="progress-item">
+        <div class="progress-info">
+          <span class="progress-title">Sleep Quality Score</span>
+          <span class="progress-percentage">92%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill purple" style="width: 92%;"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="nav-item" aria-label="Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-item active" aria-label="Analytics">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+      <span>Analytics</span>
+    </button>
+    <button class="nav-item" aria-label="Goals">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+      <span>Goals</span>
+    </button>
+    <button class="nav-item" aria-label="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      <span>Settings</span>
+    </button>
+  </nav>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<template>
+  <main class="demo c-bg c-fg max-w-[375px] p-5 font-sans">
+    <h1 class="text-xl font-bold mb-1">Toolbar Test</h1>
+    <p class="text-sm opacity-80 mb-4">Synthetic software test fixture. No personal information.</p>
+    
+    <section class="card c-card-bg p-4 rounded-2xl mb-6">
+      <h2 class="text-lg font-semibold mb-2">Demo section</h2>
+      <p class="text-sm opacity-85 mb-4">Example interface content.</p>
+      
+      <button 
+        @click="handleDemoAction"
+        class="c-primary-bg c-primary-fg px-4 py-2 rounded-lg font-medium transition-opacity hover:opacity-90 active:scale-95"
+      >
+        {{ actionButtonText }}
+      </button>
+    </section>
+
+    <nav class="flex gap-4 border-t border-gray-800 pt-4">
+      <button 
+        v-for="tab in navigationTabs" 
+        :key="tab.id"
+        @click="activeTab = tab.id"
+        :class="[
+          'px-3 py-1.5 rounded-md text-sm transition-colors',
+          activeTab === tab.id ? 'c-primary-bg c-primary-fg font-bold' : 'hover:bg-white/5 opacity-70 hover:opacity-100'
+        ]"
+      >
+        {{ tab.name }}
+      </button>
+    </nav>
+  </main>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+
+interface Tab {
+  id: string
+  name: string
+}
+
+const actionButtonText = ref<string>('Demo action')
+const activeTab = ref<string>('home')
+
+const navigationTabs = ref<Tab[]>([
+  { id: 'home', name: 'Home' },
+  { id: 'settings', name: 'Settings' }
+])
+
+const handleDemoAction = (): void => {
+  actionButtonText.value = 'Action Clicked!'
+  setTimeout(() => {
+    actionButtonText.value = 'Demo action'
+  }, 1500)
+}
+</script>
+
+<style scoped>
+.c-bg {
+  background: #101114;
+}
+.c-fg {
+  color: #ffffff;
+}
+.c-card-bg {
+  background: #1C1D22;
+}
+.c-primary-bg {
+  background: #C6FF4D;
+}
+.c-primary-fg {
+  color: #101114;
+}
+.demo {
+  font-family: Arial, sans-serif;
+}
+</style>

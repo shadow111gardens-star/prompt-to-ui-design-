@@ -1,0 +1,606 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Pulse generation test</title><style>/*! tailwindcss v4.3.0 | MIT License | https://tailwindcss.com */
+@layer properties;
+@layer theme, base, components, utilities;
+@layer theme {
+  :root, :host {
+    --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+      "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
+    --spacing: 0.25rem;
+    --text-xs: 0.75rem;
+    --text-xs--line-height: calc(1 / 0.75);
+    --text-sm: 0.875rem;
+    --text-sm--line-height: calc(1.25 / 0.875);
+    --text-xl: 1.25rem;
+    --text-xl--line-height: calc(1.75 / 1.25);
+    --text-2xl: 1.5rem;
+    --text-2xl--line-height: calc(2 / 1.5);
+    --text-4xl: 2.25rem;
+    --text-4xl--line-height: calc(2.5 / 2.25);
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --tracking-wider: 0.05em;
+    --radius-md: 0.375rem;
+    --default-font-family: var(--font-sans);
+    --default-mono-font-family: var(--font-mono);
+  }
+}
+@layer base {
+  *, ::after, ::before, ::backdrop, ::file-selector-button {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+  }
+  html, :host {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+    font-feature-settings: var(--default-font-feature-settings, normal);
+    font-variation-settings: var(--default-font-variation-settings, normal);
+    -webkit-tap-highlight-color: transparent;
+  }
+  hr {
+    height: 0;
+    color: inherit;
+    border-top-width: 1px;
+  }
+  abbr:where([title]) {
+    -webkit-text-decoration: underline dotted;
+    text-decoration: underline dotted;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+  a {
+    color: inherit;
+    -webkit-text-decoration: inherit;
+    text-decoration: inherit;
+  }
+  b, strong {
+    font-weight: bolder;
+  }
+  code, kbd, samp, pre {
+    font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+    font-feature-settings: var(--default-mono-font-feature-settings, normal);
+    font-variation-settings: var(--default-mono-font-variation-settings, normal);
+    font-size: 1em;
+  }
+  small {
+    font-size: 80%;
+  }
+  sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+  sub {
+    bottom: -0.25em;
+  }
+  sup {
+    top: -0.5em;
+  }
+  table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+  }
+  :-moz-focusring {
+    outline: auto;
+  }
+  progress {
+    vertical-align: baseline;
+  }
+  summary {
+    display: list-item;
+  }
+  ol, ul, menu {
+    list-style: none;
+  }
+  img, svg, video, canvas, audio, iframe, embed, object {
+    display: block;
+    vertical-align: middle;
+  }
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+  button, input, select, optgroup, textarea, ::file-selector-button {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    border-radius: 0;
+    background-color: transparent;
+    opacity: 1;
+  }
+  :where(select:is([multiple], [size])) optgroup {
+    font-weight: bolder;
+  }
+  :where(select:is([multiple], [size])) optgroup option {
+    padding-inline-start: 20px;
+  }
+  ::file-selector-button {
+    margin-inline-end: 4px;
+  }
+  ::placeholder {
+    opacity: 1;
+  }
+  @supports (not (-webkit-appearance: -apple-pay-button))  or (contain-intrinsic-size: 1px) {
+    ::placeholder {
+      color: currentcolor;
+      @supports (color: color-mix(in lab, red, red)) {
+        color: color-mix(in oklab, currentcolor 50%, transparent);
+      }
+    }
+  }
+  textarea {
+    resize: vertical;
+  }
+  ::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+  ::-webkit-date-and-time-value {
+    min-height: 1lh;
+    text-align: inherit;
+  }
+  ::-webkit-datetime-edit {
+    display: inline-flex;
+  }
+  ::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+  }
+  ::-webkit-datetime-edit, ::-webkit-datetime-edit-year-field, ::-webkit-datetime-edit-month-field, ::-webkit-datetime-edit-day-field, ::-webkit-datetime-edit-hour-field, ::-webkit-datetime-edit-minute-field, ::-webkit-datetime-edit-second-field, ::-webkit-datetime-edit-millisecond-field, ::-webkit-datetime-edit-meridiem-field {
+    padding-block: 0;
+  }
+  ::-webkit-calendar-picker-indicator {
+    line-height: 1;
+  }
+  :-moz-ui-invalid {
+    box-shadow: none;
+  }
+  button, input:where([type="button"], [type="reset"], [type="submit"]), ::file-selector-button {
+    appearance: button;
+  }
+  ::-webkit-inner-spin-button, ::-webkit-outer-spin-button {
+    height: auto;
+  }
+  [hidden]:where(:not([hidden="until-found"])) {
+    display: none !important;
+  }
+}
+@layer utilities {
+  .mt-2 {
+    margin-top: calc(var(--spacing) * 2);
+  }
+  .mb-6 {
+    margin-bottom: calc(var(--spacing) * 6);
+  }
+  .mb-8 {
+    margin-bottom: calc(var(--spacing) * 8);
+  }
+  .mb-12 {
+    margin-bottom: calc(var(--spacing) * 12);
+  }
+  .block {
+    display: block;
+  }
+  .flex {
+    display: flex;
+  }
+  .grid {
+    display: grid;
+  }
+  .min-h-full {
+    min-height: 100%;
+  }
+  .w-full {
+    width: 100%;
+  }
+  .min-w-0 {
+    min-width: calc(var(--spacing) * 0);
+  }
+  .flex-1 {
+    flex: 1;
+  }
+  .flex-shrink-0 {
+    flex-shrink: 0;
+  }
+  .grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  .flex-col {
+    flex-direction: column;
+  }
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+  .items-center {
+    align-items: center;
+  }
+  .justify-between {
+    justify-content: space-between;
+  }
+  .gap-4 {
+    gap: calc(var(--spacing) * 4);
+  }
+  .gap-6 {
+    gap: calc(var(--spacing) * 6);
+  }
+  .gap-8 {
+    gap: calc(var(--spacing) * 8);
+  }
+  .space-y-4 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 4) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 4) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .overflow-x-auto {
+    overflow-x: auto;
+  }
+  .rounded-\[18px\] {
+    border-radius: 18px;
+  }
+  .rounded-full {
+    border-radius: calc(infinity * 1px);
+  }
+  .rounded-md {
+    border-radius: var(--radius-md);
+  }
+  .p-3 {
+    padding: calc(var(--spacing) * 3);
+  }
+  .p-6 {
+    padding: calc(var(--spacing) * 6);
+  }
+  .p-8 {
+    padding: calc(var(--spacing) * 8);
+  }
+  .px-3 {
+    padding-inline: calc(var(--spacing) * 3);
+  }
+  .px-8 {
+    padding-inline: calc(var(--spacing) * 8);
+  }
+  .py-1 {
+    padding-block: calc(var(--spacing) * 1);
+  }
+  .py-3 {
+    padding-block: calc(var(--spacing) * 3);
+  }
+  .py-4 {
+    padding-block: calc(var(--spacing) * 4);
+  }
+  .pb-4 {
+    padding-bottom: calc(var(--spacing) * 4);
+  }
+  .text-left {
+    text-align: left;
+  }
+  .text-2xl {
+    font-size: var(--text-2xl);
+    line-height: var(--tw-leading, var(--text-2xl--line-height));
+  }
+  .text-4xl {
+    font-size: var(--text-4xl);
+    line-height: var(--tw-leading, var(--text-4xl--line-height));
+  }
+  .text-sm {
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+  }
+  .text-xl {
+    font-size: var(--text-xl);
+    line-height: var(--tw-leading, var(--text-xl--line-height));
+  }
+  .text-xs {
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+  }
+  .font-bold {
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
+  }
+  .font-medium {
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+  }
+  .font-semibold {
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+  }
+  .tracking-wider {
+    --tw-tracking: var(--tracking-wider);
+    letter-spacing: var(--tracking-wider);
+  }
+  .uppercase {
+    text-transform: uppercase;
+  }
+  .opacity-70 {
+    opacity: 70%;
+  }
+  .opacity-80 {
+    opacity: 80%;
+  }
+  .shadow-md {
+    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-sm {
+    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .md\:w-64 {
+    @media (width >= 48rem) {
+      width: calc(var(--spacing) * 64);
+    }
+  }
+  .md\:grid-cols-2 {
+    @media (width >= 48rem) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .md\:flex-row {
+    @media (width >= 48rem) {
+      flex-direction: row;
+    }
+  }
+  .md\:p-12 {
+    @media (width >= 48rem) {
+      padding: calc(var(--spacing) * 12);
+    }
+  }
+  .lg\:grid-cols-4 {
+    @media (width >= 64rem) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+}
+@property --tw-space-y-reverse {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-font-weight {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-tracking {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-inset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-inset-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-inset-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-ring-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-inset-ring-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-inset-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-ring-inset {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ring-offset-width {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --tw-ring-offset-color {
+  syntax: "*";
+  inherits: false;
+  initial-value: #fff;
+}
+@property --tw-ring-offset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@layer properties {
+  @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
+    *, ::before, ::after, ::backdrop {
+      --tw-space-y-reverse: 0;
+      --tw-font-weight: initial;
+      --tw-tracking: initial;
+      --tw-shadow: 0 0 #0000;
+      --tw-shadow-color: initial;
+      --tw-shadow-alpha: 100%;
+      --tw-inset-shadow: 0 0 #0000;
+      --tw-inset-shadow-color: initial;
+      --tw-inset-shadow-alpha: 100%;
+      --tw-ring-color: initial;
+      --tw-ring-shadow: 0 0 #0000;
+      --tw-inset-ring-color: initial;
+      --tw-inset-ring-shadow: 0 0 #0000;
+      --tw-ring-inset: initial;
+      --tw-ring-offset-width: 0px;
+      --tw-ring-offset-color: #fff;
+      --tw-ring-offset-shadow: 0 0 #0000;
+    }
+  }
+}
+</style></head><body><div data-generated-ui>
+<style>
+  .c-bg { background-color: #faf8f5; }
+  .c-fg { color: #2e2925; }
+  .c-card-bg { background-color: #ffffff; }
+  .c-card-fg { color: #2e2925; }
+  .c-primary-bg { background-color: #db2800; }
+  .c-primary-fg { color: #ffffff; }
+  .c-border { border: 1px solid #e4e4e7; }
+  .c-muted-bg { background-color: #f4f4f5; }
+  .status-success { background-color: #ffffff; color: #2e2925; border:1px solid #e4e4e7; }
+  .status-warning { background-color: #faf8f5; color: #2e2925; border:1px solid #e4e4e7; }
+  
+  body { font-family: 'DM Sans', sans-serif; }
+  h1, h2, h3 { font-family: 'Host Grotesk', sans-serif; }
+  
+  .sidebar-link:hover { background-color: #f4f4f5; color: #db2800; }
+  .btn-hover:hover { opacity: 0.9; cursor: pointer; }
+[data-generated-ui] .revenue-bars {display:flex;gap:clamp(4px,2vw,24px);height:240px;align-items:stretch;overflow:hidden}
+[data-generated-ui] .revenue-day {flex:1;min-width:0;height:200px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;font-size:12px}
+[data-generated-ui] .revenue-bar {width:100%;max-width:48px;min-height:8px;border-radius:6px 6px 0 0;flex-shrink:1}
+[data-generated-ui] .revenue-value {font-size:10px;white-space:nowrap}
+[data-generated-ui] a:focus-visible,[data-generated-ui] button:focus-visible,[data-generated-ui] select:focus-visible {outline:2px solid #db2800;outline-offset:3px}
+@media(min-width:768px){[data-generated-ui] .mobile-navigation summary{display:none}}
+@media(max-width:767px){[data-generated-ui] #pulse-sidebar{padding:16px}[data-generated-ui] .mobile-navigation summary{cursor:pointer}}
+</style>
+
+<div class="c-bg min-h-full flex flex-col md:flex-row">
+  <!-- Sidebar -->
+  <aside id="pulse-sidebar" class="w-full md:w-64 c-card-bg c-border p-6 flex flex-col gap-8 flex-shrink-0">
+    <h2 class="text-2xl font-bold">Pulse.</h2>
+    <details class="mobile-navigation" open><summary>Navigation</summary><nav aria-label="Main navigation" class="space-y-4">
+      <a href="#" class="block p-3 rounded-md sidebar-link font-medium">Overview</a>
+      <a href="#" class="block p-3 rounded-md sidebar-link font-medium">Analytics</a>
+      <a href="#" class="block p-3 rounded-md sidebar-link font-medium">Customers</a>
+      <a href="#" class="block p-3 rounded-md sidebar-link font-medium">Settings</a>
+    </nav></details>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 min-w-0 p-6 md:p-12">
+    <!-- Header -->
+    <header id="pulse-header" class="flex flex-wrap items-center justify-between gap-6 mb-12">
+      <div>
+        <h1 class="text-4xl font-bold">Dashboard</h1>
+        <p class="c-fg opacity-80">Welcome back, check your performance metrics.</p>
+      </div>
+      <div class="flex flex-wrap gap-4">
+        <select aria-label="Reporting period" class="p-3 c-card-bg c-border rounded-md">
+          <option>Last 7 Days</option>
+          <option>Last 30 Days</option>
+        </select>
+        <button id="export-btn" class="c-primary-bg c-primary-fg px-8 py-3 rounded-full font-bold btn-hover">Export Report</button>
+      </div>
+    </header>
+
+    <!-- KPI Cards -->
+    <section id="pulse-kpi-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div class="c-card-bg p-6 rounded-[18px] c-border shadow-sm">
+        <p class="text-sm uppercase tracking-wider opacity-70">Revenue</p>
+        <h3 class="text-2xl font-bold mt-2">$42,500</h3>
+      </div>
+      <div class="c-card-bg p-6 rounded-[18px] c-border shadow-sm">
+        <p class="text-sm uppercase tracking-wider opacity-70">Active Users</p>
+        <h3 class="text-2xl font-bold mt-2">1,240</h3>
+      </div>
+      <div class="c-card-bg p-6 rounded-[18px] c-border shadow-sm">
+        <p class="text-sm uppercase tracking-wider opacity-70">Conversion</p>
+        <h3 class="text-2xl font-bold mt-2">3.2%</h3>
+      </div>
+      <div class="c-card-bg p-6 rounded-[18px] c-border shadow-sm">
+        <p class="text-sm uppercase tracking-wider opacity-70">Churn</p>
+        <h3 class="text-2xl font-bold mt-2">0.8%</h3>
+      </div>
+    </section>
+
+    <!-- Chart Section -->
+    <section id="pulse-chart" class="c-card-bg p-8 rounded-[18px] c-border shadow-md mb-12">
+      <h3 class="text-xl font-semibold mb-8">Weekly Revenue</h3>
+      <div role="img" aria-label="Seven-day revenue chart: Mon 6000, Tue 8000, Wed 4000, Thu 9000, Fri 7500, Sat 5000, Sun 6500 dollars" class="revenue-bars">
+        <div class="revenue-day"><span class="revenue-value">$6,000</span><div class="revenue-bar c-primary-bg" style="height:60%"></div><span>Mon</span></div>
+        <div class="revenue-day"><span class="revenue-value">$8,000</span><div class="revenue-bar c-primary-bg" style="height:80%"></div><span>Tue</span></div>
+        <div class="revenue-day"><span class="revenue-value">$4,000</span><div class="revenue-bar c-primary-bg" style="height:40%"></div><span>Wed</span></div>
+        <div class="revenue-day"><span class="revenue-value">$9,000</span><div class="revenue-bar c-primary-bg" style="height:90%"></div><span>Thu</span></div>
+        <div class="revenue-day"><span class="revenue-value">$7,500</span><div class="revenue-bar c-primary-bg" style="height:75%"></div><span>Fri</span></div>
+        <div class="revenue-day"><span class="revenue-value">$5,000</span><div class="revenue-bar c-primary-bg" style="height:50%"></div><span>Sat</span></div>
+        <div class="revenue-day"><span class="revenue-value">$6,500</span><div class="revenue-bar c-primary-bg" style="height:65%"></div><span>Sun</span></div>
+      </div>
+    </section>
+
+    <!-- Table Section -->
+    <section id="pulse-orders-table" class="c-card-bg p-6 rounded-[18px] c-border shadow-sm overflow-x-auto">
+      <h3 class="text-xl font-semibold mb-6">Recent Orders</h3>
+      <table class="w-full text-left">
+        <thead>
+          <tr class="c-border-b">
+            <th class="pb-4">Order ID</th>
+            <th class="pb-4">Customer</th>
+            <th class="pb-4">Amount</th>
+            <th class="pb-4">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="c-border-t">
+            <td class="py-4">#8821</td>
+            <td class="py-4">Alice Johnson</td>
+            <td class="py-4">$120.00</td>
+            <td class="py-4"><span class="px-3 py-1 rounded-full status-success text-xs font-bold">Completed</span></td>
+          </tr>
+          <tr class="c-border-t">
+            <td class="py-4">#8822</td>
+            <td class="py-4">Bob Smith</td>
+            <td class="py-4">$85.50</td>
+            <td class="py-4"><span class="px-3 py-1 rounded-full status-warning text-xs font-bold">Pending</span></td>
+          </tr>
+          <tr class="c-border-t">
+            <td class="py-4">#8823</td>
+            <td class="py-4">Charlie Day</td>
+            <td class="py-4">$210.00</td>
+            <td class="py-4"><span class="px-3 py-1 rounded-full status-success text-xs font-bold">Completed</span></td>
+          </tr>
+          <tr class="c-border-t">
+            <td class="py-4">#8824</td>
+            <td class="py-4">Diana Prince</td>
+            <td class="py-4">$45.00</td>
+            <td class="py-4"><span class="px-3 py-1 rounded-full status-success text-xs font-bold">Completed</span></td>
+          </tr>
+          <tr class="c-border-t">
+            <td class="py-4">#8825</td>
+            <td class="py-4">Edward Norton</td>
+            <td class="py-4">$300.00</td>
+            <td class="py-4"><span class="px-3 py-1 rounded-full status-warning text-xs font-bold">Pending</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+</div></body></html>

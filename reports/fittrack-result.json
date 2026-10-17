@@ -1,0 +1,43 @@
+{
+  "prompt": "Create a premium, modern fitness tracking mobile app called FitTrack.\n\nDesign 3 connected screens:\n1. Home Dashboard: Show a personalized greeting, daily activity progress, step count, calories burned, workout duration, a weekly activity chart, and a prominent Start Workout button.\n2. Workout Screen: Show workout categories, exercise cards with thumbnails, duration, difficulty level, and a clear Start Session button.\n3. Profile Screen: Show a profile header, fitness goal progress, weekly workout statistics, achievements, and settings.\n\nVisual requirements:\n- Premium, production-quality UI similar to a top-tier fitness startup.\n- Dark background (#101114), subtle surfaces (#1C1D22), electric lime accent (#C6FF4D), white typography.\n- Strong visual hierarchy, consistent spacing, rounded cards, realistic data, and polished icons.\n- Use meaningful workout images where image generation is supported.\n- Avoid empty spaces, oversized blank cards, generic layouts, and placeholder content.\n- Make every screen visually complete and responsive.\n- Ensure all three screens share the same design system.\n\nGenerate the actual UI, not a description of the UI.\n",
+  "system": "You are a senior mobile product designer. Return a complete runnable HTML fragment with scoped CSS, root id=\"fittrack-app\", and exactly three complete screen sections data-screen=\"home\", data-screen=\"workout\", data-screen=\"profile\". Show all three screens side-by-side as compact mobile designs on desktop, stacking at narrow widths. No libraries, no Tailwind, no external assets, no markdown or explanations. Use premium typography, polished Lucide-style icons, and meaningful inline vector workout illustrations because this text-only call cannot generate photographs. Use a real seven-day chart with visible data marks, an activity progress ring and realistic values. Keep each screen dense but breathable, around 390px wide and 850-1000px tall; no fixed positioning or viewport-height units. Use the exact supplied dark palette and lime accent, never the project's unrelated default theme. Use shared CSS for all screens. Every bottom nav must link to the corresponding screen via data-target=\"home|workout|profile\"; Start Workout and Start Session must have data-target=\"workout\". Include a labeled session status area. No inline handlers or scripts. All content must fit at 320px. No broken images or placeholders. Decorative icons may use CSS or inline SVG. Include accessible labels and unique IDs. Finish all three screens before stopping.",
+  "provider": "google",
+  "model": "google/gemini-3.1-flash-lite",
+  "apiCalls": 1,
+  "automaticRetries": 0,
+  "elapsedSeconds": 10.277,
+  "usage": {
+    "inputTokens": 530,
+    "inputTokenDetails": {
+      "noCacheTokens": 530,
+      "cacheReadTokens": 0
+    },
+    "outputTokens": 2008,
+    "outputTokenDetails": {
+      "textTokens": 2008,
+      "reasoningTokens": 0
+    },
+    "totalTokens": 2538,
+    "reasoningTokens": 0,
+    "cachedInputTokens": 0
+  },
+  "finishReason": "stop",
+  "htmlCharacters": 5962,
+  "testPath": "Project provider registry and AI SDK; direct single call with user theme, not the generation HTTP route",
+  "checks": {
+    "home": true,
+    "workout": true,
+    "profile": true,
+    "lime": true,
+    "noExternalAssets": true,
+    "noScripts": true
+  },
+  "qualityReview": {
+    "originalAIOutput": "Three screens generated but incomplete: blank thumbnails/avatar, missing duration on Home, categories/settings/stat details, unconnected navigation",
+    "localCorrections": "Complete preview adds requested details, vector exercise artwork, functioning local filters/search/session toggle and navigation focus; no extra provider call",
+    "previewSourceChecks": "passed",
+    "visualBrowserVerification": "not performed",
+    "imageGenerationCalls": 0,
+    "applicationBackend": "UI prototype only; does not persist fitness data"
+  }
+}

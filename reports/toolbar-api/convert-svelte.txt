@@ -1,0 +1,78 @@
+<script lang="ts">
+	// Svelte 5 component with interactivity for the demo action and nav buttons
+	let activeTab = $state('Home');
+	let actionClicked = $state(false);
+
+	function handleAction() {
+		actionClicked = !actionClicked;
+	}
+
+	function handleNav(tab: string) {
+		activeTab = tab;
+	}
+</script>
+
+<div data-generated-ui>
+	<main class="demo c-bg c-fg">
+		<h1 class="text-xl font-bold mb-2">Toolbar Test</h1>
+		<p class="text-sm opacity-80 mb-4">Synthetic software test fixture. No personal information.</p>
+		
+		<section class="card c-card-bg mb-4">
+			<h2 class="text-lg font-semibold mb-1">Demo section</h2>
+			<p class="text-sm opacity-80 mb-4">
+				Example interface content. 
+				{#if actionClicked}
+					<span class="block mt-1 text-xs c-primary-fg inline-block px-1.5 py-0.5 rounded c-primary-bg font-bold">Action triggered!</span>
+				{/if}
+			</p>
+			<button 
+				class="c-primary-bg c-primary-fg px-4 py-2 rounded-lg font-medium transition-transform active:scale-95 cursor-pointer"
+				onclick={handleAction}
+			>
+				{actionClicked ? 'Reset action' : 'Demo action'}
+			</button>
+		</section>
+
+		<nav class="flex gap-2">
+			<button 
+				class="px-3 py-1.5 rounded text-sm transition-colors {activeTab === 'Home' ? 'c-primary-bg c-primary-fg font-bold' : 'bg-white/10 hover:bg-white/20'}"
+				onclick={() => handleNav('Home')}
+			>
+				Home
+			</button>
+			<button 
+				class="px-3 py-1.5 rounded text-sm transition-colors {activeTab === 'Settings' ? 'c-primary-bg c-primary-fg font-bold' : 'bg-white/10 hover:bg-white/20'}"
+				onclick={() => handleNav('Settings')}
+			>
+				Settings
+			</button>
+		</nav>
+	</main>
+</div>
+
+<style>
+	.c-bg {
+		background: #101114;
+	}
+	.c-fg {
+		color: #ffffff;
+	}
+	.c-card-bg {
+		background: #1C1D22;
+	}
+	.c-primary-bg {
+		background: #C6FF4D;
+	}
+	.c-primary-fg {
+		color: #101114;
+	}
+	.demo {
+		font-family: Arial, sans-serif;
+		padding: 20px;
+		max-width: 375px;
+	}
+	.card {
+		padding: 16px;
+		border-radius: 16px;
+	}
+</style>

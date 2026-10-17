@@ -1,0 +1,117 @@
+<div data-generated-ui class="c-bg" style="background-color: #faf8f5; color: #2e2925; font-family: 'DM Sans', sans-serif;">
+  <style>
+    .c-bg { background-color: #faf8f5; }
+    .c-fg { color: #2e2925; }
+    .c-card-bg { background-color: #ffffff; }
+    .c-primary-bg { background-color: #db2800; color: #ffffff; }
+    .c-border { border: 1px solid #e4e4e7; }
+    .c-muted-bg { background-color: #f4f4f5; }
+    .rounded-md { border-radius: 18px; }
+    .rounded-full { border-radius: 9999px; }
+    .font-headline { font-family: 'Host Grotesk', sans-serif; }
+    @media (max-width: 1024px) { .sidebar-desktop { display: none; } }
+  </style>
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="sidebar-desktop w-64 c-card-bg c-border p-6 flex flex-col gap-8 fixed h-full">
+      <div class="text-2xl font-bold font-headline">Pulse</div>
+      <nav class="space-y-4">
+        <a href="#" class="block p-3 rounded-md c-primary-bg">Overview</a>
+        <a href="#" class="block p-3 rounded-md hover:c-muted-bg">Analytics</a>
+        <a href="#" class="block p-3 rounded-md hover:c-muted-bg">Customers</a>
+        <a href="#" class="block p-3 rounded-md hover:c-muted-bg">Settings</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-0 lg:ml-64">
+      <header class="c-card-bg p-6 c-border flex justify-between items-center sticky top-0 z-10">
+        <h1 class="text-2xl font-bold font-headline">Dashboard</h1>
+        <div class="flex gap-4">
+          <button class="px-6 py-3 border c-border rounded-full hover:bg-gray-50">Last 30 Days</button>
+          <button class="px-6 py-3 c-primary-bg rounded-full font-bold">Export Report</button>
+        </div>
+      </header>
+
+      <div class="p-6 max-w-7xl mx-auto space-y-8">
+        <!-- KPI Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="c-card-bg p-6 rounded-md c-border shadow-sm">
+            <p class="text-sm opacity-70">Revenue</p>
+            <h3 class="text-2xl font-bold">$42,500</h3>
+          </div>
+          <div class="c-card-bg p-6 rounded-md c-border shadow-sm">
+            <p class="text-sm opacity-70">Active Users</p>
+            <h3 class="text-2xl font-bold">1,284</h3>
+          </div>
+          <div class="c-card-bg p-6 rounded-md c-border shadow-sm">
+            <p class="text-sm opacity-70">Conversion</p>
+            <h3 class="text-2xl font-bold">3.2%</h3>
+          </div>
+          <div class="c-card-bg p-6 rounded-md c-border shadow-sm">
+            <p class="text-sm opacity-70">Churn</p>
+            <h3 class="text-2xl font-bold">0.8%</h3>
+          </div>
+        </section>
+
+        <!-- Chart Section -->
+        <section class="c-card-bg p-6 rounded-md c-border shadow-sm">
+          <h2 class="text-xl font-semibold mb-6">Revenue Overview</h2>
+          <div class="h-64 bg-gray-50 rounded-md flex items-center justify-center border-2 border-dashed c-border">
+            <span class="opacity-50">Revenue Chart Visualization</span>
+          </div>
+        </section>
+
+        <!-- Recent Orders Table -->
+        <section class="c-card-bg p-6 rounded-md c-border shadow-sm">
+          <h2 class="text-xl font-semibold mb-6">Recent Orders</h2>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead>
+                <tr class="border-b c-border">
+                  <th class="pb-4">Order ID</th>
+                  <th class="pb-4">Customer</th>
+                  <th class="pb-4">Amount</th>
+                  <th class="pb-4">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y c-border">
+                <tr>
+                  <td class="py-4">#8821</td>
+                  <td class="py-4">Alice Smith</td>
+                  <td class="py-4">$120.00</td>
+                  <td class="py-4"><span class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-800">Completed</span></td>
+                </tr>
+                <tr>
+                  <td class="py-4">#8822</td>
+                  <td class="py-4">Bob Jones</td>
+                  <td class="py-4">$85.50</td>
+                  <td class="py-4"><span class="px-3 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800">Pending</span></td>
+                </tr>
+                <tr>
+                  <td class="py-4">#8823</td>
+                  <td class="py-4">Charlie Brown</td>
+                  <td class="py-4">$210.00</td>
+                  <td class="py-4"><span class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-800">Completed</span></td>
+                </tr>
+                <tr>
+                  <td class="py-4">#8824</td>
+                  <td class="py-4">Dana White</td>
+                  <td class="py-4">$45.00</td>
+                  <td class="py-4"><span class="px-3 py-1 rounded-full text-xs bg-red-100 text-red-800">Cancelled</span></td>
+                </tr>
+                <tr>
+                  <td class="py-4">#8825</td>
+                  <td class="py-4">Evan Wright</td>
+                  <td class="py-4">$300.00</td>
+                  <td class="py-4"><span class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-800">Completed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>

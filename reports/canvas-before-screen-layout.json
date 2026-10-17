@@ -1,0 +1,37 @@
+{
+  "sketchesData": {
+    "tool": "select",
+    "shapes": {
+      "ids": [
+        "bFHqCx9jOgqzwfEThpBoe"
+      ],
+      "entities": {
+        "bFHqCx9jOgqzwfEThpBoe": {
+          "id": "bFHqCx9jOgqzwfEThpBoe",
+          "type": "generatedui",
+          "x": 100,
+          "y": 100,
+          "w": 375,
+          "h": 987,
+          "uiSpecData": "<div data-generated-ui>\n  <style>\n    .c-bg { background-color: #101114; }\n    .c-fg { color: #ffffff; }\n    .c-card-bg { background-color: #1C1D22; }\n    .c-card-fg { color: #ffffff; }\n    .c-primary-bg { background-color: #C6FF4D; }\n    .c-primary-fg { color: #101114; }\n    .c-secondary-bg { background-color: #2e2925; }\n    .c-secondary-fg { color: #ffffff; }\n    .c-accent-bg { background-color: #C6FF4D; }\n    .c-accent-fg { color: #101114; }\n    .c-border { border-color: #2e2925; }\n    .c-muted-bg { background-color: #1C1D22; }\n    .c-muted-fg { color: #a1a1aa; }\n\n    .rounded-md { border-radius: 18px; }\n    .rounded-pill { border-radius: 9999px; }\n  </style>\n\n  <div class=\"c-bg c-fg min-h-screen pb-24 font-sans\">\n    <header class=\"p-6 sticky top-0 c-bg z-50 border-b c-border\">\n      <h1 class=\"text-2xl font-bold\">Hi, Alex</h1>\n      <p class=\"c-muted-fg\">Ready to crush your goals?</p>\n    </header>\n\n    <main class=\"p-4 space-y-6\">\n      <!-- Daily Progress -->\n      <section id=\"daily-progress\" class=\"c-card-bg p-6 rounded-md shadow-md text-center\">\n        <h2 class=\"text-lg font-semibold mb-6\">Today's Progress</h2>\n        <div class=\"relative w-40 h-40 mx-auto mb-6 flex items-center justify-center\">\n          <svg class=\"w-full h-full\" viewBox=\"0 0 36 36\">\n            <path class=\"text-gray-700\" stroke-width=\"3\" fill=\"none\" d=\"M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831\" />\n            <path class=\"c-accent-bg\" stroke-dasharray=\"75, 100\" stroke-width=\"3\" stroke-linecap=\"round\" fill=\"none\" d=\"M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831\" />\n          </svg>\n          <div class=\"absolute inset-0 flex flex-col items-center justify-center\">\n            <span class=\"text-3xl font-bold\">75%</span>\n          </div>\n        </div>\n        <div class=\"flex justify-between\">\n          <div class=\"text-center\">\n            <div class=\"text-sm c-muted-fg\">Steps</div>\n            <div class=\"font-bold\">8,432</div>\n          </div>\n          <div class=\"text-center\">\n            <div class=\"text-sm c-muted-fg\">Kcal</div>\n            <div class=\"font-bold\">420</div>\n          </div>\n          <div class=\"text-center\">\n            <div class=\"text-sm c-muted-fg\">Mins</div>\n            <div class=\"font-bold\">45</div>\n          </div>\n        </div>\n      </section>\n\n      <!-- Activity Chart -->\n      <section id=\"activity-chart\" class=\"c-card-bg p-6 rounded-md\">\n        <h3 class=\"text-lg mb-6\">Activity Week</h3>\n        <div class=\"flex items-end justify-between h-32 space-x-2\">\n          <div class=\"flex flex-col items-center gap-2 flex-1\"><div class=\"w-full c-muted-bg rounded-t-lg h-16\"></div><span class=\"text-xs\">M</span></div>\n          <div class=\"flex flex-col items-center gap-2 flex-1\"><div class=\"w-full c-muted-bg rounded-t-lg h-24\"></div><span class=\"text-xs\">T</span></div>\n          <div class=\"flex flex-col items-center gap-2 flex-1\"><div class=\"w-full c-accent-bg rounded-t-lg h-28\"></div><span class=\"text-xs\">W</span></div>\n          <div class=\"flex flex-col items-center gap-2 flex-1\"><div class=\"w-full c-muted-bg rounded-t-lg h-20\"></div><span class=\"text-xs\">T</span></div>\n          <div class=\"flex flex-col items-center gap-2 flex-1\"><div class=\"w-full c-muted-bg rounded-t-lg h-12\"></div><span class=\"text-xs\">F</span></div>\n          <div class=\"flex flex-col items-center gap-2 flex-1\"><div class=\"w-full c-muted-bg rounded-t-lg h-24\"></div><span class=\"text-xs\">S</span></div>\n          <div class=\"flex flex-col items-center gap-2 flex-1\"><div class=\"w-full c-muted-bg rounded-t-lg h-16\"></div><span class=\"text-xs\">S</span></div>\n        </div>\n      </section>\n\n      <!-- CTA -->\n      <button id=\"start-workout\" class=\"w-full c-primary-bg c-primary-fg py-4 rounded-pill font-bold text-lg h-[56px] shadow-lg\">\n        Start Workout\n      </button>\n    </main>\n\n    <!-- Bottom Navigation -->\n    <nav class=\"fixed bottom-0 w-full c-card-bg border-t c-border p-4 flex justify-between items-center z-50\">\n      <button id=\"nav-home\" class=\"flex flex-col items-center gap-1 min-w-[44px]\">\n        <span class=\"text-xs\">Home</span>\n      </button>\n      <button id=\"nav-workouts\" class=\"flex flex-col items-center gap-1 min-w-[44px]\">\n        <span class=\"text-xs\">Workouts</span>\n      </button>\n      <button id=\"nav-profile\" class=\"flex flex-col items-center gap-1 min-w-[44px]\">\n        <span class=\"text-xs\">Profile</span>\n      </button>\n    </nav>\n  </div>\n</div>",
+          "sourceFrameId": "2aIkK7BnkLQ-y3b2padte",
+          "isGenerating": false,
+          "stroke": "transparent",
+          "strokeWidth": 0,
+          "fill": null
+        }
+      }
+    },
+    "selected": {},
+    "frameCounter": 2,
+    "past": [],
+    "future": []
+  },
+  "viewportData": {
+    "scale": 0.8434852714084738,
+    "translate": {
+      "x": 107.18819924847645,
+      "y": 117.44381641532266
+    }
+  }
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "name": "convert-react",
+    "status": "FAIL",
+    "error": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "seconds": 2.989
+  },
+  {
+    "name": "convert-vue",
+    "status": "FAIL",
+    "error": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "seconds": 0.777
+  },
+  {
+    "name": "convert-angular",
+    "status": "FAIL",
+    "error": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "seconds": 0.658
+  },
+  {
+    "name": "convert-svelte",
+    "status": "FAIL",
+    "error": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "seconds": 0.565
+  },
+  {
+    "name": "translate-mobile",
+    "status": "FAIL",
+    "error": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "seconds": 1.203
+  },
+  {
+    "name": "translate-tablet",
+    "status": "FAIL",
+    "error": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "seconds": 0.761
+  },
+  {
+    "name": "translate-web",
+    "status": "FAIL",
+    "error": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "seconds": 0.779
+  },
+  {
+    "name": "workflow-0",
+    "status": "FAIL",
+    "error": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "seconds": 1.309
+  },
+  {
+    "name": "workflow-1",
+    "status": "FAIL",
+    "error": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "seconds": 0.668
+  },
+  {
+    "name": "workflow-2",
+    "status": "FAIL",
+    "error": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "seconds": 0.748
+  },
+  {
+    "name": "workflow-3",
+    "status": "FAIL",
+    "error": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "seconds": 0.616
+  },
+  {
+    "name": "chat-redesign",
+    "status": "FAIL",
+    "error": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "seconds": 0.651
+  }
+]

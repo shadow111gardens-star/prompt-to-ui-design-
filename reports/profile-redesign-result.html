@@ -1,0 +1,87 @@
+<div id="fittrack-review">
+<style>
+    #fittrack-review { margin: 0; background: #101114; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #fff; }
+    #fittrack-review * { box-sizing: border-box; }
+    #fittrack-review .ft-phone { width: 375px; min-height: 812px; background: #101114; margin: 0 auto; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+    #fittrack-review .ft-content { padding: 20px; flex: 1; overflow-y: auto; }
+    
+    /* Header/Profile */
+    #fittrack-review .ft-profile-hero { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-top: 20px; }
+    #fittrack-review .ft-profile-avatar { width: 64px; height: 64px; border-radius: 20px; background: #1C1D22; border: 1px solid #2a2c33; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #C6FF4D; font-size: 20px; }
+    #fittrack-review .ft-profile-info h2 { margin: 0; font-size: 18px; letter-spacing: -0.3px; }
+    #fittrack-review .ft-profile-info p { margin: 4px 0 0; font-size: 11px; color: #a5a7af; }
+
+    /* Stats Grid */
+    #fittrack-review .ft-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    #fittrack-review .ft-stat-card { background: #1C1D22; padding: 16px 12px; border-radius: 16px; text-align: center; }
+    #fittrack-review .ft-stat-card strong { display: block; font-size: 16px; margin-bottom: 4px; }
+    #fittrack-review .ft-stat-card span { font-size: 9px; color: #a5a7af; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* Goal Card */
+    #fittrack-review .ft-goal-card { background: #1C1D22; padding: 20px; border-radius: 20px; margin-bottom: 24px; border: 1px solid #25262b; }
+    #fittrack-review .ft-goal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    #fittrack-review .ft-progress-bar { height: 8px; background: #101114; border-radius: 4px; margin: 12px 0; overflow: hidden; }
+    #fittrack-review .ft-progress-fill { height: 100%; background: #C6FF4D; width: 75%; border-radius: 4px; }
+
+    /* Badges */
+    #fittrack-review .ft-badges-row { display: flex; gap: 12px; margin-bottom: 24px; }
+    #fittrack-review .ft-badge-item { flex: 1; background: #1C1D22; padding: 12px; border-radius: 16px; text-align: center; font-size: 9px; color: #a5a7af; }
+    #fittrack-review .ft-badge-icon { margin-bottom: 8px; color: #C6FF4D; }
+
+    /* Settings */
+    #fittrack-review .ft-settings-list { background: #1C1D22; border-radius: 20px; padding: 0 16px; margin-bottom: 24px; }
+    #fittrack-review .ft-setting-row { display: flex; align-items: center; gap: 12px; padding: 16px 0; border-bottom: 1px solid #25262b; font-size: 13px; }
+    #fittrack-review .ft-setting-row:last-child { border: none; }
+    #fittrack-review .ft-icon { color: #C6FF4D; }
+
+    /* Navigation */
+    #fittrack-review .ft-nav { display: flex; justify-content: space-around; padding: 16px; border-top: 1px solid #1C1D22; background: #101114; }
+    #fittrack-review .ft-nav button { background: none; border: none; color: #7d808a; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; cursor: pointer; }
+    #fittrack-review .ft-nav button.active { color: #C6FF4D; }
+</style>
+
+<section class="ft-phone">
+    <div class="ft-content">
+        <div class="ft-profile-hero">
+            <div class="ft-profile-avatar">AJ</div>
+            <div class="ft-profile-info">
+                <h2>Alex Johnson</h2>
+                <p>Pro Member • Since 2023</p>
+            </div>
+        </div>
+
+        <div class="ft-stats-grid">
+            <div class="ft-stat-card"><strong>3</strong><span>Workouts</span></div>
+            <div class="ft-stat-card"><strong>118m</strong><span>Duration</span></div>
+            <div class="ft-stat-card"><strong>1245</strong><span>Kcal</span></div>
+        </div>
+
+        <div class="ft-goal-card">
+            <div class="ft-goal-header">
+                <span style="font-size: 12px; font-weight: 600;">Weekly Goal</span>
+                <span style="color: #C6FF4D; font-size: 12px; font-weight: 700;">3/4 Workouts</span>
+            </div>
+            <div class="ft-progress-bar"><div class="ft-progress-fill"></div></div>
+        </div>
+
+        <div class="ft-badges-row">
+            <div class="ft-badge-item"><div class="ft-badge-icon">🔥</div>7-day Streak</div>
+            <div class="ft-badge-item"><div class="ft-badge-icon">🏅</div>First 10</div>
+            <div class="ft-badge-item"><div class="ft-badge-icon">👣</div>50k Steps</div>
+        </div>
+
+        <div class="ft-settings-list">
+            <div class="ft-setting-row"><span class="ft-icon">👤</span> <span>Personal Details</span></div>
+            <div class="ft-setting-row"><span class="ft-icon">🎯</span> <span>Fitness Goals</span></div>
+            <div class="ft-setting-row"><span class="ft-icon">🔔</span> <span>Notifications</span></div>
+            <div class="ft-setting-row"><span class="ft-icon">🛡️</span> <span>Privacy & Security</span></div>
+        </div>
+    </div>
+
+    <nav class="ft-nav">
+        <button><span>🏠</span>Home</button>
+        <button><span>💪</span>Workout</button>
+        <button class="active"><span>👤</span>Profile</button>
+    </nav>
+</section>
+</div>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toolbar Test</title>
+<style>
+  :root {
+    --bg-color: #101114;
+    --card-bg: #1C1D22;
+    --card-border: #2A2C35;
+    --text-main: #FFFFFF;
+    --text-muted: #9BA1A6;
+    --accent: #C6FF4D;
+    --accent-hover: #b3f235;
+    --accent-fg: #101114;
+    --radius-lg: 16px;
+    --radius-sm: 8px;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+  }
+
+  .demo {
+    width: 100%;
+    max-width: 1600px;
+    background: var(--bg-color);
+    border-radius: 24px;
+    border: 1px solid var(--card-border);
+    padding: 48px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 32px;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 24px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
+    margin-bottom: 8px;
+  }
+
+  header p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+  }
+
+  .nav-desktop {
+    display: flex;
+    gap: 12px;
+  }
+
+  .nav-desktop button {
+    background: var(--card-bg);
+    color: var(--text-main);
+    border: 1px solid var(--card-border);
+    padding: 12px 24px;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .nav-desktop button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .main-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .card h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .card p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .c-primary-bg {
+    background-color: var(--accent);
+  }
+
+  .c-primary-fg {
+    color: var(--accent-fg);
+  }
+
+  button.c-primary-bg {
+    border: none;
+    padding: 14px 28px;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    align-self: flex-start;
+  }
+
+  button.c-primary-bg:hover {
+    background-color: var(--accent-hover);
+  }
+
+  button.c-primary-bg:active {
+    transform: scale(0.98);
+  }
+
+  footer nav {
+    display: none; /* Hidden on 1600px desktop web layout in favor of header/context nav */
+  }
+
+  @media (max-width: 768px) {
+    body {
+      padding: 16px;
+    }
+    .demo {
+      padding: 24px;
+      max-width: 375px;
+    }
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .nav-desktop {
+      display: none;
+    }
+    .main-grid {
+      grid-template-columns: 1fr;
+    }
+    footer nav {
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid var(--card-border);
+      padding-top: 16px;
+    }
+  }
+</style>
+</head>
+<body class="c-bg c-fg">
+  <main class="demo">
+    <header>
+      <div>
+        <h1>Toolbar Test</h1>
+        <p>Synthetic software test fixture. No personal information.</p>
+      </div>
+      <nav class="nav-desktop" aria-label="Desktop Navigation">
+        <button type="button">Home</button>
+        <button type="button">Settings</button>
+      </nav>
+    </header>
+
+    <div class="main-grid">
+      <section class="card c-card-bg">
+        <div>
+          <h2>Demo section</h2>
+          <p>Example interface content scaled and restructured cleanly for 1600px web viewports while preserving exact design system parameters.</p>
+        </div>
+        <button class="c-primary-bg c-primary-fg" type="button">Demo action</button>
+      </section>
+
+      <section class="card c-card-bg">
+        <div>
+          <h2>Diagnostic Panel</h2>
+          <p>Additional context grid unit maintaining consistent card padding, radii, and typography scaling across wide layouts.</p>
+        </div>
+        <button class="c-primary-bg c-primary-fg" type="button">Run Diagnostics</button>
+      </section>
+    </div>
+
+    <footer>
+      <nav aria-label="Mobile Navigation">
+        <button type="button">Home</button>
+        <button type="button">Settings</button>
+      </nav>
+    </footer>
+  </main>
+</body>
+</html>

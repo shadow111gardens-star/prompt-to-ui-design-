@@ -1,0 +1,89 @@
+<div data-generated-ui>
+  <style>
+    .c-bg { background-color: #101114; }
+    .c-fg { color: #ffffff; }
+    .c-card-bg { background-color: #1C1D22; }
+    .c-card-fg { color: #ffffff; }
+    .c-primary-bg { background-color: #C6FF4D; }
+    .c-primary-fg { color: #101114; }
+    .c-secondary-bg { background-color: #2e2925; }
+    .c-secondary-fg { color: #ffffff; }
+    .c-accent-bg { background-color: #C6FF4D; }
+    .c-accent-fg { color: #101114; }
+    .c-border { border-color: #2e2925; }
+    .c-muted-bg { background-color: #1C1D22; }
+    .c-muted-fg { color: #a1a1aa; }
+
+    .rounded-md { border-radius: 18px; }
+    .rounded-pill { border-radius: 9999px; }
+  </style>
+
+  <div class="c-bg c-fg min-h-screen pb-24 font-sans">
+    <header class="p-6 sticky top-0 c-bg z-50 border-b c-border">
+      <h1 class="text-2xl font-bold">Hi, Alex</h1>
+      <p class="c-muted-fg">Ready to crush your goals?</p>
+    </header>
+
+    <main class="p-4 space-y-6">
+      <!-- Daily Progress -->
+      <section id="daily-progress" class="c-card-bg p-6 rounded-md shadow-md text-center">
+        <h2 class="text-lg font-semibold mb-6">Today's Progress</h2>
+        <div class="relative w-40 h-40 mx-auto mb-6 flex items-center justify-center">
+          <svg class="w-full h-full" viewBox="0 0 36 36">
+            <path class="text-gray-700" stroke-width="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path class="c-accent-bg" stroke-dasharray="75, 100" stroke-width="3" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <span class="text-3xl font-bold">75%</span>
+          </div>
+        </div>
+        <div class="flex justify-between">
+          <div class="text-center">
+            <div class="text-sm c-muted-fg">Steps</div>
+            <div class="font-bold">8,432</div>
+          </div>
+          <div class="text-center">
+            <div class="text-sm c-muted-fg">Kcal</div>
+            <div class="font-bold">420</div>
+          </div>
+          <div class="text-center">
+            <div class="text-sm c-muted-fg">Mins</div>
+            <div class="font-bold">45</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Activity Chart -->
+      <section id="activity-chart" class="c-card-bg p-6 rounded-md">
+        <h3 class="text-lg mb-6">Activity Week</h3>
+        <div class="flex items-end justify-between h-32 space-x-2">
+          <div class="flex flex-col items-center gap-2 flex-1"><div class="w-full c-muted-bg rounded-t-lg h-16"></div><span class="text-xs">M</span></div>
+          <div class="flex flex-col items-center gap-2 flex-1"><div class="w-full c-muted-bg rounded-t-lg h-24"></div><span class="text-xs">T</span></div>
+          <div class="flex flex-col items-center gap-2 flex-1"><div class="w-full c-accent-bg rounded-t-lg h-28"></div><span class="text-xs">W</span></div>
+          <div class="flex flex-col items-center gap-2 flex-1"><div class="w-full c-muted-bg rounded-t-lg h-20"></div><span class="text-xs">T</span></div>
+          <div class="flex flex-col items-center gap-2 flex-1"><div class="w-full c-muted-bg rounded-t-lg h-12"></div><span class="text-xs">F</span></div>
+          <div class="flex flex-col items-center gap-2 flex-1"><div class="w-full c-muted-bg rounded-t-lg h-24"></div><span class="text-xs">S</span></div>
+          <div class="flex flex-col items-center gap-2 flex-1"><div class="w-full c-muted-bg rounded-t-lg h-16"></div><span class="text-xs">S</span></div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <button id="start-workout" class="w-full c-primary-bg c-primary-fg py-4 rounded-pill font-bold text-lg h-[56px] shadow-lg">
+        Start Workout
+      </button>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 w-full c-card-bg border-t c-border p-4 flex justify-between items-center z-50">
+      <button id="nav-home" class="flex flex-col items-center gap-1 min-w-[44px]">
+        <span class="text-xs">Home</span>
+      </button>
+      <button id="nav-workouts" class="flex flex-col items-center gap-1 min-w-[44px]">
+        <span class="text-xs">Workouts</span>
+      </button>
+      <button id="nav-profile" class="flex flex-col items-center gap-1 min-w-[44px]">
+        <span class="text-xs">Profile</span>
+      </button>
+    </nav>
+  </div>
+</div>

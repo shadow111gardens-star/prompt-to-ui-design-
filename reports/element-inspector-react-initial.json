@@ -1,0 +1,28 @@
+{
+  "apiCalls": 1,
+  "editedHeading": true,
+  "editedButton": true,
+  "syntaxErrors": [],
+  "characters": 8373,
+  "usage": {
+    "streamId": "inspector-react-smoke",
+    "type": "usage",
+    "providerAttempts": 1,
+    "usage": {
+      "inputTokens": 2443,
+      "inputTokenDetails": {
+        "noCacheTokens": 2443,
+        "cacheReadTokens": 0
+      },
+      "outputTokens": 2697,
+      "outputTokenDetails": {
+        "textTokens": 2697,
+        "reasoningTokens": 0
+      },
+      "totalTokens": 5140,
+      "reasoningTokens": 0,
+      "cachedInputTokens": 0
+    },
+    "finishReason": "stop"
+  }
+}

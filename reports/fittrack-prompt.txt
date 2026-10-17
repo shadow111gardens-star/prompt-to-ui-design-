@@ -1,0 +1,17 @@
+Create a premium, modern fitness tracking mobile app called FitTrack.
+
+Design 3 connected screens:
+1. Home Dashboard: Show a personalized greeting, daily activity progress, step count, calories burned, workout duration, a weekly activity chart, and a prominent Start Workout button.
+2. Workout Screen: Show workout categories, exercise cards with thumbnails, duration, difficulty level, and a clear Start Session button.
+3. Profile Screen: Show a profile header, fitness goal progress, weekly workout statistics, achievements, and settings.
+
+Visual requirements:
+- Premium, production-quality UI similar to a top-tier fitness startup.
+- Dark background (#101114), subtle surfaces (#1C1D22), electric lime accent (#C6FF4D), white typography.
+- Strong visual hierarchy, consistent spacing, rounded cards, realistic data, and polished icons.
+- Use meaningful workout images where image generation is supported.
+- Avoid empty spaces, oversized blank cards, generic layouts, and placeholder content.
+- Make every screen visually complete and responsive.
+- Ensure all three screens share the same design system.
+
+Generate the actual UI, not a description of the UI.

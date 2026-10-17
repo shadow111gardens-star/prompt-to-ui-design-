@@ -1,0 +1,15 @@
+{
+  "htmlEditedText": true,
+  "htmlButton": true,
+  "htmlFontSize": true,
+  "htmlColor": true,
+  "htmlImageSource": true,
+  "htmlNoEditorOverlay": true,
+  "zipFiles": [
+    "index.html",
+    "screens/screen-1.html",
+    "screens/screen-2.html",
+    "screens/screen-3.html"
+  ],
+  "zipAllThreeEdits": true
+}
