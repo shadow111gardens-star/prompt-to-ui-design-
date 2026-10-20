@@ -537,7 +537,7 @@ export default function DesignTokensEditor({
             onChange={(e) => setAiPrompt(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleGenerateTheme()}
             placeholder='e.g. "cyberpunk neon dashboard"'
-            className="flex-1 px-3 py-1.5 text-xs bg-background border border-sidebar-border/60 rounded-lg outline-none focus:border-violet-500/50 text-foreground placeholder:text-muted-foreground/50"
+            className="flex-1 min-w-0 px-3 py-1.5 text-xs bg-background border border-sidebar-border/60 rounded-lg outline-none focus:border-violet-500/50 text-foreground placeholder:text-muted-foreground/50"
             disabled={isGeneratingTheme}
           />
           <Button
@@ -589,7 +589,7 @@ export default function DesignTokensEditor({
         </div>
         <div className="space-y-3.5">
           <div className="space-y-1">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap gap-2 items-center justify-between">
               <div className="space-y-0.5">
                 <span className="text-sm font-semibold text-foreground/80 block">
                   Primary Color
@@ -623,7 +623,7 @@ export default function DesignTokensEditor({
           </div>
 
           <div className="space-y-1">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap gap-2 items-center justify-between">
               <div className="space-y-0.5">
                 <span className="text-sm font-semibold text-foreground/80 block">
                   Background Color
@@ -650,7 +650,7 @@ export default function DesignTokensEditor({
           </div>
 
           <div className="space-y-1">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap gap-2 items-center justify-between">
               <div className="space-y-0.5">
                 <span className="text-sm font-semibold text-foreground/80 block">
                   Text Color
@@ -696,7 +696,7 @@ export default function DesignTokensEditor({
           </h3>
         </div>
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap gap-2 items-center justify-between">
             <div className="space-y-0.5">
               <span className="text-sm font-semibold text-foreground/80 block">
                 Success
@@ -724,7 +724,7 @@ export default function DesignTokensEditor({
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap gap-2 items-center justify-between">
             <div className="space-y-0.5">
               <span className="text-sm font-semibold text-foreground/80 block">
                 Warning
@@ -752,7 +752,7 @@ export default function DesignTokensEditor({
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap gap-2 items-center justify-between">
             <div className="space-y-0.5">
               <span className="text-sm font-semibold text-foreground/80 block">
                 Error
@@ -776,7 +776,7 @@ export default function DesignTokensEditor({
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap gap-2 items-center justify-between">
             <div className="space-y-0.5">
               <span className="text-sm font-semibold text-foreground/80 block">
                 Info
@@ -814,7 +814,7 @@ export default function DesignTokensEditor({
           </h3>
         </div>
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap gap-2 items-center justify-between">
             <div className="space-y-0.5">
               <span className="text-sm font-semibold text-foreground/80 block">
                 Surface Variant
@@ -842,7 +842,7 @@ export default function DesignTokensEditor({
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap gap-2 items-center justify-between">
             <div className="space-y-0.5">
               <span className="text-sm font-semibold text-foreground/80 block">
                 Muted Background
@@ -866,7 +866,7 @@ export default function DesignTokensEditor({
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap gap-2 items-center justify-between">
             <div className="space-y-0.5">
               <span className="text-sm font-semibold text-foreground/80 block">
                 Border Color
@@ -895,7 +895,7 @@ export default function DesignTokensEditor({
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm font-semibold text-foreground/80">
+            <div className="flex flex-wrap gap-2 items-center justify-between text-sm font-semibold text-foreground/80">
               <span>Border Width</span>
               <span className="font-mono text-xs text-muted-foreground">
                 {borderWidth}px
@@ -915,7 +915,7 @@ export default function DesignTokensEditor({
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm font-semibold text-foreground/80">
+            <div className="flex flex-wrap gap-2 items-center justify-between text-sm font-semibold text-foreground/80">
               <span>Overlay Opacity</span>
               <span className="font-mono text-xs text-muted-foreground">
                 {Math.round(overlayOpacity * 100)}%
@@ -993,7 +993,7 @@ export default function DesignTokensEditor({
         </div>
         <div className="space-y-4">
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm font-semibold text-foreground/80">
+            <div className="flex flex-wrap gap-2 items-center justify-between text-sm font-semibold text-foreground/80">
               <span>Card Corners</span>
               <span className="font-mono text-xs text-muted-foreground">
                 {guide.designSystemDetails.cardRadius}px
@@ -1012,7 +1012,7 @@ export default function DesignTokensEditor({
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm font-semibold text-foreground/80">
+            <div className="flex flex-wrap gap-2 items-center justify-between text-sm font-semibold text-foreground/80">
               <span>Button Corners</span>
               <span className="font-mono text-xs text-muted-foreground">
                 {guide.designSystemDetails.buttonRadius >= 32
@@ -1038,7 +1038,7 @@ export default function DesignTokensEditor({
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm font-semibold text-foreground/80">
+            <div className="flex flex-wrap gap-2 items-center justify-between text-sm font-semibold text-foreground/80">
               <span>Minimal Spacing</span>
               <span className="font-mono text-xs text-muted-foreground">
                 {guide.designSystemDetails.spacingUnit}px
@@ -1146,7 +1146,7 @@ export default function DesignTokensEditor({
               }
             }}
             placeholder="Snapshot name..."
-            className="flex-1 px-3 py-1.5 text-xs bg-background border border-sidebar-border/60 rounded-lg outline-none focus:border-primary/50 text-foreground placeholder:text-muted-foreground/50"
+            className="flex-1 min-w-0 px-3 py-1.5 text-xs bg-background border border-sidebar-border/60 rounded-lg outline-none focus:border-primary/50 text-foreground placeholder:text-muted-foreground/50"
           />
           <Button
             size="sm"
@@ -1240,7 +1240,7 @@ export default function DesignTokensEditor({
       </div>
 
       {localMd !== guide.designSystemDetails.designMd && (
-        <div className="p-3 bg-primary/10 border border-primary/20 rounded-xl flex items-center justify-between gap-3">
+        <div className="p-3 bg-primary/10 border border-primary/20 rounded-xl flex flex-wrap gap-2 items-center justify-between gap-3">
           <span className="text-xs text-primary font-semibold leading-normal">
             DESIGN.md edited. Sync changes to update visual controls & mockup.
           </span>
@@ -1259,7 +1259,7 @@ export default function DesignTokensEditor({
   return (
     <div className="flex-1 flex flex-col h-full min-h-0 overflow-hidden bg-background">
       {/* Mac-style Window Header Bar & Autosave Status */}
-      <div className="flex items-center justify-between px-6 bg-card py-3 border-b border-sidebar-border/60 shrink-0">
+      <div className="flex flex-wrap gap-2 items-center justify-between px-6 bg-card py-3 border-b border-sidebar-border/60 shrink-0">
         <div className="flex items-center gap-1.5">
           <div className="size-2.5 rounded-full bg-[#ff5f56]" />
           <div className="size-2.5 rounded-full bg-[#ffbd2e]" />
@@ -1281,14 +1281,14 @@ export default function DesignTokensEditor({
       </div>
 
       {/* Content panel: Split Screen Only */}
-      <div className="grow grid grid-cols-2 gap-6 p-5 min-h-0 overflow-hidden h-full">
+      <div className="grow grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 p-3 sm:p-5 min-h-0 overflow-y-auto lg:overflow-hidden lg:h-full">
         {/* Left Side: Visual Editor (scrollable) */}
-        <div className="h-full overflow-y-auto pr-3 scrollbar-thin scrollbar-thumb-border/40">
+        <div className="min-w-0 lg:h-full lg:overflow-y-auto lg:pr-3 scrollbar-thin scrollbar-thumb-border/40">
           {renderVisualEditor()}
         </div>
 
         {/* Right Side: Markdown Editor (independent scrolling) */}
-        <div className="h-full flex flex-col min-h-0">
+        <div className="min-w-0 min-h-96 lg:min-h-0 lg:h-full flex flex-col">
           {renderMarkdownEditor()}
         </div>
       </div>

@@ -39,8 +39,8 @@ export default function DesignSystemPage() {
   }, [dispatch, projectId]);
 
   return (
-    <div className="h-screen w-screen flex flex-col pt-16 bg-background overflow-hidden">
-      <div className="flex-1 min-h-0 flex flex-col p-6">
+    <div className="openui-workspace-viewport w-full min-w-0 flex flex-col bg-background overflow-hidden">
+      <div className="flex-1 min-h-0 min-w-0 flex flex-col p-3 sm:p-6">
         <div className="flex items-center justify-between pb-2 shrink-0">
           <div>
             <h1 className="text-3xl lg:text-left text-center font-bold text-foreground">

@@ -123,7 +123,7 @@ const ToolBarShapes = () => {
       <div
         role="toolbar"
         aria-label="Drawing tools"
-        className="flex flex-wrap justify-center items-center bg-card/95 border border-border shadow-xl shadow-neutral-950/10 dark:shadow-black/50 gap-1 xl:gap-2 rounded-3xl xl:rounded-full p-2 xl:p-3 backdrop-blur-md"
+        className="flex w-full max-w-full flex-nowrap sm:flex-wrap justify-start sm:justify-center overflow-x-auto items-center bg-card/95 border border-border shadow-xl shadow-neutral-950/10 dark:shadow-black/50 gap-1 2xl:gap-2 rounded-3xl 2xl:rounded-full p-2 2xl:p-3 backdrop-blur-md"
       >
         <TooltipProvider>
           {tools.map((tool) => (
@@ -136,7 +136,7 @@ const ToolBarShapes = () => {
                   size="lg"
                   onClick={() => selectTool(tool.id)}
                   className={cn(
-                    "cursor-pointer rounded-full w-9 h-9 xl:w-12 xl:h-12 p-0 shrink-0 transition-all duration-200",
+                    "cursor-pointer rounded-full w-11 h-11 sm:w-9 sm:h-9 2xl:w-12 2xl:h-12 p-0 shrink-0 transition-all duration-200",
                     currentTool === tool.id
                       ? "text-primary-foreground bg-primary border border-primary/20 shadow-lg shadow-primary/20 scale-105"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent"
@@ -148,7 +148,7 @@ const ToolBarShapes = () => {
               <TooltipContent>{`${tool.label} - ${tool.description}`}</TooltipContent>
             </Tooltip>
           ))}
-          <Tooltip><TooltipTrigger asChild><Button aria-label="Chat" aria-pressed={chatOpen} variant="ghost" size="lg" onClick={()=>window.dispatchEvent(new Event('openui-toggle-project-chat'))} className={cn('h-9 w-9 shrink-0 rounded-full p-0 xl:h-12 xl:w-12',chatOpen?'bg-primary text-primary-foreground':'text-muted-foreground hover:bg-muted')}><MessageSquare className="h-4 w-4"/></Button></TooltipTrigger><TooltipContent>Chat with this project</TooltipContent></Tooltip>
+          <Tooltip><TooltipTrigger asChild><Button aria-label="Chat" aria-pressed={chatOpen} variant="ghost" size="lg" onClick={()=>window.dispatchEvent(new Event('openui-toggle-project-chat'))} className={cn('h-11 w-11 sm:h-9 sm:w-9 shrink-0 rounded-full p-0 2xl:h-12 2xl:w-12',chatOpen?'bg-primary text-primary-foreground':'text-muted-foreground hover:bg-muted')}><MessageSquare className="h-4 w-4"/></Button></TooltipTrigger><TooltipContent>Chat with this project</TooltipContent></Tooltip>
         </TooltipProvider>
       </div>
     </div>

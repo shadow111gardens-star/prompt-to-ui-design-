@@ -233,10 +233,10 @@ export default function FullscreenPreview({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-none sm:max-w-none max-h-none sm:max-h-none w-screen h-screen bg-zinc-950 border-none rounded-none p-0 flex flex-col overflow-hidden [&>button]:hidden">
+      <DialogContent className="max-w-none sm:max-w-none max-h-none sm:max-h-none w-screen h-dvh bg-zinc-950 border-none rounded-none p-0 flex flex-col overflow-hidden [&>button]:hidden">
         <DialogTitle className="sr-only">Fullscreen Preview</DialogTitle>
         {/* Toolbar */}
-        <div className="flex items-center justify-between px-6 py-3 bg-zinc-900/80 border-b border-zinc-800/60 shrink-0">
+        <div className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-6 py-3 bg-zinc-900/80 border-b border-zinc-800/60 shrink-0">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">
               Preview
@@ -282,7 +282,7 @@ export default function FullscreenPreview({
                 className="shadow-2xs text-[11px] h-7 px-2.5 mr-2 bg-zinc-800/80 hover:bg-zinc-700/80 border-zinc-700 text-zinc-300 hover:text-zinc-100 cursor-pointer"
               >
                 <ExternalLink size={12} className="mr-1.5 inline-block" />
-                Open in New Tab
+                <span className="hidden sm:inline">Open in New Tab</span>
               </LiquidGlassButton>
             )}
             <div className="flex items-center gap-1 bg-zinc-800/50 rounded-full p-0.5">

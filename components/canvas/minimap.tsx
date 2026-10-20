@@ -80,17 +80,19 @@ export default function Minimap({
 }: MinimapProps) {
   const minimapRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = React.useState(false);
+  const [mobileOpen,setMobileOpen]=React.useState(false);
 
-  const mouseMoveRef = useRef<((e: MouseEvent) => void) | null>(null);
+  const mouseMoveRef = useRef<((e: PointerEvent) => void) | null>(null);
   const mouseUpRef = useRef<(() => void) | null>(null);
 
   React.useEffect(() => {
     return () => {
       if (mouseMoveRef.current) {
-        window.removeEventListener("mousemove", mouseMoveRef.current);
+        window.removeEventListener("pointermove", mouseMoveRef.current);
       }
       if (mouseUpRef.current) {
-        window.removeEventListener("mouseup", mouseUpRef.current);
+        window.removeEventListener("pointerup", mouseUpRef.current);
+        window.removeEventListener("pointercancel", mouseUpRef.current);
       }
     };
   }, []);
@@ -164,7 +166,7 @@ export default function Minimap({
 
   // Handler for viewport indicator box dragging
   const handleViewportMouseDown = useCallback(
-    (e: React.MouseEvent) => {
+    (e: React.PointerEvent) => {
       if (e.button !== 0) return;
       e.stopPropagation();
       e.preventDefault();
@@ -178,7 +180,7 @@ export default function Minimap({
       const initialWorldCenterY =
         (canvasSize.height / 2 - viewport.translate.y) / viewport.scale;
 
-      const handleMouseMove = (moveEvent: MouseEvent) => {
+      const handleMouseMove = (moveEvent: PointerEvent) => {
         const deltaX = moveEvent.clientX - startClientX;
         const deltaY = moveEvent.clientY - startClientY;
 
@@ -192,8 +194,9 @@ export default function Minimap({
       };
 
       const handleMouseUp = () => {
-        window.removeEventListener("mousemove", handleMouseMove);
-        window.removeEventListener("mouseup", handleMouseUp);
+        window.removeEventListener("pointermove", handleMouseMove);
+        window.removeEventListener("pointerup", handleMouseUp);
+        window.removeEventListener("pointercancel", handleMouseUp);
         mouseMoveRef.current = null;
         mouseUpRef.current = null;
       };
@@ -201,15 +204,16 @@ export default function Minimap({
       mouseMoveRef.current = handleMouseMove;
       mouseUpRef.current = handleMouseUp;
 
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp);
+      window.addEventListener("pointermove", handleMouseMove);
+      window.addEventListener("pointerup", handleMouseUp);
+      window.addEventListener("pointercancel", handleMouseUp);
     },
     [viewport, canvasSize, minimapScale, onNavigate],
   );
 
   // Handler for clicking and dragging the minimap background
   const handleContainerMouseDown = useCallback(
-    (e: React.MouseEvent) => {
+    (e: React.PointerEvent) => {
       if (e.button !== 0) return;
 
       const rect = minimapRef.current?.getBoundingClientRect();
@@ -243,7 +247,7 @@ export default function Minimap({
       const startClientX = e.clientX;
       const startClientY = e.clientY;
 
-      const handleMouseMove = (moveEvent: MouseEvent) => {
+      const handleMouseMove = (moveEvent: PointerEvent) => {
         const deltaX = moveEvent.clientX - startClientX;
         const deltaY = moveEvent.clientY - startClientY;
 
@@ -254,8 +258,9 @@ export default function Minimap({
       };
 
       const handleMouseUp = () => {
-        window.removeEventListener("mousemove", handleMouseMove);
-        window.removeEventListener("mouseup", handleMouseUp);
+        window.removeEventListener("pointermove", handleMouseMove);
+        window.removeEventListener("pointerup", handleMouseUp);
+        window.removeEventListener("pointercancel", handleMouseUp);
         mouseMoveRef.current = null;
         mouseUpRef.current = null;
       };
@@ -263,8 +268,9 @@ export default function Minimap({
       mouseMoveRef.current = handleMouseMove;
       mouseUpRef.current = handleMouseUp;
 
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp);
+      window.addEventListener("pointermove", handleMouseMove);
+      window.addEventListener("pointerup", handleMouseUp);
+      window.addEventListener("pointercancel", handleMouseUp);
     },
     [minimapScale, worldBounds, onNavigate],
   );
@@ -272,10 +278,13 @@ export default function Minimap({
   if (shapes.length === 0) return null;
 
   return (
+    <>
+    <button type="button" aria-label={mobileOpen?'Hide minimap':'Show minimap'} aria-expanded={mobileOpen} onClick={()=>setMobileOpen(value=>!value)} className="fixed bottom-32 right-3 z-50 rounded-lg border border-border bg-card px-3 py-2 text-xs font-semibold shadow-lg sm:hidden">{mobileOpen?'Close map':'Map'}</button>
     <div
       ref={minimapRef}
       className={cn(
-        "fixed bottom-24 right-4 rounded-2xl border border-border/80 dark:border-white/10 bg-card/95 dark:bg-card/90 shadow-2xl shadow-black/10 dark:shadow-black/30 backdrop-blur-md cursor-pointer transition-all duration-300 overflow-hidden z-50",
+        "fixed bottom-44 sm:bottom-36 2xl:bottom-24 right-4 touch-none rounded-2xl border border-border/80 dark:border-white/10 bg-card/95 dark:bg-card/90 shadow-2xl shadow-black/10 dark:shadow-black/30 backdrop-blur-md cursor-pointer transition-all duration-300 overflow-hidden z-50",
+        !mobileOpen && "max-sm:hidden",
         isHovered ? "scale-100 opacity-100" : "scale-95 opacity-90",
       )}
       style={{
@@ -283,7 +292,7 @@ export default function Minimap({
         width: MINIMAP_WIDTH + MINIMAP_PADDING * 2,
         height: MINIMAP_HEIGHT + MINIMAP_PADDING * 2,
       }}
-      onMouseDown={handleContainerMouseDown}
+      onPointerDown={handleContainerMouseDown}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       title="Minimap — click or drag to navigate"
@@ -332,10 +341,11 @@ export default function Minimap({
           strokeWidth={1.5}
           rx={2}
           className="cursor-grab active:cursor-grabbing"
-          onMouseDown={handleViewportMouseDown}
+          onPointerDown={handleViewportMouseDown}
         />
       </svg>
     </div>
+    </>
   );
 }
 

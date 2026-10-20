@@ -195,7 +195,7 @@ export function GeneratorDialog({
       <DialogContent
         onEscapeKeyDown={(e) => e.preventDefault()}
         onPointerDownOutside={(e) => e.preventDefault()}
-        className="z-100 min-w-2xl bg-background border-border text-foreground shadow-2xl rounded-2xl p-0 overflow-hidden max-h-[90vh] flex flex-col"
+        className="z-100 min-w-0 w-[calc(100vw-2rem)] sm:max-w-2xl bg-background border-border text-foreground shadow-2xl rounded-2xl p-0 overflow-hidden max-h-[calc(100dvh-2rem)] flex flex-col"
       >
         <DialogHeader className="p-6 pb-0">
           <DialogTitle className="flex items-center gap-2 text-foreground text-lg font-bold">
@@ -296,7 +296,7 @@ export function GeneratorDialog({
               <Label className="text-xs font-semibold text-muted-foreground">
                 Target Screen Size
               </Label>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[
                   {
                     id: "custom",

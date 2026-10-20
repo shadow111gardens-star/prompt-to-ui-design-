@@ -232,7 +232,7 @@ const InspirationSidebar = ({ isOpen, onClose }: InspirationSidebarProps) => {
   return (
     <div
       className={cn(
-        "fixed left-5 top-1/2 transform -translate-y-1/2 w-80 bg-card/95 border border-border shadow-2xl shadow-neutral-950/20 dark:shadow-black/60 gap-2 p-3 rounded-lg z-50 transition-transform duration-300",
+        "fixed left-5 top-1/2 transform -translate-y-1/2 w-80 max-w-[calc(100vw-2.5rem)] max-h-[calc(100dvh-14rem)] overflow-y-auto bg-card/95 border border-border shadow-2xl shadow-neutral-950/20 dark:shadow-black/60 gap-2 p-3 rounded-lg z-50 transition-transform duration-300",
         isOpen ? "translate-x-0" : "-translate-x-[calc(100%+20px)]",
       )}
     >

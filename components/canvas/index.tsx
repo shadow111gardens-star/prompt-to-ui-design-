@@ -150,7 +150,7 @@ const CanvasContent = () => {
   );
 
   return (
-    <div className="relative flex h-screen w-screen overflow-hidden pt-16 bg-background">
+    <div className="openui-workspace-viewport relative flex w-full min-w-0 overflow-hidden bg-background">
       <TextSidebar isOpen={isSidebarOpen && hasSelectedText} />
       <InspirationSidebar
         isOpen={isInspirationOpen}
@@ -163,7 +163,7 @@ const CanvasContent = () => {
         role="application"
         aria-label="Infinite drawing canvas"
         className={cn(
-          "relative flex-1 h-full overflow-hidden select-none z-0 bg-background",
+          "relative flex-1 min-w-0 h-full overflow-hidden select-none z-0 bg-background",
           {
             "cursor-grabbing": viewport.mode === "panning",
             "cursor-grab":

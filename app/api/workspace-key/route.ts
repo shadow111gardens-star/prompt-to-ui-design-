@@ -1,0 +1,23 @@
+import { NextResponse } from 'next/server';
+import { isLocalKeyAdmin, workspaceKeyStore } from '@/lib/workspace-key';
+
+export const runtime = 'nodejs';
+const headers = { 'Cache-Control': 'no-store' };
+function forbidden() { return NextResponse.json({ error: 'Key management requires the local OpenUI page.' }, { status: 403, headers }); }
+
+export async function GET(request: Request) {
+  // GET returns only metadata; the full key is never persisted or returned again.
+  if (!['localhost', '127.0.0.1', '[::1]'].includes(new URL(request.url).hostname)) return forbidden();
+  try { return NextResponse.json(await workspaceKeyStore.status(), { headers }); }
+  catch { return NextResponse.json({ error: 'Unable to load workspace key.' }, { status: 500, headers }); }
+}
+export async function POST(request: Request) {
+  if (!isLocalKeyAdmin(request)) return forbidden();
+  try { return NextResponse.json(await workspaceKeyStore.generate(), { headers }); }
+  catch { return NextResponse.json({ error: 'Unable to generate workspace key.' }, { status: 500, headers }); }
+}
+export async function DELETE(request: Request) {
+  if (!isLocalKeyAdmin(request)) return forbidden();
+  try { await workspaceKeyStore.revoke(); return NextResponse.json({ configured: false }, { headers }); }
+  catch { return NextResponse.json({ error: 'Unable to revoke workspace key.' }, { status: 500, headers }); }
+}

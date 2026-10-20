@@ -7,7 +7,7 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-dvh">
       {children}
       <Toolbar />
     </div>

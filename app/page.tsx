@@ -31,6 +31,7 @@ import WorkflowSection from "@/components/landing/workflow-section";
 import PricingSection from "@/components/landing/pricing-section";
 import TestimonialsSection from "@/components/landing/testimonials-section";
 import FAQSection from "@/components/landing/faq-section";
+import SiteFooter from "@/components/site/footer";
 
 export default function LandingPage() {
   const [activeTab, setActiveTab] = useState<
@@ -322,7 +323,7 @@ export class PromoCardComponent {}`,
       />
 
       {/* Sticky Header Navbar */}
-      <header className="w-full h-16 border-b border-border/60 bg-background/85 backdrop-blur-md sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-6 lg:px-12 select-none">
+      <header className="w-full h-16 border-b border-border/60 bg-background/85 backdrop-blur-md sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 lg:px-12 select-none">
         <div className="flex items-center gap-3">
           <Link
             href="/"
@@ -349,7 +350,7 @@ export class PromoCardComponent {}`,
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+        <nav className="hidden xl:flex items-center gap-6 lg:gap-8">
           <Link
             href="#features"
             className="text-xs font-semibold text-muted-foreground hover:text-foreground transition"
@@ -376,7 +377,7 @@ export class PromoCardComponent {}`,
           </Link>
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <ThemeToggle />
           <Link href="/dashboard/workspace" className="hidden sm:block">
             <Button className="rounded-full h-10 px-6 w-48 text-sm font-bold bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer shadow-xs active:scale-95 transition flex items-center gap-1.5">
@@ -386,7 +387,10 @@ export class PromoCardComponent {}`,
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-1.5 rounded-lg border border-border bg-card text-foreground hover:bg-secondary transition active:scale-95"
+            aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="landing-mobile-navigation"
+            className="xl:hidden p-2.5 rounded-lg border border-border bg-card text-foreground hover:bg-secondary transition active:scale-95"
           >
             {mobileMenuOpen ? (
               <X className="size-5" />
@@ -397,8 +401,12 @@ export class PromoCardComponent {}`,
         </div>
       </header>
 
+      {mobileMenuOpen && <nav id="landing-mobile-navigation" aria-label="Mobile navigation" className="fixed top-16 inset-x-0 z-50 grid max-h-[calc(100dvh-4rem)] gap-1 overflow-y-auto border-b border-border bg-background p-4 shadow-lg xl:hidden">
+        {[['Features','#features'],['Workflow','#workflow'],['Code Export','#code-export'],['Architecture','#architecture'],['Pricing','#pricing'],['FAQ','#faq'],['Go to Workspace','/dashboard/workspace']].map(([label,href])=><Link key={href} href={href} onClick={()=>setMobileMenuOpen(false)} className="rounded-lg px-4 py-3 text-sm font-medium hover:bg-secondary">{label}</Link>)}
+      </nav>}
+
       {/* Hero Section */}
-      <main className="flex-1 max-w-7xl mx-auto px-12 py-24 space-y-12 z-10">
+      <main className="flex-1 w-full min-w-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-24 space-y-12 z-10">
         <section className="flex flex-col items-center text-center space-y-6 mx-auto pb-4">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/25 bg-primary/5 text-primary text-xs font-bold uppercase tracking-wider animate-pulse">
             <Sparkles className="size-3" />
@@ -429,19 +437,7 @@ export class PromoCardComponent {}`,
                 <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            {/* Star on GitHub */}
-            <a
-              href="https://github.com/scalewithalap/openui"
-              target="_blank"
-              className="hidden sm:flex items-center gap-1.5 rounded-full h-10 px-4 text-xs font-semibold border border-border bg-card hover:bg-secondary cursor-pointer shadow-3xs transition"
-              title="Star OpenUI on GitHub"
-            >
-              <svg viewBox="0 0 24 24" className="size-4 fill-current">
-                <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.137 20.162 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
-              </svg>
-              <span>Star on GitHub</span>
-              <Star className="size-3.5 fill-amber-500 text-amber-500" />
-            </a>
+
           </div>
         </section>
 
@@ -591,7 +587,7 @@ export class PromoCardComponent {}`,
                   <span className="w-3 h-3 rounded-full bg-green-500/80" />
                 </div>
                 {/* Tabs selection */}
-                <div className="flex bg-zinc-900 dark:bg-zinc-950 border border-zinc-800 p-0.5 rounded-lg">
+                <div className="flex max-w-full overflow-x-auto bg-zinc-900 dark:bg-zinc-950 border border-zinc-800 p-0.5 rounded-lg">
                   {(["react", "vue", "svelte", "angular", "html"] as const).map(
                     (tab) => (
                       <button
@@ -646,35 +642,7 @@ export class PromoCardComponent {}`,
         <FAQSection />
       </main>
 
-      {/* Footer */}
-      <footer className="w-full border-t border-border bg-card/45 py-12 px-6 lg:px-12 text-xs text-muted-foreground select-none relative z-10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 mb-8 text-left">
-          <div className="space-y-3 sm:col-span-2">
-            <Link href="/" className="flex w-max items-center transition hover:scale-[1.01]">
-              <Image src="/logo-light.png" alt="OpenUI Logo" width={663} height={182} className="block h-6 w-auto object-contain dark:hidden"/>
-              <Image src="/logo-dark.png" alt="OpenUI Logo" width={663} height={182} className="hidden h-6 w-auto object-contain dark:block"/>
-            </Link>
-            <p className="mt-2 max-w-[280px] text-muted-foreground/85 leading-relaxed">AI-powered UI design platform for generating, editing, and exporting beautiful interfaces. Turn your ideas into production-ready designs.</p>
-          </div>
-          {[
-            { title: 'Product', items: ['Features', 'Pricing', 'Changelog', 'Roadmap'] },
-            { title: 'Resources', items: ['Documentation', 'Templates', 'Showcase', 'Community'] },
-            { title: 'Company', items: ['About', 'Blog', 'Careers', 'Contact'] },
-            { title: 'Legal', items: ['Terms', 'Privacy', 'Security', 'Cookies'] },
-          ].map(({title,items}) => <div key={title} className="space-y-3 flex flex-col">
-            <h5 className="font-bold text-foreground">{title}</h5>
-            {items.map(item => item==='Features'||item==='Pricing'
-              ? <Link key={item} href={item==='Features'?'#features':'#pricing'} className="hover:underline hover:text-foreground transition">{item}</Link>
-              : item==='Contact'
-                ? <a key={item} href="https://x.com/abhay8769" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-foreground transition">{item}</a>
-                : <span key={item}>{item}</span>)}
-          </div>)}
-        </div>
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-border/40 text-[11px]">
-          <span>OpenUI v1.0.0 · Local-first design environment</span>
-          <span>Copyright © 2026 OpenUI. Built with ❤️ by Alap Putatunda.</span>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

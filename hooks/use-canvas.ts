@@ -1,4 +1,5 @@
 "use client";
+import { pinchStep } from '@/lib/canvas-touch';
 import { hasDrawableSize } from "@/lib/canvas-drawing";
 import {
   downloadBlob,
@@ -62,6 +63,7 @@ import {
   wheelPan,
   wheelZoom,
   zoomToFit,
+  zoomBy,
 } from "@/redux/slice/viewport";
 import { AppDispatch, useAppDispatch, useAppSelector } from "@/redux/store";
 import { nanoid } from "@reduxjs/toolkit";
@@ -198,6 +200,7 @@ export const useInfiniteCanvas = () => {
   const canvasRef = useRef<HTMLDivElement | null>(null);
   const [canvasEl, setCanvasEl] = useState<HTMLDivElement | null>(null);
   const touchMapRef = useRef<Map<number, TouchPointer>>(new Map());
+  const touchGestureRef = useRef(false);
 
   const draftShapeRef = useRef<DraftShape | null>(null);
   const freeDrawPointsRef = useRef<Point[]>([]);
@@ -506,6 +509,25 @@ export const useInfiniteCanvas = () => {
     const local = getLocalPointFromPtr(e.nativeEvent);
     const world = screenToWorld(local, viewport.translate, viewport.scale);
 
+    if (e.pointerType === "touch") {
+      touchMapRef.current.set(e.pointerId, { id: e.pointerId, p: local });
+      canvasRef.current?.setPointerCapture?.(e.pointerId);
+      if (touchMapRef.current.size >= 2 || touchGestureRef.current) {
+        touchGestureRef.current = true;
+        // A second finger starts navigation, never commits a half-drawn shape.
+        draftShapeRef.current = null;
+        freeDrawPointsRef.current = [];
+        isDrawingRef.current = false;
+        isMovingRef.current = false;
+        moveStartRef.current = null;
+        isErasingRef.current = false;
+        setConnectorDrag(null);
+        dispatch(panEnd());
+        requestRender();
+        return;
+      }
+    }
+
     if (touchMapRef.current.size <= 1) {
       canvasRef.current?.setPointerCapture?.(e.pointerId);
       const isPanButton = e.button === 1 || e.button === 2;
@@ -667,6 +689,20 @@ export const useInfiniteCanvas = () => {
 
   const onPointerMove: React.PointerEventHandler<HTMLDivElement> = (e) => {
     const local = getLocalPointFromPtr(e.nativeEvent);
+    if (e.pointerType === "touch" && touchGestureRef.current) {
+      e.preventDefault();
+      const before = [...touchMapRef.current.values()].map(touch=>touch.p);
+      const tracked = touchMapRef.current.has(e.pointerId);
+      if (tracked) touchMapRef.current.set(e.pointerId, { id: e.pointerId, p: local });
+      const after = [...touchMapRef.current.values()].map(touch=>touch.p);
+      if (tracked && before.length >= 2 && after.length >= 2) {
+        const step = pinchStep([before[0],before[1]],[after[0],after[1]]);
+        dispatch(zoomBy({ factor: step.factor, originScreen: step.origin }));
+        dispatch(wheelPan({ dx: step.dx / viewport.wheelPanSpeed, dy: step.dy / viewport.wheelPanSpeed }));
+      }
+      return;
+    }
+    if (e.pointerType === "touch" && touchMapRef.current.has(e.pointerId)) touchMapRef.current.set(e.pointerId, { id: e.pointerId, p: local });
     const world = screenToWorld(local, viewport.translate, viewport.scale);
 
     if (currentTool === "laser") {
@@ -796,7 +832,15 @@ export const useInfiniteCanvas = () => {
   };
 
   const onPointerUp: React.PointerEventHandler<HTMLDivElement> = (e) => {
-    canvasRef.current?.releasePointerCapture?.(e.pointerId);
+    if (e.pointerType === "touch") {
+      touchMapRef.current.delete(e.pointerId);
+      if (touchGestureRef.current) {
+        if (canvasRef.current?.hasPointerCapture(e.pointerId)) canvasRef.current.releasePointerCapture(e.pointerId);
+        if (touchMapRef.current.size === 0) touchGestureRef.current = false;
+        return;
+      }
+    }
+    if (canvasRef.current?.hasPointerCapture(e.pointerId)) canvasRef.current.releasePointerCapture(e.pointerId);
 
     const local = getLocalPointFromPtr(e.nativeEvent);
     const world = screenToWorld(local, viewport.translate, viewport.scale);
@@ -837,7 +881,18 @@ export const useInfiniteCanvas = () => {
   };
 
   const onPointerCancel: React.PointerEventHandler<HTMLDivElement> = (e) => {
-    onPointerUp(e);
+    if (e.pointerType !== "touch") { onPointerUp(e); return; }
+    touchMapRef.current.delete(e.pointerId);
+    touchGestureRef.current = touchMapRef.current.size > 0;
+    draftShapeRef.current = null;
+    freeDrawPointsRef.current = [];
+    isDrawingRef.current = false;
+    isMovingRef.current = false;
+    isErasingRef.current = false;
+    setConnectorDrag(null);
+    if (canvasRef.current?.hasPointerCapture(e.pointerId)) canvasRef.current.releasePointerCapture(e.pointerId);
+    dispatch(panEnd());
+    requestRender();
   };
 
   const onKeyDown = (e: KeyboardEvent): void => {

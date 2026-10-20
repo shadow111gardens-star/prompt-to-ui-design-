@@ -12,7 +12,7 @@ const Page = async ({ searchParams }: CanvasPageProps) => {
   const projectId = params.project;
   if (!projectId) {
     return (
-      <div className="w-full h-screen flex items-center justify-center">
+      <div className="w-full h-dvh flex items-center justify-center">
         <p className="text-muted-foreground">No project selected!</p>
       </div>
     );
@@ -22,7 +22,7 @@ const Page = async ({ searchParams }: CanvasPageProps) => {
 
   if (!project) {
     return (
-      <div className="w-full h-screen flex items-center justify-center">
+      <div className="w-full h-dvh flex items-center justify-center">
         <p className="text-red-500">Project not found!</p>
       </div>
     );

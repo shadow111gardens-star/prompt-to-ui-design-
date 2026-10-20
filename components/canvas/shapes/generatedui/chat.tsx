@@ -48,7 +48,7 @@ export default function ChatWindow({ generatedUIId, isOpen, onClose }: Props) {
 
   return (
     <div
-      className="absolute right-0 top-0 bottom-0 w-[360px] z-60 h-full border-l border-sidebar-border bg-sidebar flex flex-col transition-all duration-300 select-none"
+      className="absolute right-0 top-0 bottom-0 w-[360px] max-w-full z-60 h-full border-l border-sidebar-border bg-sidebar flex flex-col transition-all duration-300 select-none"
       style={{
         boxShadow: "-4px 0 16px rgba(0,0,0,0.02)",
       }}

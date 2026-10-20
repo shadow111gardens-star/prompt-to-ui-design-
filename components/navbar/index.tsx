@@ -475,38 +475,42 @@ const Navbar = () => {
 
   const hasCanvas = pathname.includes("canvas");
   const hasStyleGuide = pathname.includes("style-guide");
+  const hasProjectSidebar = /\/dashboard\/[^/]+(?:\/settings)?\/?$/.test(pathname);
+
+  if (pathname.endsWith("/settings") && hasProjectSidebar) return null;
 
   return (
-    <div className="flex items-center justify-between px-6 h-16 fixed top-0 left-0 right-0 z-50 border-b border-border/85 bg-background/95 backdrop-blur-md">
+    <div data-project-header={projectId ? "true" : undefined} className={cn("flex items-center justify-between gap-2 px-3 sm:px-6 h-16 fixed top-0 left-0 right-0 z-50 border-b border-border/85 bg-background/95 backdrop-blur-md",hasProjectSidebar&&"lg:left-60",projectId&&"max-2xl:h-[104px] max-2xl:pb-10")}>
       {/* Left Area: Logo & Project Browser-style Tab */}
-      <div className="flex items-center gap-5 h-full">
+      <div className="flex min-w-0 items-center gap-2 sm:gap-5 h-full">
         {/* Logo */}
         <Link
           href={`/dashboard/workspace`}
-          className="hover:scale-105 transition flex items-center shrink-0"
+          className={cn("hover:scale-105 transition flex items-center shrink-0",hasProjectSidebar&&"lg:hidden",projectId&&"max-sm:hidden")}
         >
           <Image
             src="/logo-light.png"
             alt="OpenUI Logo"
             width={663}
             height={182}
-            className="h-7 w-auto block dark:hidden object-contain"
+            className="h-5 sm:h-7 w-auto block dark:hidden object-contain"
           />
           <Image
             src="/logo-dark.png"
             alt="OpenUI Logo"
             width={663}
             height={182}
-            className="h-7 w-auto hidden dark:block object-contain"
+            className="h-5 sm:h-7 w-auto hidden dark:block object-contain"
           />
         </Link>
 
         {/* Browser Tabs Styled as Pill Container */}
         {projectId && projectName && (
-          <div className="flex items-center gap-1 bg-secondary/70 border border-border/60 p-0.5 rounded-full shadow-3xs h-10 select-none">
+          <div className="flex min-w-0 items-center gap-1 bg-secondary/70 border border-border/60 p-0.5 rounded-full shadow-3xs h-10 select-none">
             {/* Active Project Tab */}
             <div
-              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-card border border-border/40 text-primary shadow-3xs rounded-full text-xs font-semibold select-none cursor-pointer transition-all duration-200"
+              role="button" tabIndex={0} aria-label={`Rename ${projectName}`} onKeyDown={event=>{if(event.target===event.currentTarget && (event.key==="Enter" || event.key===" ")){event.preventDefault();setTempName(projectName);setIsEditingName(true);}}}
+              className="flex items-center gap-1.5 px-2 sm:px-3.5 py-1.5 bg-card border border-border/40 text-primary shadow-3xs rounded-full text-xs font-semibold select-none cursor-pointer transition-all duration-200"
               title="Click to rename"
               onClick={() => {
                 setTempName(projectName);
@@ -528,7 +532,7 @@ const Navbar = () => {
                   className="bg-transparent border-none outline-none text-foreground text-xs font-semibold w-[100px] p-0 focus:ring-0 focus:border-none focus:outline-none"
                 />
               ) : (
-                <span className="max-w-fit truncate cursor-pointer hover:text-primary transition">
+                <span className="hidden sm:block max-w-24 2xl:max-w-40 truncate cursor-pointer hover:text-primary transition">
                   {projectName}
                 </span>
               )}
@@ -537,7 +541,7 @@ const Navbar = () => {
             {/* Plus Tab */}
             <Link
               href="/dashboard/workspace"
-              className="flex items-center justify-center h-8 w-8 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition cursor-pointer"
+              aria-label="View all projects" className="flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition cursor-pointer"
               title="View all projects"
             >
               <Plus className="size-4" />
@@ -547,14 +551,14 @@ const Navbar = () => {
       </div>
 
       {/* Middle Area: Workspace Page Nav Tab Buttons */}
-      <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex items-center justify-center z-10">
+      <div className="absolute inset-x-0 top-16 h-10 flex items-center justify-center overflow-x-auto px-2 z-10 2xl:inset-x-auto 2xl:left-1/2 2xl:-translate-x-1/2 2xl:top-1/2 2xl:-translate-y-1/2 2xl:h-auto 2xl:overflow-visible">
         {projectId && (
-          <div className="flex items-center gap-1 bg-secondary/70 border border-border/60 p-0.5 rounded-full shadow-3xs">
+          <div className="flex shrink-0 items-center gap-1 bg-secondary/70 border border-border/60 p-0.5 rounded-full shadow-3xs">
             {/* Canvas Link */}
             <Link
               href={`/dashboard/workspace/canvas?project=${projectId}`}
               className={cn(
-                "group inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer",
+                "group inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2 sm:px-4 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer",
                 pathname.includes("canvas")
                   ? "bg-card text-primary shadow-3xs border border-border/40"
                   : "text-muted-foreground hover:text-foreground",
@@ -570,7 +574,7 @@ const Navbar = () => {
             <Link
               href={`/dashboard/workspace/design-system?project=${projectId}`}
               className={cn(
-                "group inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer",
+                "group inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2 sm:px-4 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer",
                 pathname.includes("design-system")
                   ? "bg-card text-primary shadow-3xs border border-border/40"
                   : "text-muted-foreground hover:text-foreground",
@@ -586,7 +590,7 @@ const Navbar = () => {
             <Link
               href={`/dashboard/workspace/style-guide?project=${projectId}`}
               className={cn(
-                "group inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer",
+                "group inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2 sm:px-4 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer",
                 pathname.includes("style-guide")
                   ? "bg-card text-primary shadow-3xs border border-border/40"
                   : "text-muted-foreground hover:text-foreground",
@@ -602,19 +606,19 @@ const Navbar = () => {
       </div>
 
       {/* Right Area: Controls & Action Buttons */}
-      <div className="flex items-center gap-2 justify-end">
-        {hasCanvas && <Autosave />}
+      <div className={cn("flex shrink-0 items-center gap-1 sm:gap-2 justify-end",isEditingName&&"max-sm:hidden")}>
+        {hasCanvas && <div className="hidden sm:block"><Autosave /></div>}
         {hasCanvas && (
           <Button
             variant="outline"
             onClick={() =>
               window.dispatchEvent(new CustomEvent("trigger-manual-save"))
             }
-            className="rounded-full h-8 px-4 text-xs font-semibold bg-card border-border hover:bg-secondary cursor-pointer shadow-3xs flex items-center gap-1.5 text-muted-foreground hover:text-foreground active:scale-95 transition"
-            title="Save changes manually"
+            className="rounded-full h-9 px-2 sm:px-4 text-xs font-semibold bg-card border-border hover:bg-secondary cursor-pointer shadow-3xs flex items-center gap-1.5 text-muted-foreground hover:text-foreground active:scale-95 transition"
+            aria-label="Save changes manually" title="Save changes manually"
           >
             <Save className="size-3.5" />
-            <span>Save</span>
+            <span className="hidden lg:inline">Save</span>
           </Button>
         )}
 
@@ -623,11 +627,11 @@ const Navbar = () => {
         {/* Export Button (Coral Primary) */}
         {projectId && (
           <Button
-            onClick={() => setIsExportOpen(true)}
-            className="rounded-full h-8 px-4 text-xs font-semibold bg-primary hover:bg-primary/95 text-primary-foreground shadow-xs active:scale-95 cursor-pointer flex items-center gap-1.5 transition"
+            aria-label="Export project" onClick={() => setIsExportOpen(true)}
+            className="rounded-full h-9 px-2 sm:px-4 text-xs font-semibold bg-primary hover:bg-primary/95 text-primary-foreground shadow-xs active:scale-95 cursor-pointer flex items-center gap-1.5 transition"
           >
             <Download className="size-3.5" />
-            <span>Export</span>
+            <span className="hidden lg:inline">Export</span>
           </Button>
         )}
 
@@ -645,7 +649,7 @@ const Navbar = () => {
               <CircleQuestionMark className="size-4.5 text-muted-foreground" />
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-card border border-border text-foreground min-w-6xl rounded-2xl shadow-2xl p-6 overflow-hidden">
+          <DialogContent className="bg-card border border-border text-foreground min-w-0 w-[calc(100vw-2rem)] sm:max-w-6xl max-h-[calc(100dvh-2rem)] rounded-2xl shadow-2xl p-4 sm:p-6 overflow-y-auto">
             <DialogHeader className="mb-4">
               <DialogTitle className="text-xl font-bold flex items-center gap-2 text-foreground">
                 <Sparkles className="size-5 text-primary" />
@@ -832,7 +836,7 @@ const Navbar = () => {
               </div>
 
               {/* Design Iteration */}
-              <div className="md:col-span-2 space-y-3 rounded-xl border border-border bg-secondary/35 p-4 transition-all duration-300">
+              <div className="md:col-span-3 space-y-3 rounded-xl border border-border bg-secondary/35 p-4 transition-all duration-300">
                 <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-foreground">
                   <Layers className="size-4 text-primary" />
                   Design Iteration & Code Export
@@ -850,61 +854,10 @@ const Navbar = () => {
                 </p>
               </div>
 
-              {/* Meet the Creator */}
-              <div className="md:col-span-1 space-y-3 rounded-xl border border-border bg-secondary/35 p-4 transition-all duration-300 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-foreground">
-                    <Sparkles className="size-4 text-primary animate-pulse" />
-                    Meet the Creator
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
-                    OpenUI is built by{" "}
-                    <a
-                      href="https://scalewithalap.com"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-foreground font-bold hover:underline"
-                    >
-                      Alap Putatunda
-                    </a>
-                    , founder of Scale with Alap and creator of{" "}
-                    <a
-                      href="https://vibe44.com"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-primary font-bold hover:underline"
-                    >
-                      Vibe44
-                    </a>
-                    .
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <a
-                    href="https://scalewithalap.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-muted-foreground hover:text-foreground font-semibold flex items-center gap-0.5"
-                  >
-                    <span>scalewithalap.com</span>
-                    <ExternalLink className="size-2.5" />
-                  </a>
-                  <span className="text-muted-foreground/30">•</span>
-                  <a
-                    href="https://vibe44.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-primary hover:text-primary/80 font-bold flex items-center gap-0.5"
-                  >
-                    <span>vibe44.com</span>
-                    <ExternalLink className="size-2.5" />
-                  </a>
-                </div>
-              </div>
+
             </div>
 
-            <div className="mt-4 pt-4 border-t border-border flex items-center justify-between text-xs text-muted-foreground/60 font-medium">
-              <span>Copyright 2026 © OpenUI, The Designer's Co-pilot</span>
+            <div className="mt-4 pt-4 border-t border-border flex items-center justify-end text-xs text-muted-foreground/60 font-medium">
               <span>v1.0.0</span>
             </div>
           </DialogContent>

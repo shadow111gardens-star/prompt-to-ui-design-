@@ -45,7 +45,7 @@ const StyleGuideTypography = ({ typographyGuide }: Props) => {
                       )}
                     </div>
                     <div
-                      className="text-foreground"
+                      className="break-words text-foreground"
                       style={{
                         fontFamily: style.fontFamily,
                         fontSize: style.fontSize,

@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-20",
+  "results": [
+    {
+      "route": "/features",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/pricing",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/changelog",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/roadmap",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/documentation",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/templates",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/showcase",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/community",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/about",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/blog",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/careers",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/contact",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/terms",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/privacy",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/security",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/cookies",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/blog/better-ui-prompts",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/blog/consistent-screens",
+      "status": 200,
+      "footer": true
+    },
+    {
+      "route": "/blog/export-checklist",
+      "status": 200,
+      "footer": true
+    }
+  ]
+}

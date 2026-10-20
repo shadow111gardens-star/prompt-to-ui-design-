@@ -27,8 +27,8 @@ const tabs = [
 const Layout = ({ children }: Props) => {
   return (
     <Tabs defaultValue="colors" className="w-full">
-      <div className="mt-16 container mx-auto p-6">
-        <div>
+      <div className="pt-[var(--openui-header-height,4rem)] container mx-auto px-4 sm:px-6 pb-6">
+        <div className="pt-6">
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
             <div>
               <h1 className="text-3xl lg:text-left text-center font-bold text-foreground">
@@ -57,7 +57,7 @@ const Layout = ({ children }: Props) => {
           </div>
         </div>
       </div>
-      <div className="container mx-auto px-6 pb-12">{children}</div>
+      <div className="container mx-auto min-w-0 px-4 sm:px-6 pb-12">{children}</div>
     </Tabs>
   );
 };

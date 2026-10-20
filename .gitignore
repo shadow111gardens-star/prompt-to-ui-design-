@@ -50,6 +50,7 @@ graphify-out/cache/
 .git/
 
 # local database and uploads
+/.openui/
 data/openui.db
 data/openui.db-journal
 data/uploads/

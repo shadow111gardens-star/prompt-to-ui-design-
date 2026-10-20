@@ -93,7 +93,7 @@ const TextSidebar = ({ isOpen }: Props) => {
   return (
     <div
       className={cn(
-        "z-60 fixed right-5 top-1/2 transform -translate-y-1/2 w-80 bg-card/95 border border-border shadow-2xl shadow-black/30 gap-2 p-3 rounded-lg transition-transform duration-300 backdrop-blur-md",
+        "z-60 fixed right-5 top-1/2 transform -translate-y-1/2 w-80 max-w-[calc(100vw-2.5rem)] max-h-[calc(100dvh-14rem)] overflow-y-auto bg-card/95 border border-border shadow-2xl shadow-black/30 gap-2 p-3 rounded-lg transition-transform duration-300 backdrop-blur-md",
         isOpen ? "translate-x-0" : "translate-x-full",
       )}
     >

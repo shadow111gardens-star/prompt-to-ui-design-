@@ -195,3 +195,18 @@
   stroke-dasharray: 8 4;
   animation: connector-flow 0.8s linear infinite;
 }
+
+/* Workspace chrome tracks the two-row project header on narrow screens. */
+:root { --openui-header-height: 4rem; }
+body:has([data-project-header="true"]) { --openui-header-height: 6.5rem; }
+@media (min-width: 1536px) { body:has([data-project-header="true"]) { --openui-header-height: 4rem; } }
+.openui-workspace-viewport { height: 100dvh; padding-top: var(--openui-header-height); }
+@media (max-width: 1023px) { .openui-panel-overlay { top: var(--openui-header-height); } }
+@media (pointer: coarse) {
+  [role="toolbar"] button, [data-slot="dialog-close"] { min-width: 44px; min-height: 44px; }
+  input, textarea, select { font-size: max(1rem, 16px); }
+}
+
+@media (max-width: 1023px) and (max-height: 600px) {
+  .openui-panel-overlay { bottom: max(0.5rem, env(safe-area-inset-bottom)) !important; }
+}

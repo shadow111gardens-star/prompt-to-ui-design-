@@ -182,19 +182,19 @@ export default function ModelSelector() {
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Select AI model" aria-expanded={isOpen} onClick={() => setIsOpen(!isOpen)}
         disabled={loading}
-        className="flex items-center gap-2 rounded-full px-4 h-8 text-xs font-semibold border border-border bg-card text-foreground hover:bg-secondary transition disabled:opacity-50 shadow-3xs cursor-pointer"
+        className="flex items-center gap-1 sm:gap-2 rounded-full px-2 sm:px-4 h-9 text-xs font-semibold border border-border bg-card text-foreground hover:bg-secondary transition disabled:opacity-50 shadow-3xs cursor-pointer"
       >
         <Sparkles className="size-3.5 text-primary" />
-        <span className="max-w-[130px] truncate capitalize">
+        <span className="hidden md:inline max-w-[130px] truncate capitalize">
           {loading ? "Loading AI models..." : getDisplayName(selectedModel)}
         </span>
         <ChevronDown className="size-3.5 opacity-85" />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-82 rounded-2xl border border-border bg-card shadow-lg z-100 overflow-hidden">
+        <div className="fixed top-[var(--openui-header-height,4rem)] left-2 right-2 sm:absolute sm:top-auto sm:left-auto sm:right-0 mt-2 w-auto sm:w-82 max-w-[calc(100vw-1rem)] rounded-2xl border border-border bg-card shadow-lg z-100 overflow-hidden">
           <div className="p-3 border-b border-border/60 flex items-center gap-2">
             <Search className="size-4 text-muted-foreground/80" />
             <input
@@ -207,7 +207,7 @@ export default function ModelSelector() {
             />
           </div>
 
-          <div className="max-h-80 overflow-y-auto p-2">
+          <div className="max-h-[min(20rem,calc(100dvh-var(--openui-header-height)-1rem))] overflow-y-auto p-2">
             {sortedGroupedEntries.length === 0 ? (
               <div className="p-4 text-center text-xs text-muted-foreground">
                 No models found!
