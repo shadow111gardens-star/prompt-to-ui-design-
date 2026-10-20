@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-20",
+  "pages": [
+    {
+      "route": "/",
+      "status": 200
+    },
+    {
+      "route": "/sign-in",
+      "status": 200
+    },
+    {
+      "route": "/dashboard/workspace",
+      "status": 200
+    }
+  ],
+  "assetCount": 35,
+  "failed": [],
+  "reportedChunk": {
+    "status": 200,
+    "children": [
+      {
+        "route": "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_1mojsay._.js",
+        "status": 200
+      }
+    ]
+  },
+  "diagnosis": "Reported failure not reproduced over HTTP. Current chunk assets served successfully before and after a controlled development-server restart. A stale client/server session is possible, not proven."
+}

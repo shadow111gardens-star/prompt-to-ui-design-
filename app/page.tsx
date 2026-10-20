@@ -379,10 +379,9 @@ export class PromoCardComponent {}`,
 
         <div className="flex items-center gap-2 sm:gap-4">
           <ThemeToggle />
-          <Link href="/dashboard/workspace" className="hidden sm:block">
-            <Button className="rounded-full h-10 px-6 w-48 text-sm font-bold bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer shadow-xs active:scale-95 transition flex items-center gap-1.5">
-              <span>Go to Workspace</span>
-              <ChevronRight className="size-4" />
+          <Link href="/sign-in" className="hidden sm:block">
+            <Button className="rounded-full h-10 w-auto px-5 py-2.5 text-sm font-bold bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer shadow-xs active:scale-95 transition inline-flex items-center justify-center gap-2">
+              <span>Sign in</span>
             </Button>
           </Link>
           <button
@@ -402,7 +401,7 @@ export class PromoCardComponent {}`,
       </header>
 
       {mobileMenuOpen && <nav id="landing-mobile-navigation" aria-label="Mobile navigation" className="fixed top-16 inset-x-0 z-50 grid max-h-[calc(100dvh-4rem)] gap-1 overflow-y-auto border-b border-border bg-background p-4 shadow-lg xl:hidden">
-        {[['Features','#features'],['Workflow','#workflow'],['Code Export','#code-export'],['Architecture','#architecture'],['Pricing','#pricing'],['FAQ','#faq'],['Go to Workspace','/dashboard/workspace']].map(([label,href])=><Link key={href} href={href} onClick={()=>setMobileMenuOpen(false)} className="rounded-lg px-4 py-3 text-sm font-medium hover:bg-secondary">{label}</Link>)}
+        {[['Features','#features'],['Workflow','#workflow'],['Code Export','#code-export'],['Architecture','#architecture'],['Pricing','#pricing'],['FAQ','#faq'],['Sign in','/sign-in']].map(([label,href])=><Link key={href} href={href} onClick={()=>setMobileMenuOpen(false)} className="rounded-lg px-4 py-3 text-sm font-medium hover:bg-secondary">{label}</Link>)}
       </nav>}
 
       {/* Hero Section */}
@@ -410,21 +409,18 @@ export class PromoCardComponent {}`,
         <section className="flex flex-col items-center text-center space-y-6 mx-auto pb-4">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/25 bg-primary/5 text-primary text-xs font-bold uppercase tracking-wider animate-pulse">
             <Sparkles className="size-3" />
-            <span>The Open-source Google Stitch Alternative</span>
+            <span>YOUR AI-POWERED UI DESIGN WORKSPACE</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-8xl font-heading font-black tracking-tight text-foreground leading-[1.15]">
-            AI-agnostic, Local & Open-source{" "}
+            AI-Driven UI Design{" "}
             <span className="bg-linear-to-r from-primary via-[#ff4a22] to-amber-500 bg-clip-text text-transparent">
-              UI Design Platform.
+              Platform for Developers.
             </span>
           </h1>
 
           <p className="text-sm sm:text-base lg:text-xl text-muted-foreground leading-relaxed">
-            A developer-first prototyping co-pilot. Draw shape frames on an
-            infinite canvas, watch AI stream responsive UI in real time, and
-            propagate custom style guides to all screens simultaneously.
-            Local-first, open-source, and provider-agnostic.
+            Design interfaces faster with AI. Generate responsive UI screens from prompts, explore ideas on an infinite canvas, and maintain consistent designs with your preferred AI provider. Built for developers and teams who want more control over their design workflow.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
