@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Host_Grotesk, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { AuthProvider } from '@/components/auth/provider';
 import ReduxProvider from "@/redux/provider";
 import { ThemeProvider } from "next-themes";
 
@@ -41,8 +42,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <ReduxProvider>
-            {children}
-            <Toaster />
+            <AuthProvider>{children}<Toaster /></AuthProvider>
           </ReduxProvider>
         </ThemeProvider>
       </body>

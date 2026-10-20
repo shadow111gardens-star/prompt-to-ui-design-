@@ -6,6 +6,7 @@ import { FolderKanban, Settings2, Crown, Menu, ChevronDown, CircleHelp } from 'l
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { usePathname, useParams } from 'next/navigation';
 import ProjectSearch from '@/components/projects/project-search';
+import LogoutButton from '@/components/auth/logout-button';
 import ThemeToggle from '@/components/navbar/theme-toggle';
 import { cn } from '@/lib/utils';
 
@@ -26,6 +27,7 @@ export default function DashboardShell({children}:{children:React.ReactNode}) {
     <nav aria-label="Workspace navigation" className="space-y-2">
       <Link href={workspace} aria-current={!isSettings?"page":undefined} onClick={()=>setMenuOpen(false)} className={navClass(!isSettings)}><FolderKanban className="size-5 text-primary"/>Projects</Link>
       <Link href={`${workspace}/settings`} aria-current={isSettings?"page":undefined} onClick={()=>setMenuOpen(false)} className={navClass(isSettings)}><Settings2 className="size-5 text-primary"/>Settings</Link>
+      <div className="px-4 py-2"><LogoutButton/></div>
     </nav>
     <div className="mt-auto rounded-2xl border border-border bg-card/50 p-4">
       <h2 className="flex items-center gap-2 text-sm font-semibold text-foreground"><span className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary"><Crown className="size-4"/></span>Upgrade to Pro</h2>

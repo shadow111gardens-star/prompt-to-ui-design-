@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-20",
+  "results": [
+    {
+      "path": "/",
+      "status": 200,
+      "location": null
+    },
+    {
+      "path": "/sign-in",
+      "status": 200,
+      "location": null
+    },
+    {
+      "path": "/sign-up",
+      "status": 200,
+      "location": null
+    },
+    {
+      "path": "/dashboard/workspace",
+      "status": 307,
+      "location": "/sign-in?next=%2Fdashboard%2Fworkspace"
+    },
+    {
+      "path": "/dashboard/workspace/settings",
+      "status": 307,
+      "location": "/sign-in?next=%2Fdashboard%2Fworkspace%2Fsettings"
+    },
+    {
+      "path": "/api/projects",
+      "status": 401,
+      "location": null
+    },
+    {
+      "path": "/api/models",
+      "status": 401,
+      "location": null
+    },
+    {
+      "path": "session forged token",
+      "status": 401
+    },
+    {
+      "path": "session cross-origin",
+      "status": 403
+    },
+    {
+      "path": "logout cookie clear",
+      "status": 200,
+      "httpOnly": true,
+      "secure": true
+    }
+  ]
+}

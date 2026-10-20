@@ -9,6 +9,7 @@ import {
 } from "@/redux/slice/projects";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { toast } from "sonner";
+import { useAuth } from '@/components/auth/provider';
 import { nanoid } from "@reduxjs/toolkit";
 import { useRouter } from "next/navigation";
 
@@ -50,8 +51,11 @@ export const useProjectCreation = () => {
   const dispatch = useAppDispatch();
   const projectsState = useAppSelector((state) => state.projects);
   const router = useRouter();
+  const {user,ready}=useAuth();
 
   const createProject = async (name?: string, initialPrompt?: string) => {
+    if(!ready){toast.info('Please wait while your session is restored.');return;}
+    if(!user){router.push('/sign-in?next=%2Fdashboard%2Fworkspace');return;}
     dispatch(createProjectStart());
     try {
       const thumbnail = generateGradientThumbnail();
