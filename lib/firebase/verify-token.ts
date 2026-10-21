@@ -1,8 +1,9 @@
+import { accountPlan, type AccountPlan } from '@/lib/account-plan';
 import { createPublicKey, verify } from 'node:crypto';
 
 export class EmailVerificationRequiredError extends Error { constructor(){super('Verify your email address to continue.');this.name='EmailVerificationRequiredError';} }
 
-export type FirebaseIdentity = { sub: string; exp: number; email?: string };
+export type FirebaseIdentity = { sub: string; exp: number; email?: string; plan:AccountPlan };
 const certificateUrl = 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com';
 let cached: { keys: Record<string,string>; expires: number } | undefined;
 let inflight: Promise<Record<string,string>> | undefined;
@@ -35,6 +36,6 @@ export async function verifyFirebaseToken(token: string, options?: { projectId: 
   const publicKey = createPublicKey(keys[header.kid]);
   if (!verify('RSA-SHA256',Buffer.from(`${parts[0]}.${parts[1]}`),publicKey,Buffer.from(parts[2],'base64url'))) throw new Error('Invalid authentication signature.');
   if(claims.firebase?.sign_in_provider==='password' && claims.email_verified!==true)throw new EmailVerificationRequiredError();
-  return {sub:claims.sub,exp:claims.exp,email:typeof claims.email==='string'?claims.email:undefined};
+  return {sub:claims.sub,exp:claims.exp,plan:accountPlan(claims.plan),email:typeof claims.email==='string'?claims.email:undefined};
 }
 export const AUTH_COOKIE = 'openui_firebase_session';

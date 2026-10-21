@@ -18,8 +18,8 @@ export const useElementInspector=()=>{const value=useContext(Context);if(!value)
 export function describeElement(element:Element):ElementInfo {
   const doc=element.ownerDocument, win=doc.defaultView!;const css=win.getComputedStyle(element),box=element.getBoundingClientRect(),parent=element.parentElement?.getBoundingClientRect();
   const styles:Record<string,string>={};
-  for(const prop of ["display","margin","padding","gap","flex-direction","flex-wrap","align-items","justify-content","align-self","flex-grow","flex-shrink","flex-basis","grid-column","grid-row","grid-template-columns","grid-template-rows","border-radius","font-family","font-size","font-weight","line-height","letter-spacing","text-align","color","background-color","border-color","border-width","border-style","opacity","box-shadow","visibility","translate"])styles[prop]=css.getPropertyValue(prop);
-  const attributes:Record<string,string>={};for(const prop of ["src","alt","href","disabled","placeholder","type","value","aria-label"]) {const attr=element.getAttribute(prop);if(attr!==null)attributes[prop]=attr;}
+  for(const prop of ["display","margin","padding","gap","flex-direction","flex-wrap","align-items","justify-content","align-self","flex-grow","flex-shrink","flex-basis","grid-column","grid-row","grid-template-columns","grid-template-rows","border-radius","font-family","font-size","font-weight","line-height","letter-spacing","text-align","color","background-color","background-image","border-color","border-width","border-style","opacity","box-shadow","visibility","translate"])styles[prop]=css.getPropertyValue(prop);
+  const attributes:Record<string,string>={};for(const prop of ["src","alt","href","disabled","placeholder","type","value","aria-label","data-openui-asset","data-image-query"]) {const attr=element.getAttribute(prop);if(attr!==null)attributes[prop]=attr;}
   if(element.tagName.toLowerCase()==='textarea')attributes.value=(element as HTMLTextAreaElement).value;
   const parents:ElementInfo["parents"]=[];let ancestor=element.parentElement;
   while(ancestor && ancestor.id!=="mockup-root"){const id=ancestor.getAttribute(ELEMENT_ID);if(id)parents.push({id,name:ancestor.tagName.toLowerCase()+(ancestor.id?`#${ancestor.id}`:"")});ancestor=ancestor.parentElement;}
@@ -54,6 +54,7 @@ function synchronizeTarget(element:Element,html:string,id:string,patch:ElementPa
   if(patch.text!==undefined){if(element.tagName.toLowerCase()==='textarea')(element as HTMLTextAreaElement).value=patch.text;synchronizeTextTree(element,updated);}
 }
 export function ElementInspectorProvider({children}:{children:React.ReactNode}){
+  useEffect(()=>{const notice=(event:Event)=>{const warnings=(event as CustomEvent<unknown>).detail;if(Array.isArray(warnings)&&typeof warnings[0]==='string')toast.warning(warnings[0]);};window.addEventListener('openui-image-status',notice);return()=>window.removeEventListener('openui-image-status',notice);},[]);
   const dispatch=useAppDispatch();const entities=useAppSelector(state=>state.shapes.shapes.entities) as Record<string,Shape|undefined>;
   const selectedShapes=useAppSelector(state=>state.shapes.selected) as Record<string,boolean>;
   const entitiesRef=useRef(entities);entitiesRef.current=entities;

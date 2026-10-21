@@ -1,3 +1,4 @@
+import { withPersonalProvider } from '@/lib/ai/with-personal-provider';
 import { NextRequest, NextResponse } from "next/server";
 import {
   getLanguageModel,
@@ -178,7 +179,7 @@ ${styleGuide.description || "A cohesive design system generated for the project.
   };
 }
 
-export async function POST(request: NextRequest) {
+export const POST=withPersonalProvider(async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { projectId } = body;
@@ -305,4 +306,4 @@ Return ONLY the JSON object matching the exact schema structure above.`;
       { status: 500 },
     );
   }
-}
+});

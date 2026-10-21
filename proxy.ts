@@ -7,7 +7,8 @@ export async function proxy(request:NextRequest){
   const token=request.cookies.get(AUTH_COOKIE)?.value;
   try{
     if(!token)throw new Error('Missing session');
-    await verifyFirebaseToken(token);
+    const identity=await verifyFirebaseToken(token);
+    if(path==='/api/workspace-key'&&identity.plan!=='lifetime')return NextResponse.json({error:'AI Preferences requires the Lifetime plan.'},{status:403,headers:{'Cache-Control':'no-store'}});
     if(path.startsWith('/api/')&&!['GET','HEAD','OPTIONS'].includes(request.method)&&request.headers.get('origin')!==request.nextUrl.origin)return NextResponse.json({error:'Invalid request origin.'},{status:403});
     return NextResponse.next();
   }catch(error){

@@ -1,5 +1,5 @@
 import { deriveProjectDesignSystem } from "@/lib/project-design-system";
-import { prisma } from "../db";
+import { prisma } from "@/lib/db";
 import fs from "fs/promises";
 import path from "path";
 

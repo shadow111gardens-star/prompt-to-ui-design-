@@ -1,3 +1,4 @@
+import { withPersonalProvider } from '@/lib/ai/with-personal-provider';
 import { prepareElementConversionHtml } from "@/lib/element-editing";
 import { NextRequest, NextResponse } from "next/server";
 import {
@@ -58,7 +59,7 @@ Rules:
 - Make interactive elements functional`,
 };
 
-export async function POST(request: NextRequest) {
+export const POST=withPersonalProvider(async function POST(request: NextRequest) {
   try {
     const rawText = await request.text();
     const body = JSON.parse(rawText);
@@ -148,4 +149,4 @@ Generate a complete, production-ready ${framework} component. Output ONLY the co
       { status: 500 },
     );
   }
-}
+});

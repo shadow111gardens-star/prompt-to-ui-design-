@@ -1,0 +1,1 @@
+Brand SVGs from @lobehub/icons-static-svg (Lobe Icons), distributed under the accompanying license. Brand names and marks belong to their respective owners. Source: https://github.com/lobehub/lobe-icons

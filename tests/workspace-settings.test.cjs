@@ -51,7 +51,8 @@ test('integration projects requires a valid Bearer key and never includes HTML o
   assert.equal((await response.json()).projects[0].id,'p1');
 });
 // Exercise component event handlers with isolated hooks; this is not a browser test.
-function settingsHarness() {
+function settingsHarness(options={}) {
+ const user=options.user||{uid:'test-account',displayName:'Signed In User',email:'signed-in@example.test'};
  const slots=[],effects=[],cleanups=[];let index=0;
  const hooks={
   useState(initial){const i=index++;if(!(i in slots))slots[i]=initial;return [slots[i],value=>slots[i]=typeof value==='function'?value(slots[i]):value];},
@@ -59,9 +60,9 @@ function settingsHarness() {
   useEffect(callback){const i=index++;if(!(i in slots)){slots[i]=true;effects.push(callback);}},
  };
  const filename=path.resolve('components/projects/workspace-settings.tsx'),mod=new Module(filename,module);mod.filename=filename;mod.paths=Module._nodeModulePaths(path.dirname(filename));
- mod.require=function(request){if(request==='react')return hooks;if(request==='@/lib/load-workspace-key')return load('lib/load-workspace-key.ts');if(request==='@/lib/utils')return {cn:(...values)=>values.filter(Boolean).join(' ')};if(request==='next/link')return 'a';return Module.prototype.require.call(this,request);};
+ mod.require=function(request){if(request==='react')return hooks;if(request==='@/components/projects/provider-keys-preview')return {__esModule:true,default:()=>null};if(request==='@/lib/account-plan')return load('lib/account-plan.ts');if(request==='@/components/auth/provider')return {useAuth:()=>({user,plan:options.plan||'lifetime'})};if(request==='firebase/auth')return {updateProfile:options.updateProfile||(async(current,data)=>Object.assign(current,data))};if(request==='@/lib/firebase/errors')return {authErrorMessage:error=>error.message};if(request==='@/components/navbar/theme-toggle')return {__esModule:true,default:()=>null};if(request==='@/lib/load-workspace-key')return load('lib/load-workspace-key.ts');if(request==='@/lib/utils')return {cn:(...values)=>values.filter(Boolean).join(' ')};if(request==='next/link')return 'a';return Module.prototype.require.call(this,request);};
  mod._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText,filename);
- const render=()=>{index=0;return mod.exports.default({providers:[]});};
+ const render=()=>{index=0;return mod.exports.default({providers:[],previewLifetime:options.previewLifetime});};
  const mount=()=>{const tree=render();for(const effect of effects)cleanups.push(effect());return tree;};
  return {render,mount,unmount:()=>cleanups.forEach(cleanup=>cleanup?.())};
 }
@@ -78,34 +79,23 @@ function browserMocks(t,fetcher){
  t.after(()=>{global.window=saved.window;global.localStorage=saved.localStorage;global.fetch=saved.fetch;if(saved.navigator)Object.defineProperty(global,'navigator',saved.navigator);else delete global.navigator;});
  return storage;
 }
-test('settings profile save trims values and restores them after remount',async t=>{
+test('settings shows authenticated identity, saves Firebase display name and never trusts old browser profile',async t=>{
  const storage=browserMocks(t,async()=>Response.json({configured:false}));
- let h=settingsHarness();h.mount();await flush();
+ storage.set('openui-workspace-profile',JSON.stringify({name:'Wrong Account',email:'wrong@example.test'}));
+ const user={uid:'user-one',displayName:'Google Name',email:'google@example.test'};let saved;
+ const h=settingsHarness({user,updateProfile:async(current,data)=>{saved={uid:current.uid,...data};Object.assign(current,data);}});h.mount();await flush();
+ assert.equal(find(h.render(),n=>n.props?.id==='display-name').props.value,'Google Name');
+ assert.equal(find(h.render(),n=>n.props?.id==='profile-email').props.value,'google@example.test');assert.equal(find(h.render(),n=>n.props?.id==='profile-email').props.readOnly,true);
  find(h.render(),n=>n.props?.id==='display-name').props.onChange({target:{value:'  Abhay  '}});
- find(h.render(),n=>n.props?.id==='profile-email').props.onChange({target:{value:'abhay@example.test'}});
- find(h.render(),n=>n.type==='form').props.onSubmit({preventDefault(){}});
- assert.deepEqual(JSON.parse(storage.get('openui-workspace-profile')),{name:'Abhay',email:'abhay@example.test'});
- h.unmount();h=settingsHarness();h.mount();await flush();
- assert.equal(find(h.render(),n=>n.props?.id==='display-name').props.value,'Abhay');h.unmount();
+ find(h.render(),n=>n.type==='form').props.onSubmit({preventDefault(){}});await flush();assert.deepEqual(saved,{uid:'user-one',displayName:'Abhay'});h.unmount();
+ const other=settingsHarness({user:{uid:'user-two',displayName:null,email:'new-signup@example.test'}});other.mount();await flush();assert.equal(find(other.render(),n=>n.props?.id==='display-name').props.value,'new-signup');assert.equal(find(other.render(),n=>n.props?.id==='profile-email').props.value,'new-signup@example.test');other.unmount();
 });
-test('settings generate, reveal, copy, clipboard failure and revoke update actual controls',async t=>{
- let copied='';browserMocks(t,async(_url,options={})=>Response.json(options.method==='POST'?{configured:true,key:'oui_test-key',suffix:'-key'}:{configured:false}));
- navigator.clipboard.writeText=async value=>{copied=value;};
- const h=settingsHarness();h.mount();await flush();
- find(h.render(),n=>n.props?.id==='tab-api').props.onClick();
- find(h.render(),n=>n.type==='button'&&n.props.children?.includes?.('Generate New Key')).props.onClick();await flush();
- assert.equal(find(h.render(),n=>n.props?.['aria-label']==='API key').props.type,'password');
- find(h.render(),n=>n.props?.['aria-label']==='Reveal API key').props.onClick();
- assert.equal(find(h.render(),n=>n.props?.['aria-label']==='API key').props.type,'text');
- find(h.render(),n=>n.props?.['aria-label']==='Copy API key').props.onClick();await flush();assert.equal(copied,'oui_test-key');
- navigator.clipboard.writeText=async()=>{throw Error('blocked');};
- find(h.render(),n=>n.props?.['aria-label']==='Copy API key').props.onClick();await flush();assert.ok(nodes(h.render()).some(n=>n.props?.role==='status'&&n.props.children.includes('Clipboard unavailable')));
- find(h.render(),n=>n.type==='button'&&n.props.children?.includes?.('Revoke key')).props.onClick();await flush();
- assert.equal(find(h.render(),n=>n.props?.['aria-label']==='Copy API key').props.disabled,true);h.unmount();
+test('settings reports Firebase profile update errors and restores the save button',async t=>{
+ browserMocks(t,async()=>Response.json({configured:false}));const h=settingsHarness({updateProfile:async()=>{throw Error('Profile update failed');}});h.mount();await flush();find(h.render(),n=>n.type==='form').props.onSubmit({preventDefault(){}});await flush();assert.ok(nodes(h.render()).some(n=>n.props?.role==='status'&&n.props.children==='Profile update failed'));assert.equal(find(h.render(),n=>n.props?.type==='submit').props.disabled,false);h.unmount();
 });
-test('settings pending status fetch is cancelled on unmount without an unhandled rejection',async t=>{
- let signal;browserMocks(t,(_url,options)=>{signal=options.signal;return new Promise((_resolve,reject)=>signal.addEventListener('abort',()=>reject(new DOMException('Cancelled','AbortError'))));});
- const h=settingsHarness();h.mount();await Promise.resolve();h.unmount();await flush();assert.equal(signal.aborted,true);
+
+test('AI Preferences removes the workspace integration key card and makes no legacy key requests',async t=>{
+ let requests=0;browserMocks(t,async()=>{requests++;return Response.json({configured:false});});const h=settingsHarness();h.mount();await flush();find(h.render(),n=>n.props?.id==='tab-api').props.onClick();const tree=h.render();assert.equal(nodes(tree).some(n=>n.props?.children==='Your API Key'),false);assert.equal(nodes(tree).some(n=>n.props?.['aria-label']==='API key'),false);assert.equal(requests,0);h.unmount();
 });
 const {loadWorkspaceKey}=load('lib/load-workspace-key.ts');
 function keyObserver(){const successes=[],errors=[],reports=[];return {successes,errors,reports,callbacks:{onSuccess:value=>successes.push(value),onError:error=>errors.push(error),reportError:error=>reports.push(error)}};}
@@ -137,4 +127,14 @@ test('workspace genuine failures remain visible, including failures racing with 
  let reject;const late=keyObserver();const pending=new Promise((_resolve,fail)=>{reject=fail;});
  const racing=loadWorkspaceKey(late.callbacks,()=>pending);await Promise.resolve();racing.cancel();reject(failure);await racing.done;
  assert.equal(late.errors.length,0);assert.equal(late.reports[0],failure);
+});
+
+test('AI Preferences is hidden and key APIs are not requested for non-Lifetime plans, including direct hashes',async t=>{
+ let requests=0;browserMocks(t,async()=>{requests++;return Response.json({configured:false});});window.location.hash='#tab-api';
+ for(const plan of ['local','plus','pro']){const h=settingsHarness({plan});h.mount();await flush();assert.equal(nodes(h.render()).some(n=>n.props?.id==='tab-api'),false);assert.equal(nodes(h.render()).some(n=>n.props?.id==='panel-api'),false);h.unmount();}
+ assert.equal(requests,0);
+});
+
+test('Lifetime UI preview displays preferences but cannot fetch or generate keys for a local account',async t=>{
+ let requests=0;browserMocks(t,async()=>{requests++;return Response.json({configured:false});});const h=settingsHarness({plan:'local',previewLifetime:true});h.mount();await flush();assert.ok(nodes(h.render()).some(n=>n.props?.id==='panel-api'));assert.equal(nodes(h.render()).some(n=>n.type==='button'&&n.props.children?.includes?.('Generate New Key')),false);await flush();assert.equal(requests,0);h.unmount();
 });

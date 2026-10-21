@@ -1,3 +1,4 @@
+import { withPersonalProvider } from '@/lib/ai/with-personal-provider';
 import { NextRequest, NextResponse } from "next/server";
 import {
   getLanguageModel,
@@ -13,7 +14,7 @@ import { buildRedesignPrompt, REDESIGN_SYSTEM_PROMPT, summarizeScreenStyle } fro
 import fs from "fs/promises";
 import path from "path";
 
-export async function POST(request: NextRequest) {
+export const POST=withPersonalProvider(async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { generatedUIId, currentHTML, projectId, pageIndex, streamId } = body;
@@ -162,4 +163,4 @@ export async function POST(request: NextRequest) {
       { status: 500 },
     );
   }
-}
+});

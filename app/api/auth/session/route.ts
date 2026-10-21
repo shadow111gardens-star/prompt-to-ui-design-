@@ -10,7 +10,7 @@ export async function POST(request:Request){
     const {idToken}: {idToken?:unknown}=await request.json();
     if(typeof idToken!=='string')return NextResponse.json({error:'An authentication token is required.'},{status:400});
     const identity=await verifyFirebaseToken(idToken);
-    const response=NextResponse.json({uid:identity.sub},{headers:{'Cache-Control':'no-store'}});
+    const response=NextResponse.json({uid:identity.sub,plan:identity.plan},{headers:{'Cache-Control':'no-store'}});
     response.cookies.set(AUTH_COOKIE,idToken,{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'lax',path:'/',maxAge:Math.max(0,identity.exp-Math.floor(Date.now()/1000))});
     return response;
   }catch(error){

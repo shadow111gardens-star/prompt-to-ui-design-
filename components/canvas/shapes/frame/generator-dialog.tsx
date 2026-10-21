@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -42,7 +42,7 @@ type GeneratorDialogProps = {
     selectedImageIds: string[],
     variantCount: number,
     creativeRange: number,
-  ) => void;
+  ) => void | Promise<void>;
   hasDrawings: boolean;
   projectId: string;
 };
@@ -102,6 +102,8 @@ export function GeneratorDialog({
   hasDrawings,
   projectId,
 }: GeneratorDialogProps) {
+  const [submitting,setSubmitting]=useState(false),[generationError,setGenerationError]=useState('');
+  const pending=useRef(false);
   const [idea, setIdea] = useState("");
   const [content, setContent] = useState("");
   const [selectedPills, setSelectedPills] = useState<string[]>([]);
@@ -162,7 +164,12 @@ export function GeneratorDialog({
     );
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
+    if(pending.current)return;
+    if(!projectId){setGenerationError('Open a project before generating a design.');return;}
+    if(!idea.trim()&&!(includeDrawing&&hasDrawings)&&selectedImageIds.length===0){setGenerationError('Describe your idea or select a drawing/reference image.');return;}
+    pending.current=true;setSubmitting(true);setGenerationError('');
+    try{
     // Combine structured fields into a single prompt string
     const parts: string[] = [];
 
@@ -179,7 +186,7 @@ export function GeneratorDialog({
     }
 
     const combinedPrompt = parts.join(". ");
-    onSubmit(
+    await onSubmit(
       combinedPrompt,
       deviceType,
       includeDrawing,
@@ -188,11 +195,14 @@ export function GeneratorDialog({
       creativeRange,
     );
     onClose();
+    }catch(error){setGenerationError(error instanceof Error?error.message:'Generation failed. Check your AI provider and retry.');}
+    finally{pending.current=false;setSubmitting(false);}
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && !submitting && onClose()}>
       <DialogContent
+        showCloseButton={!submitting}
         onEscapeKeyDown={(e) => e.preventDefault()}
         onPointerDownOutside={(e) => e.preventDefault()}
         className="z-100 min-w-0 w-[calc(100vw-2rem)] sm:max-w-2xl bg-background border-border text-foreground shadow-2xl rounded-2xl p-0 overflow-hidden max-h-[calc(100dvh-2rem)] flex flex-col"
@@ -205,7 +215,7 @@ export function GeneratorDialog({
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto px-6 pb-2">
-          <div className="space-y-5 my-4">
+          <fieldset disabled={submitting} className="space-y-5 my-4">
             {/* Idea field */}
             <div className="space-y-2">
               <Label
@@ -483,26 +493,27 @@ export function GeneratorDialog({
                 </div>
               </div>
             )}
-          </div>
+          </fieldset>
         </div>
-
+        {generationError&&<p role="alert" className="border-t border-destructive/20 px-6 py-3 text-xs text-destructive">{generationError}</p>}
         <DialogFooter className="p-4 pt-4 flex gap-2 border-t border-border/80">
           <Button
             type="button"
             variant="ghost"
             onClick={onClose}
+            disabled={submitting}
             className="rounded-xl border border-border bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted/30 cursor-pointer"
           >
             Cancel
           </Button>
           <Button
             type="button"
-            onClick={handleGenerate}
-            disabled={!idea.trim() && !hasDrawings}
+            onClick={()=>void handleGenerate()}
+            disabled={submitting||(!idea.trim()&&!(includeDrawing&&hasDrawings)&&selectedImageIds.length===0)}
             className="rounded-xl bg-amber-500 text-amber-950 dark:text-zinc-950 hover:bg-amber-400 font-bold cursor-pointer disabled:opacity-50"
           >
             <Sparkles className="w-4 h-4 mr-1 fill-current" />
-            Generate UI
+            {submitting?'Generating...':'Generate UI'}
           </Button>
         </DialogFooter>
       </DialogContent>

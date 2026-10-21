@@ -1494,10 +1494,12 @@ export const useFrame = (shape: FrameShape) => {
     (state) => state.shapes.shapes.entities,
   );
   const allShapes = React.useMemo(() => {
-    return Object.values(shapesEntities || {}).filter(
+    return (Object.values(shapesEntities || {}) as (Shape | undefined)[]).filter(
       (shape): shape is Shape => shape !== undefined,
     );
   }, [shapesEntities]);
+
+  const generationPending=useRef(false);
 
   const handleGenerateDesign = async (
     prompt: string,
@@ -1507,7 +1509,10 @@ export const useFrame = (shape: FrameShape) => {
     variantCount: number = 1,
     creativeRange: number = 1.0,
   ) => {
+    if(generationPending.current)return;
+    generationPending.current=true;
     try {
+      if(!new URLSearchParams(window.location.search).get("project"))throw new Error("Open a saved project before generating a design.");
       setIsGenerating(true);
 
       const existingVariants = allShapes
@@ -1704,7 +1709,9 @@ export const useFrame = (shape: FrameShape) => {
       toast.error(
         `Failed to generate UI design: ${error instanceof Error ? error.message : "Unknown error!"}`,
       );
+      throw error;
     } finally {
+      generationPending.current=false;
       setIsGenerating(false);
     }
   };

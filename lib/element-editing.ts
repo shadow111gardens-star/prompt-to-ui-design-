@@ -4,8 +4,8 @@ const VOID = new Set("area base br col embed hr img input link meta param source
 const EXCLUDED = new Set("html head body script style meta link title base noscript template".split(" "));
 type Tag = { start: number; end: number; tag: string; close: boolean; raw: string; id?: string; selfClosing: boolean };
 export type ElementPatch = { styles?: Record<string, string>; attributes?: Record<string, string | null>; text?: string; icon?: string; loadFont?:boolean };
-export const EDITABLE_STYLES = new Set("box-sizing width height min-width max-width min-height max-height margin margin-top margin-right margin-bottom margin-left padding padding-top padding-right padding-bottom padding-left display align-items justify-content align-self flex-direction flex-wrap flex-grow flex-shrink flex-basis gap row-gap column-gap grid-template-columns grid-template-rows grid-column grid-row border-radius font-family font-size font-weight line-height letter-spacing text-align color background-color border-color border-width border-style opacity box-shadow visibility translate".split(" "));
-const ATTRIBUTES = new Set(["src", "alt", "href", "disabled", "placeholder", "type", "value", "aria-label"]);
+export const EDITABLE_STYLES = new Set("box-sizing width height min-width max-width min-height max-height margin margin-top margin-right margin-bottom margin-left padding padding-top padding-right padding-bottom padding-left display align-items justify-content align-self flex-direction flex-wrap flex-grow flex-shrink flex-basis gap row-gap column-gap grid-template-columns grid-template-rows grid-column grid-row border-radius font-family font-size font-weight line-height letter-spacing text-align color background-color background-image border-color border-width border-style opacity box-shadow visibility translate".split(" "));
+const ATTRIBUTES = new Set(["src", "alt", "href", "disabled", "placeholder", "type", "value", "aria-label", "srcset", "data-openui-asset", "data-image-query", "data-openui-image-fallback"]);
 const escapeAttribute = (value: string) => value.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
 const escapeText = (value: string) => escapeAttribute(value).replace(/>/g,"&gt;");
 const decode = (value:string) => value.replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&");
@@ -87,12 +87,14 @@ export function patchElementHtml(html:string,id:string,patch:ElementPatch):strin
   const target=all[index];let opening=target.raw;
   if(patch.styles){const style=declarations(decode(attributeValue(opening,"style")||""));
     for(const [key,value] of Object.entries(patch.styles)){
-      if(!EDITABLE_STYLES.has(key) || /[{};<>]|expression\s*\(|url\s*\(/i.test(value))throw new Error("Unsupported style value.");
+      const assetBackground=key==='background-image'&&/^url\(["']?\/api\/images\/assets\/[a-f0-9-]{36}["']?\)$/.test(value);
+      if(!EDITABLE_STYLES.has(key) || !assetBackground&&/[{};<>]|expression\s*\(|url\s*\(/i.test(value))throw new Error("Unsupported style value.");
       if(value.trim())style.set(key,`${value.replace(/\s*!important\s*$/i,"")} !important`);else style.delete(key);
     }
     opening=setAttribute(opening,"style",[...style].map(([k,v])=>`${k}: ${v}`).join("; "));
   }
   for(const [key,value] of Object.entries(patch.attributes||{})){
+    if(key==='srcset'&&value!==null)throw new Error("Clear responsive sources before replacing an image.");
     if(!ATTRIBUTES.has(key))throw new Error("Unsupported element attribute.");
     if(value!==null && (key==='src'||key==='href') && !safeElementUrl(value,key==='src'))throw new Error("Use a safe image or link URL.");
     opening=setAttribute(opening,key,value);
@@ -157,3 +159,6 @@ export function prepareElementConversionHtml(html: string): string {
   const style = `<style id="openui-element-conversion-overrides">${rules.join("\n")}</style>`;
   return /<\/head>/i.test(identified) ? identified.replace(/<\/head>/i, style + "</head>") : identified + style;
 }
+
+// Shared source-preserving scanner for generated image hydration.
+export { tags as scanHtmlTags,attributeValue as htmlAttribute,setAttribute as setHtmlAttribute };

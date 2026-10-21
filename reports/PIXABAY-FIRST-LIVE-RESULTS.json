@@ -1,0 +1,31 @@
+[
+  {
+    "category": "travel",
+    "error": "Selected image could not be downloaded."
+  },
+  {
+    "category": "food",
+    "q": "pizza tomatoes",
+    "hits": 24,
+    "cacheReused": true,
+    "selectedId": 4384650,
+    "tags": "pizza, dough, cheese, tomatoes, italian, food, yummy, mozzarella, italy, cook, kitchen, onion, pizza, pizza, pizza, pizza, pizza",
+    "assetId": "fc0bfea8-0d9d-425e-87b0-91aa2cd47854",
+    "mime": "image/jpeg",
+    "width": 1280,
+    "height": 932,
+    "bytes": 324890
+  },
+  {
+    "category": "ecommerce",
+    "error": "Selected image could not be downloaded."
+  },
+  {
+    "category": "real-estate",
+    "error": "Selected image could not be downloaded."
+  },
+  {
+    "category": "fitness",
+    "error": "Selected image could not be downloaded."
+  }
+]

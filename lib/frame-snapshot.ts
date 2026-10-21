@@ -1,3 +1,4 @@
+import { makeImagesPortable } from '@/lib/images/portable-assets';
 import { Shape, FrameShape } from "@/redux/slice/shapes";
 import { parseHtmlDocument, cleanBodyClass } from "@/lib/html-parser";
 
@@ -263,11 +264,18 @@ const DEFAULT_FONTS: ExportFonts = {
   bodyFont: "DM Sans",
 };
 
-export const downloadHTML = (
+export const downloadHTML = async (
   htmlContent: string,
   filename: string,
   fonts: ExportFonts = DEFAULT_FONTS,
-): void => {
+  shapeId?: string,
+): Promise<void> => {
+  if (shapeId) {
+    const { renderedScreenHTML } = await import("@/lib/screen-html-export");
+    downloadBlob(new Blob([await renderedScreenHTML(shapeId, filename.replace(/\.html$/, ""))], { type: "text/html;charset=utf-8" }), filename);
+    return;
+  }
+  htmlContent=await makeImagesPortable(htmlContent);
   const parsed = parseHtmlDocument(htmlContent);
   // M8: Escape filename for safe injection into HTML title tag
   const safeTitle = filename.replace(".html", "")
@@ -322,36 +330,17 @@ export const exportGeneratedUIAsPNG = async (
       throw new Error("Iframe not found in the export element!");
     }
 
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-    if (!iframeDoc) {
-      throw new Error("Iframe document not accessible!");
-    }
-
-    const targetElement = iframeDoc.getElementById("mockup-root") || iframeDoc.body;
-    if (!targetElement) {
-      throw new Error("Target element inside iframe not found!");
-    }
-
-
-
-    const { toBlob } = await import("html-to-image");
-
-    // Get computed background color of the iframe body or default to white
-    const computedBg = window.getComputedStyle(iframeDoc.body).backgroundColor;
-    const backgroundColor = computedBg && computedBg !== "rgba(0, 0, 0, 0)" ? computedBg : "#ffffff";
-
-    const blob = await toBlob(targetElement, {
-      backgroundColor: backgroundColor,
-      pixelRatio: 2, // High resolution (retina)
-      cacheBust: true,
-      skipFonts: true,
-    });
-
-    if (blob) {
-      downloadBlob(blob, filename);
-    } else {
-      throw new Error("Failed to create GeneratedUI snapshot blob!");
-    }
+    const doc = iframe.contentDocument;
+    const id = iframe.dataset.openuiShape;
+    const root = doc?.getElementById("mockup-root");
+    if (!id || !root) throw new Error("Screen preview is not ready.");
+    const { captureScreenImage } = await import("@/lib/screen-image-export");
+    const blob = await captureScreenImage({
+      id,
+      w: iframe.clientWidth, h: iframe.clientHeight,
+      uiSpecData: root.innerHTML,
+    }, "png");
+    downloadBlob(blob, filename);
   } catch (error) {
     console.error("❌ Failed to capture GeneratedUI snapshot:", error);
     const { toast } = await import("sonner");

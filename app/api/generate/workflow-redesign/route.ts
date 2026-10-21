@@ -1,3 +1,4 @@
+import { withPersonalProvider } from '@/lib/ai/with-personal-provider';
 import { NextRequest, NextResponse } from "next/server";
 import {
   getLanguageModel,
@@ -9,7 +10,7 @@ import { prisma } from "@/lib/db";
 import { streamText } from "ai";
 import { buildRedesignPrompt, REDESIGN_SYSTEM_PROMPT } from "@/lib/ai/redesign-context";
 
-export async function POST(request: NextRequest) {
+export const POST=withPersonalProvider(async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { userMessage, generatedUIId, currentHTML, projectId, streamId } = body;
@@ -116,4 +117,4 @@ export async function POST(request: NextRequest) {
       { status: 500 },
     );
   }
-}
+});

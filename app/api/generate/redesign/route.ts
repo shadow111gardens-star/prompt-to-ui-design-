@@ -1,3 +1,4 @@
+import { withPersonalProvider } from '@/lib/ai/with-personal-provider';
 import { NextRequest, NextResponse } from "next/server";
 import {
   getLanguageModel,
@@ -13,7 +14,7 @@ import fs from "fs/promises";
 import path from "path";
 import { projectChatResponse } from "@/lib/ai/project-chat-response";
 
-export async function POST(request: NextRequest) {
+export const POST=withPersonalProvider(async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     if (body.mode === "project-chat") return projectChatResponse(request, body);
@@ -196,4 +197,4 @@ export async function POST(request: NextRequest) {
       { status: 500 },
     );
   }
-}
+});

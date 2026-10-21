@@ -1,4 +1,5 @@
 "use client";
+import { makeImagesPortable } from '@/lib/images/portable-assets';
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -138,6 +139,7 @@ const Navbar = () => {
       return;
     }
 
+    const exportHtml=await makeImagesPortable(targetShape.uiSpecData);
     const primaryColor =
       guide?.colorSections[0]?.swatches[0]?.hexColor || "#db2800";
     const bgColor = guide?.colorSections[0]?.swatches[1]?.hexColor || "#faf8f5";
@@ -158,7 +160,7 @@ const Navbar = () => {
       : "9999px";
 
     if (id === "copy") {
-      navigator.clipboard.writeText(targetShape.uiSpecData);
+      await navigator.clipboard.writeText(await makeImagesPortable(exportHtml));
       toast.success("Code copied to clipboard!");
       setIsExportOpen(false);
       return;
@@ -267,7 +269,7 @@ const Navbar = () => {
       URL.revokeObjectURL(url);
       toast.success("Figma specifications exported!");
     } else if (id === "lovable") {
-      const lovablePrompt = `### LOVABLE EXPORT - OpenUI Component Specifications\nProject: ${projectName}\nDesign Tokens:\n- Primary Accent: ${primaryColor}\n- Background Cream: ${bgColor}\n- Text Color: ${textColor}\n- Heading Font: ${headingFont}\n- Body Font: ${bodyFont}\n- Card Corner Radius: ${cardRadius}\n- Button Corner Radius: ${buttonRadius}\n\nComponent Code:\n\`\`\`html\n${targetShape.uiSpecData}\n\`\`\`\n`;
+      const lovablePrompt = `### LOVABLE EXPORT - OpenUI Component Specifications\nProject: ${projectName}\nDesign Tokens:\n- Primary Accent: ${primaryColor}\n- Background Cream: ${bgColor}\n- Text Color: ${textColor}\n- Heading Font: ${headingFont}\n- Body Font: ${bodyFont}\n- Card Corner Radius: ${cardRadius}\n- Button Corner Radius: ${buttonRadius}\n\nComponent Code:\n\`\`\`html\n${exportHtml}\n\`\`\`\n`;
       const blob = new Blob([lovablePrompt], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -300,7 +302,7 @@ const Navbar = () => {
             ),
           },
           "src/App.tsx": {
-            content: `export default function App() {\n  return (\n    <div className="min-h-screen flex items-center justify-center bg-slate-50">\n      ${targetShape.uiSpecData}\n    </div>\n  );\n}`,
+            content: `export default function App() {\n  return (\n    <div className="min-h-screen flex items-center justify-center bg-slate-50">\n      ${exportHtml}\n    </div>\n  );\n}`,
           },
         },
       };
@@ -393,13 +395,13 @@ const Navbar = () => {
       // src/App.tsx
       zip.file(
         "src/App.tsx",
-        `import React from 'react';\n\nexport default function App() {\n  return (\n    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">\n      <div\n        dangerouslySetInnerHTML={{ __html: \\\`${targetShape.uiSpecData.replace(/`/g, "\\`").replace(/\$/g, "\\$")}\\\` }}\n      />\n    </div>\n  );\n}`,
+        `import React from 'react';\n\nexport default function App() {\n  return (\n    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">\n      <div\n        dangerouslySetInnerHTML={{ __html: \\\`${exportHtml.replace(/`/g, "\\`").replace(/\$/g, "\\$")}\\\` }}\n      />\n    </div>\n  );\n}`,
       );
 
       // Single file preview
       zip.file(
         "single-file-preview.html",
-        `<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="UTF-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n    <title>Exported Design - OpenUI</title>\n    <script src="https://cdn.tailwindcss.com"></script>\n    <style>\n      :root {\n        --color-primary: ${primaryColor};\n        --color-secondary: ${bgColor};\n        --color-text: ${textColor};\n        --font-heading: ${headingFont};\n        --font-body: ${bodyFont};\n        --border-radius-button: ${buttonRadius};\n      }\n      body {\n        font-family: var(--font-body), sans-serif;\n        color: var(--color-text);\n        background-color: var(--color-secondary);\n      }\n    </style>\n  </head>\n  <body class="min-h-screen flex items-center justify-center p-6">\n    ${targetShape.uiSpecData}\n  </body>\n</html>`,
+        `<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="UTF-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n    <title>Exported Design - OpenUI</title>\n    <script src="https://cdn.tailwindcss.com"></script>\n    <style>\n      :root {\n        --color-primary: ${primaryColor};\n        --color-secondary: ${bgColor};\n        --color-text: ${textColor};\n        --font-heading: ${headingFont};\n        --font-body: ${bodyFont};\n        --border-radius-button: ${buttonRadius};\n      }\n      body {\n        font-family: var(--font-body), sans-serif;\n        color: var(--color-text);\n        background-color: var(--color-secondary);\n      }\n    </style>\n  </head>\n  <body class="min-h-screen flex items-center justify-center p-6">\n    ${exportHtml}\n  </body>\n</html>`,
       );
 
       const content = await zip.generateAsync({ type: "blob" });
@@ -479,6 +481,7 @@ const Navbar = () => {
 
   if (pathname.endsWith("/settings") && hasProjectSidebar) return null;
 
+  if(hasProjectSidebar&&!pathname.endsWith('/settings'))return null;
   return (
     <div data-project-header={projectId ? "true" : undefined} className={cn("flex items-center justify-between gap-2 px-3 sm:px-6 h-16 fixed top-0 left-0 right-0 z-50 border-b border-border/85 bg-background/95 backdrop-blur-md",hasProjectSidebar&&"lg:left-60",projectId&&"max-2xl:h-[104px] max-2xl:pb-10")}>
       {/* Left Area: Logo & Project Browser-style Tab */}

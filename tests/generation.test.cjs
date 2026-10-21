@@ -40,7 +40,8 @@ test('parallel generations remain isolated', async () => {
   const wire = [{streamId:'other', text:'wrong'}, {streamId:'ui', text:'<main>OK</main>'}].map(x => `data: ${JSON.stringify(x)}\n\n`).join('');
   assert.equal(await parseSSEStream(readerFor(wire), 'ui', () => {}), '<main>OK</main>');
 });
-test('NVIDIA and Ollama use chat completions', () => {
+test('NVIDIA and Ollama use chat completions', t => {
+  const old=process.env.NVIDIA_NIM_API_KEY;process.env.NVIDIA_NIM_API_KEY='unit-test-key';t.after(()=>{if(old===undefined)delete process.env.NVIDIA_NIM_API_KEY;else process.env.NVIDIA_NIM_API_KEY=old;});
   assert.equal(getLanguageModel('nvidia', 'test').provider, 'openai.chat');
   assert.equal(getLanguageModel('ollama', 'test').provider, 'openai.chat');
 });
@@ -155,7 +156,8 @@ test('theme application persists one override, updates literal color classes and
  assert.equal((second.match(/id="openui-theme-override"/g)||[]).length,1);
  assert.match(second,/Keep me/);assert.match(second,/#c6ff4d/);assert.match(second,/!important/);
 });
-test('transient stream failure falls back once before output', async () => {
+test('transient stream failure falls back once before output', async t => {
+ const old=process.env.GEMINI_API_KEY;process.env.GEMINI_API_KEY='unit-test-key';t.after(()=>{if(old===undefined)delete process.env.GEMINI_API_KEY;else process.env.GEMINI_API_KEY=old;});
  const {createResilientStreamResponse}=load('lib/ai/resilient-stream.ts',{'@/lib/db':{prisma:{}}});
  let calls=0;
  const response=createResilientStreamResponse(()=>({fullStream:(async function*(){calls++;if(calls===1){yield {type:'error',error:Object.assign(new Error('high demand'),{statusCode:503})};}else{yield {type:'text-delta',text:'<main>Ready</main>'};}})(),totalUsage:Promise.resolve({totalTokens:10}),finishReason:Promise.resolve('stop')}),{},'ui','google','gemini-test');
@@ -395,17 +397,17 @@ test('screen image filenames stay unique, safe and keep the requested extension'
 test('screen image export captures the design root and produces all-screen archives without editor frames',async()=>{
  const downloads=[];const captures=[];const previous=global.document;
  const Zip=require('jszip');function TestZip(){const zip=new Zip();const file=zip.file.bind(zip);zip.file=(name,data)=>file(name,data instanceof Blob?data.arrayBuffer():data);return zip;}
- const root={childElementCount:1,scrollWidth:375,scrollHeight:812,querySelectorAll:()=>[]};
- const doc={body:root,documentElement:{},fonts:{ready:Promise.resolve()},getElementById:id=>id==='mockup-root'?root:null,defaultView:{getComputedStyle:()=>({backgroundColor:'rgb(16, 17, 20)'})}};
- const htmlImage={toBlob:async(node,options)=>{captures.push({node,options});return new Blob(['png']);},toJpeg:async()=> 'data:image/jpeg;base64,/9j/',toSvg:async()=> 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%2F%3E'};
+ const root={childElementCount:1,scrollWidth:375,scrollHeight:812,getAttribute:()=>null,getBoundingClientRect:()=>({width:375,height:812}),querySelectorAll:()=>[]};
+ const doc={body:root,documentElement:{},querySelectorAll:()=>[],createElement:()=>({style:{}}),fonts:{ready:Promise.resolve(),forEach:()=>{}},getElementById:id=>id==='mockup-root'?root:null,defaultView:{requestAnimationFrame:callback=>queueMicrotask(callback),getComputedStyle:()=>({backgroundColor:'rgb(16, 17, 20)',fontFamily:'DM Sans',fontSize:'16px',content:'none'})}};root.ownerDocument=doc;
+ const htmlImage={getFontEmbedCSS:async()=> '@font-face{font-family:DM Sans;src:url(data:font/woff2;base64,AA==)}',toBlob:async(node,options)=>{captures.push({node,options});return new Blob(['png']);},toJpeg:async()=> 'data:image/jpeg;base64,/9j/',toSvg:async()=> 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%2F%3E'};
  const exporter=load('lib/screen-image-export.ts',{'@/lib/frame-snapshot':{downloadBlob:(blob,name)=>downloads.push({blob,name})},jszip:{__esModule:true,default:TestZip},'html-to-image':htmlImage});
- const screens=[{id:'one',screenName:'One',uiSpecData:'<main>One</main>'},{id:'two',screenName:'Two',uiSpecData:'<main>Two</main>'}];
+ const screens=[{id:'one',w:375,h:904,screenName:'One',uiSpecData:'<main>One</main>'},{id:'two',w:375,h:874,screenName:'Two',uiSpecData:'<main>Two</main>'}];
  global.document={querySelectorAll:()=>[{dataset:{openuiShape:'fullscreen-one'},contentDocument:null},...screens.map(s=>({dataset:{openuiShape:s.id},contentDocument:doc}))]};
  try {
   await exporter.downloadScreenImages(screens,'png',true,()=>{});
   assert.equal(downloads.length,1);assert.equal(downloads[0].name,'openui-all-screens-png.zip');
   const zip=await require('jszip').loadAsync(await downloads[0].blob.arrayBuffer());assert.deepEqual(Object.keys(zip.files),['01-One.png','02-Two.png']);
-  assert.equal(captures[0].node,root);assert.equal(captures[0].options.pixelRatio,2);assert.equal(captures[0].options.width,375);assert.equal(captures[0].options.filter({tagName:'SCRIPT'}),false);
+  assert.equal(captures[0].node,root);assert.equal(captures[0].options.pixelRatio,2);assert.equal(captures[0].options.width,375);assert.equal(captures[0].options.height,904);assert.equal(captures[1].options.height,874);assert.match(captures[0].options.fontEmbedCSS,/DM Sans/);assert.match(captures[0].options.fontEmbedCSS,/font-size:16px!important/);assert.equal(captures[0].options.skipAutoScale,true);assert.equal(captures[0].options.filter({tagName:'SCRIPT'}),false);
   assert.equal((await exporter.captureScreenImage(screens[0],'jpg')).type,'image/jpeg');assert.equal((await exporter.captureScreenImage(screens[0],'svg')).type,'image/svg+xml');
   await assert.rejects(()=>exporter.captureScreenImage({...screens[0],isGenerating:true},'png'),/not ready/);
   global.document={querySelectorAll:()=>[]};await assert.rejects(()=>exporter.captureScreenImage(screens[0],'png'),/Open the Canvas/);

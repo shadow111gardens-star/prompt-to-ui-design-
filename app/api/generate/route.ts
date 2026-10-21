@@ -1,3 +1,4 @@
+import { withPersonalProvider } from '@/lib/ai/with-personal-provider';
 import { prompts, deviceContexts } from "@/prompts";
 import {
   getLanguageModel,
@@ -12,7 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 
-export async function POST(request: NextRequest) {
+export const POST=withPersonalProvider(async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const imageFile = formData.get("image") as File | null;
@@ -223,4 +224,4 @@ Generate a fully responsive UI layout corresponding to the specifications below:
       { status: 500 },
     );
   }
-}
+});

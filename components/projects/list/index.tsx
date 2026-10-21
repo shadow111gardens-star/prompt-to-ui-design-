@@ -1,7 +1,7 @@
 "use client";
 import { useProjectCreation } from "@/hooks/use-project";
 import { formatDistanceToNow } from "date-fns";
-import { Plus, Trash2, ExternalLink, Sparkles } from "lucide-react";
+import { Plus, Trash2, ExternalLink, Sparkles, ChartNoAxesColumn, MapPin, CalendarDays, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -174,7 +174,9 @@ const ProjectPreview = ({ project }: { project: any }) => {
   );
 };
 
-const ProjectsList = () => {
+const sidebarIcons=[ChartNoAxesColumn,MapPin,CalendarDays,ShoppingBag,Sparkles];
+const sidebarColors=['border-emerald-500/20 bg-emerald-500/10 text-emerald-500','border-amber-500/20 bg-amber-500/10 text-amber-500','border-pink-500/20 bg-pink-500/10 text-pink-500','border-violet-500/20 bg-violet-500/10 text-violet-400','border-primary/20 bg-primary/10 text-primary'];
+const ProjectsList = ({compact=false}:{compact?:boolean}) => {
   const { projects, canCreate, deleteProject } = useProjectCreation();
   const [deletingProject, setDeletingProject] = useState<{
     id: string;
@@ -197,8 +199,8 @@ const ProjectsList = () => {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className={compact?"space-y-2":"space-y-8"}>
+      <div className={compact?"sr-only":"flex items-center justify-between"}>
         <div>
           <h1 className="text-3xl font-semibold text-foreground">
             Your Projects
@@ -209,8 +211,8 @@ const ProjectsList = () => {
         </div>
       </div>
 
-      {projects.length === 0 ? (
-        <div className="text-center py-24 rounded-2xl border border-dashed border-border/80 bg-secondary/10 flex flex-col items-center justify-center">
+      {projects.length === 0 ? (compact ? null : (
+        <div className={compact?"rounded-xl border border-dashed border-border p-4 text-center text-xs":"text-center py-24 rounded-2xl border border-dashed border-border/80 bg-secondary/10 flex flex-col items-center justify-center"}>
           <div className="w-16 h-16 mb-4 rounded-lg bg-muted flex items-center justify-center">
             <Plus className="w-8 h-8 text-muted-foreground" />
           </div>
@@ -221,17 +223,17 @@ const ProjectsList = () => {
             Create your first project to get started
           </p>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {projects.map((project: any) => (
+      )) : (
+        <div className={compact?"space-y-1":"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"}>
+          {projects.map((project: any,index:number) => (
             <Link
-              className="group cursor-pointer relative block"
+              className={compact?"group relative block rounded-xl px-2 py-2.5 transition hover:bg-secondary/60":"group cursor-pointer relative block"}
               key={project._id}
               href={`/dashboard/workspace/canvas?project=${project._id}`}
             >
-              <div className="space-y-3">
-                <div
-                  className="relative rounded-lg overflow-hidden aspect-300/200 flex items-center justify-center border border-border/60 shadow-xs"
+              <div className={compact?"space-y-0":"space-y-3"}>
+                {!compact&&<div
+                  className={compact?"hidden":"relative rounded-lg overflow-hidden aspect-300/200 flex items-center justify-center border border-border/60 shadow-xs"}
                   style={{
                     backgroundColor:
                       project.htmlPreview && project.styleGuide
@@ -274,17 +276,18 @@ const ProjectsList = () => {
                       <Plus className="w-8 h-8 text-gray-400" />
                     </div>
                   )}
-                </div>
+                </div>}
                 <div className="flex items-start justify-between gap-2">
+                  {compact&&<span className={`flex size-8 shrink-0 items-center justify-center rounded-lg border ${sidebarColors[index%sidebarColors.length]}`}>{React.createElement(sidebarIcons[index%sidebarIcons.length],{size:17,strokeWidth:1.6})}</span>}
                   <div className="space-y-1 min-w-0 flex-1">
-                    <h3 className="font-medium text-foreground text-md truncate group-hover:text-primary transition-colors">
+                    <h3 className={compact?"truncate text-xs font-medium leading-4 text-foreground/90 transition group-hover:text-primary":"font-medium text-foreground text-md truncate group-hover:text-primary transition-colors"}>
                       {project.name}
                     </h3>
                     <p
                       className="text-xs text-muted-foreground"
                       suppressHydrationWarning
                     >
-                      Last opened{" "}
+                      {!compact&&<>Last opened </>}
                       {formatDistanceToNow(new Date(project.lastModified), {
                         addSuffix: true,
                       })}
@@ -299,7 +302,7 @@ const ProjectsList = () => {
                         name: project.name,
                       });
                     }}
-                    className="p-1.5 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-all duration-200 z-10 cursor-pointer shrink-0"
+                    className={`${compact?"opacity-0 group-hover:opacity-100 focus:opacity-100":""} p-1.5 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-all duration-200 z-10 cursor-pointer shrink-0`}
                     title="Delete project"
                   >
                     <Trash2 className="size-4" />

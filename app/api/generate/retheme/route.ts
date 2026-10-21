@@ -1,3 +1,4 @@
+import { withPersonalProvider } from '@/lib/ai/with-personal-provider';
 import { NextRequest } from "next/server";
 import {
   getLanguageModel,
@@ -22,7 +23,7 @@ CRITICAL RULES:
 9. Preserve all Tailwind CSS classes but update color classes to match the new palette.
 10. Keep all interactive elements, scripts, and data attributes intact.`;
 
-export async function POST(request: NextRequest) {
+export const POST=withPersonalProvider(async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { html, tokens, projectId, streamId } = body;
@@ -112,4 +113,4 @@ export async function POST(request: NextRequest) {
       { status: 500, headers: { "Content-Type": "application/json" } },
     );
   }
-}
+});

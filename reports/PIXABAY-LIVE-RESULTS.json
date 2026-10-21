@@ -1,0 +1,22 @@
+[
+  {
+    "category": "travel",
+    "error": "Pixabay downloads are temporarily rate limited. Try again in a minute."
+  },
+  {
+    "category": "food",
+    "error": "Pixabay downloads are temporarily rate limited. Try again in a minute."
+  },
+  {
+    "category": "ecommerce",
+    "error": "Pixabay downloads are temporarily rate limited. Try again in a minute."
+  },
+  {
+    "category": "real-estate",
+    "error": "Pixabay downloads are temporarily rate limited. Try again in a minute."
+  },
+  {
+    "category": "fitness",
+    "error": "Pixabay downloads are temporarily rate limited. Try again in a minute."
+  }
+]

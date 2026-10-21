@@ -1,5 +1,6 @@
+import { renderedScreenHTML } from '@/lib/screen-html-export';
 import JSZip from "jszip";
-import { downloadBlob, type ExportFonts } from "./frame-snapshot";
+import { downloadBlob, type ExportFonts } from "@/lib/frame-snapshot";
 
 interface ScreenData {
   id: string;
@@ -11,44 +12,6 @@ const DEFAULT_FONTS: ExportFonts = {
   headingFont: "Host Grotesk",
   bodyFont: "DM Sans",
 };
-
-function buildGoogleFontsUrl(fonts: ExportFonts): string {
-  const families = new Set<string>();
-  families.add(fonts.headingFont.replace(/\s+/g, "+"));
-  families.add(fonts.bodyFont.replace(/\s+/g, "+"));
-  families.add("Inter");
-  const params = Array.from(families)
-    .map((f) => `family=${f}:wght@400;500;600;700`)
-    .join("&");
-  return `https://fonts.googleapis.com/css2?${params}&display=swap`;
-}
-
-function wrapStandaloneHTML(html: string, title: string, fonts: ExportFonts): string {
-  const fontsUrl = buildGoogleFontsUrl(fonts);
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${title}</title>
-  <script src="https://cdn.tailwindcss.com"><\/script>
-  <link href="${fontsUrl}" rel="stylesheet">
-  <style>
-    body {
-      font-family: '${fonts.bodyFont}', 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    h1, h2, h3, h4, h5, h6 {
-      font-family: '${fonts.headingFont}', 'Inter', sans-serif;
-    }
-  </style>
-</head>
-<body>
-  ${html}
-</body>
-</html>`;
-}
 
 function generateGalleryIndex(screens: ScreenData[]): string {
   const links = screens
@@ -116,7 +79,7 @@ export async function exportScreensAsZip(
   }
 
   for (const screen of screens) {
-    const html = wrapStandaloneHTML(screen.html, screen.name, fonts);
+    const html = await renderedScreenHTML(screen.id, screen.name);
     screensFolder.file(`${screen.name}.html`, html);
   }
 

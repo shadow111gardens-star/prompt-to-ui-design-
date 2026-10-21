@@ -1,4 +1,5 @@
 "use client";
+import { makeImagesPortable } from '@/lib/images/portable-assets';
 import { identifyHtmlElements, liveElementHtml, hasLiveElementEdit } from "@/lib/element-editing";
 import { useEditableFrame } from "@/components/canvas/element-inspector/frame-bridge";
 import { LiquidGlassButton } from "@/components/buttons/liquid-glass";
@@ -452,7 +453,7 @@ const GeneratedUI = ({
                   type="button"
                   onClick={() => {
                     if (shape.uiSpecData) {
-                      copyToClipboard(shape.uiSpecData)
+                      makeImagesPortable(shape.uiSpecData).then(copyToClipboard)
                         .then(() => {
                           toast.success("HTML copied to clipboard!");
                         })
@@ -475,8 +476,7 @@ const GeneratedUI = ({
                         headingFont: guide?.typographySections?.[0]?.styles?.[0]?.fontFamily || "Host Grotesk",
                         bodyFont: guide?.typographySections?.[1]?.styles?.[0]?.fontFamily || "DM Sans",
                       };
-                      downloadHTML(shape.uiSpecData, filename, fonts);
-                      toast.success("HTML file downloaded!");
+                      void downloadHTML(shape.uiSpecData,filename,fonts,shape.id).then(()=>toast.success("HTML file downloaded!")).catch(error=>toast.error(error instanceof Error?error.message:"Image export failed."));
                     }
                   }}
                   className="w-full text-left cursor-pointer text-xs gap-2 flex items-center px-2 py-1.5 rounded-lg hover:bg-zinc-800 hover:text-zinc-100 transition-colors"

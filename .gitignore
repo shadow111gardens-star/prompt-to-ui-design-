@@ -56,3 +56,7 @@ data/openui.db-journal
 data/uploads/
 prisma/*.db
 prisma/*.db-journal
+
+# Generated export comparison fixtures, screenshots, archives and local logs.
+# Reproduction tools and regression tests remain in tests/.
+/reports/export-layout/

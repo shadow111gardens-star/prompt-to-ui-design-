@@ -1,4 +1,5 @@
 "use client";
+import { makeImagesPortable } from '@/lib/images/portable-assets';
 import React from "react";
 import {
   Dialog,
@@ -61,7 +62,7 @@ export default function CodePreviewDialog({
   }, [code]);
 
   const handleCopy = () => {
-    copyToClipboard(cleanCode)
+    makeImagesPortable(cleanCode).then(copyToClipboard)
       .then(() => {
         toast.success(`${meta.label} code copied to clipboard!`);
       })
@@ -70,10 +71,12 @@ export default function CodePreviewDialog({
       });
   };
 
-  const handleDownload = () => {
-    const blob = new Blob([cleanCode], { type: "text/plain;charset=utf-8" });
+  const handleDownload = async () => {
+    try{const portable=await makeImagesPortable(cleanCode);
+    const blob = new Blob([portable], { type: "text/plain;charset=utf-8" });
     downloadBlob(blob, `component${meta.ext}`);
     toast.success(`${meta.label} file downloaded!`);
+    }catch(error){toast.error(error instanceof Error?error.message:"Image export failed.");}
   };
 
   return (

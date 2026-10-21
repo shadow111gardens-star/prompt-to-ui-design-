@@ -1,3 +1,4 @@
+import { withPersonalProvider } from '@/lib/ai/with-personal-provider';
 import { NextRequest, NextResponse } from "next/server";
 import {
   getLanguageModel,
@@ -59,7 +60,7 @@ Your response MUST follow this structure exactly:
 
 CRITICAL: All hex colors must be valid 6-digit hex codes (#RRGGBB). Choose colors that are visually harmonious, have good contrast ratios (WCAG AA minimum), and match the requested aesthetic.`;
 
-export async function POST(request: NextRequest) {
+export const POST=withPersonalProvider(async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { prompt, projectId } = body;
@@ -207,4 +208,4 @@ ${themeData.description}
       { status: 500 },
     );
   }
-}
+});
