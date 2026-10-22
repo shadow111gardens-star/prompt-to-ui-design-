@@ -31,11 +31,11 @@ function loader(mocks = {}) {
 }
 const verifier = loader()('lib/firebase/verify-token.ts');
 const options = { projectId: 'ownership-test', keys: { test: keys.publicKey.export({ type: 'spki', format: 'pem' }) }, now };
-function token(uid, verified = true) {
-  const parts = [{ alg: 'RS256', kid: 'test' }, { aud: 'ownership-test', iss: 'https://securetoken.google.com/ownership-test', sub: uid, exp: now + 3600, iat: now - 1, auth_time: now - 10, email_verified: verified, firebase: { sign_in_provider: 'password' } }].map(value => Buffer.from(JSON.stringify(value)).toString('base64url')).join('.');
+function token(uid, verified = true, issuedAt = now - 1) {
+  const parts = [{ alg: 'RS256', kid: 'test' }, { aud: 'ownership-test', iss: 'https://securetoken.google.com/ownership-test', sub: uid, exp: now + 3600, iat: issuedAt, auth_time: issuedAt - 9, email_verified: verified, firebase: { sign_in_provider: 'password' } }].map(value => Buffer.from(JSON.stringify(value)).toString('base64url')).join('.');
   return parts + '.' + sign('RSA-SHA256', Buffer.from(parts), keys.privateKey).toString('base64url');
 }
-const tokens = { alice: token('alice'), bob: token('bob'), unverified: token('alice', false), forged: 'not-a-signed-token' };
+const tokens = { alice: token('alice'), aliceAgain: token('alice', true, now), bob: token('bob'), unverified: token('alice', false), forged: 'not-a-signed-token' };
 function req(url, user = 'alice', method = 'GET', body, origin = 'http://localhost') {
   const headers = { ...(user ? { cookie: 'openui_firebase_session=' + tokens[user] } : {}), origin };
   if (body && !(body instanceof FormData)) headers['content-type'] = 'application/json';
@@ -105,6 +105,43 @@ test('real signed Firebase identities scope listings, detail and server-side hel
   }
   for (const uid of [null, 'forged']) assert.equal((await list.GET(req('/api/projects', uid))).status, 401);
   assert.equal((await list.GET(req('/api/projects', 'unverified'))).status, 403);
+});
+
+test('verified session create logout and refreshed-token login retain only the same UID projects without changing existing records', async () => {
+  const f = fixture(), originals = structuredClone(f.records);
+  const session = f.load('app/api/auth/session/route.ts');
+  const projects = f.load('app/api/projects/route.ts');
+  const detail = f.load('app/api/projects/[id]/route.ts');
+  const signedIn = await session.POST(req('/api/auth/session', null, 'POST', { idToken: tokens.alice, uid: 'bob', ownerUid: 'bob' }));
+  assert.equal(signedIn.status, 200);
+  assert.equal((await signedIn.json()).uid, 'alice');
+  assert.ok(signedIn.headers.get('set-cookie').includes('openui_firebase_session=' + tokens.alice));
+  assert.match(signedIn.headers.get('set-cookie'), /HttpOnly/i);
+  const created = await projects.POST(req('/api/projects', 'alice', 'POST', { name: 'Persisted new project', ownerUid: 'bob', uid: 'bob' }));
+  assert.equal(created.status, 200);
+  const id = (await created.json()).projectId;
+  assert.equal(f.records.find(row => row.id === id).ownerUid, 'alice');
+  const logout = await session.DELETE(req('/api/auth/session', 'alice', 'DELETE'));
+  assert.equal(logout.status, 200);
+  assert.match(logout.headers.get('set-cookie'), /Max-Age=0/);
+  assert.equal((await projects.GET(req('/api/projects', null))).status, 401);
+  assert.notEqual(tokens.aliceAgain, tokens.alice);
+  const returning = await session.POST(req('/api/auth/session', null, 'POST', { idToken: tokens.aliceAgain, uid: 'bob' }));
+  assert.equal(returning.status, 200);
+  assert.equal((await returning.json()).uid, 'alice');
+  const rows = await (await projects.GET(req('/api/projects', 'aliceAgain'))).json();
+  assert.ok(rows.some(row => row._id === id));
+  assert.ok(rows.every(row => f.records.find(record => record.id === row._id).ownerUid === 'alice'));
+  assert.equal((await detail.GET(req('/api/projects/' + id, 'aliceAgain'), params(id))).status, 200);
+  f.setServerUser('aliceAgain');
+  assert.ok((await f.load('lib/db/projects.ts').getAllProjects()).some(row => row._id === id));
+  const otherList = await (await projects.GET(req('/api/projects', 'bob'))).json();
+  assert.ok(!otherList.some(row => row._id === id));
+  for (const method of ['GET', 'PATCH', 'DELETE']) {
+    assert.equal((await detail[method](req('/api/projects/' + id, 'bob', method, method === 'PATCH' ? { name: 'Denied', ownerUid: 'bob' } : undefined), params(id))).status, 404);
+  }
+  assert.deepEqual(f.records.filter(row => originals.some(original => original.id === row.id)), originals);
+  assert.deepEqual(f.writes, ['create']);
 });
 
 test('both accounts can edit and delete only their own synthetic projects', async () => {

@@ -1,0 +1,41 @@
+{
+  "verifiedAt": "2026-10-22T10:20:07.879Z",
+  "branchId": "br-calm-morning-b4md3ubx",
+  "projectId": "icy-sun-12796122",
+  "computeId": "ep-tiny-thunder-b4xpxxw4",
+  "database": "neondb",
+  "appliedMigration": "20261022010000_project_ownership",
+  "migrationStatus": "up-to-date",
+  "initialMigrationReplayed": false,
+  "initialMigrationHistoryUnchanged": true,
+  "ownerUidColumn": {
+    "type": "text",
+    "nullable": true,
+    "default": null
+  },
+  "ownerIndexValid": true,
+  "projectIds": [
+    "cmvh5b97y00025guyv7jefm3t",
+    "cmvh5hwfh00045guyq5ik93eq",
+    "cmvht27jd0000m0uylzzqxrem",
+    "cmvhtlb0o0003m0uyylqeghtg",
+    "cmvj315os0002y4uylrjws5dc"
+  ],
+  "projectCount": 5,
+  "allProjectOwnersNull": true,
+  "allExistingProjectFieldsUnchanged": true,
+  "nestedRecordsUnchanged": true,
+  "counts": {
+    "Project": 5,
+    "MoodBoardImage": 2,
+    "InspirationImage": 0,
+    "ProjectSettings": 4
+  },
+  "productionEnvironmentFileUnchanged": true,
+  "assignmentPlanUnchanged": true,
+  "productionConnected": true,
+  "ownersAssigned": false,
+  "deployed": false,
+  "backupChecksumVerified": true,
+  "backupRestoreTested": false
+}
