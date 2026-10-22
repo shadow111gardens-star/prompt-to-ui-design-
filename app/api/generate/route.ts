@@ -12,6 +12,9 @@ import { streamText } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
+import { getMoodboardModel } from '@/lib/ai/moodboard-model';
+import { readMoodboardReferences } from '@/lib/moodboard-references';
+import { designTargetInstruction, projectDesignTarget } from '@/lib/design-target';
 
 export const POST=withPersonalProvider(async function POST(request: NextRequest) {
   try {
@@ -28,6 +31,16 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
     const variantIndex = parseInt((formData.get("variantIndex") as string) || "0", 10);
     const variantCountTotal = parseInt((formData.get("variantCount") as string) || "1", 10);
     const streamId = (formData.get("streamId") as string) || "gen-ui";
+    const moodboardMode = formData.get('generationMode') === 'moodboard';
+    let moodboardIds: string[] = [];
+    if (moodboardMode) {
+      try {
+        const ids: unknown = JSON.parse(String(formData.get('moodboardImageIds') || '[]'));
+        if (!Array.isArray(ids) || !ids.length || ids.length > 5 || ids.some(id => typeof id !== 'string' || !id || id.length > 200)) throw new Error();
+        moodboardIds = ids;
+      } catch { return NextResponse.json({ error: 'Select one to five saved Moodboard images.' }, { status: 400 }); }
+      if (prompt.length > 4000) return NextResponse.json({ error: 'Keep the description under 4,000 characters.' }, { status: 400 });
+    }
 
     let selectedImageIds: string[] = [];
     try {
@@ -61,7 +74,7 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
     const imageBuffer = imageFile ? await imageFile.arrayBuffer() : null;
     const project = await prisma.project.findUnique({
       where: { id: projectId },
-      include: { settings: true, inspirationImages: true },
+      include: { settings: true, inspirationImages: true, moodBoardImages: true },
     });
 
     if (!project) {
@@ -83,8 +96,8 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
     const designMd = guide?.designSystemDetails?.designMd || "";
 
     // Load local inspiration images and convert to Uint8Array (filtered by selectedImageIds)
-    const visionImages: Array<{ type: "image"; image: Uint8Array }> = [];
-    for (const img of project.inspirationImages) {
+    const visionImages: Array<{ type: "image"; image: Uint8Array; mediaType?: string }> = [];
+    for (const img of moodboardMode ? [] : project.inspirationImages) {
       // If user selected specific images, filter by them
       if (!selectedImageIds.includes(img.id)) {
         continue;
@@ -113,6 +126,13 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
     // Resolve model based on presence of image input
     const hasImages = !!imageBuffer || visionImages.length > 0;
     let model;
+    if (moodboardMode) {
+      try {
+        const selected = await getMoodboardModel(project.settings);
+        visionImages.push(...await readMoodboardReferences(project.moodBoardImages, moodboardIds, selected.provider));
+        model = selected.model;
+      } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : 'Moodboard image input is unavailable.' }, { status: 422 }); }
+    } else {
     try {
       const settings = project.settings;
       if (settings?.provider && settings?.model) {
@@ -134,6 +154,7 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
     } catch (err) {
       console.warn("[Generate] Failed to resolve project model, using fallback. Error details:", err);
       model = getFallbackModel();
+    }
     }
 
     const systemPrompt = prompts.generativeUi.system;
@@ -164,7 +185,7 @@ Generate a fully responsive UI layout corresponding to the specifications below:
    - Required Layout Content: "${prompt || "Generate a modern interface based on style system."}"
 
 3. Style Guide & Design Tokens (DESIGN.md):
-   - ${styleConstraints}
+   - ${moodboardMode ? 'Derive a cohesive palette, typography, spacing, borders and component language from the attached Moodboard. Existing project tokens are secondary guidance where compatible: ' + styleConstraints : styleConstraints}
 
 4. Reference Images:
    - Use the attached design reference images ONLY for visual style interpretation (overall layout spacing structure, component ideas, mood, accent placements) to bias visual choices within the style tokens above.
@@ -172,10 +193,11 @@ Generate a fully responsive UI layout corresponding to the specifications below:
    - Design System / DESIGN.md rules always override conflicting cues in the images.
 `;
 
-    const messagesContent: Array<{ type: "text"; text: string } | { type: "image"; image: Uint8Array }> = [
+    const moodboardInstruction = `\nMOODBOARD-TO-UI: Analyze all attached references for layout, visual hierarchy, palette, typography, spacing, borders, imagery and component style. Create a NEW responsive interface inspired by their shared visual direction and the user's optional description. These design references are inspiration only: never map them into image slots. Do not copy a reference pixel-for-pixel, and do not render the Moodboard itself or use reference screenshots as the resulting UI. Build real editable HTML elements, CSS and SVG components, not a single screenshot/image. Return only complete runnable HTML. No analysis prose. For this task the references provide primary visual direction; preserve explicit user requirements.`;
+    const messagesContent: Array<{ type: "text"; text: string } | { type: "image"; image: Uint8Array; mediaType?: string }> = [
       {
         type: "text",
-        text: userPrompt,
+        text: userPrompt + (moodboardMode ? moodboardInstruction : ''),
       },
     ];
 
@@ -199,7 +221,7 @@ Generate a fully responsive UI layout corresponding to the specifications below:
           content: messagesContent,
         },
       ],
-      system: systemPrompt + variantDiversityPrompt,
+      system: systemPrompt + variantDiversityPrompt + (moodboardMode ? moodboardInstruction : '') + designTargetInstruction(projectDesignTarget(project.sketchesData)),
       temperature: temperature,
     });
 

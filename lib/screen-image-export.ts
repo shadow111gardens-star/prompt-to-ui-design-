@@ -1,6 +1,7 @@
 import JSZip from 'jszip';
 import { downloadBlob } from '@/lib/frame-snapshot';
 import type { GeneratedUIShape } from '@/redux/slice/shapes';
+import { placeholderExportCSS } from '@/lib/element-color-info';
 import { waitForScreenRender, embedScreenFonts, screenCaptureDimensions, screenFontSizeCSS } from '@/lib/screen-render-readiness';
 
 export type ScreenImageFormat = 'png' | 'jpg' | 'svg';
@@ -29,7 +30,7 @@ export async function captureScreenImage(screen:ScreenCaptureSource,format:Scree
   // Font embedding can discover imported font-face rules; settle their layout too.
   await waitForScreenRender(root);
   if(iframe?.clientHeight && Math.abs(iframe.clientHeight-dimensions.height)>1)throw new Error('Canvas viewport dimensions changed. Wait for the selected frame to finish resizing and retry.');
-  const options={...dimensions,backgroundColor:background,fontEmbedCSS:fontEmbedCSS+'\n'+screenFontSizeCSS(root),cacheBust:false,includeQueryParams:true,skipAutoScale:true,
+  const options={...dimensions,backgroundColor:background,fontEmbedCSS:fontEmbedCSS+'\n'+screenFontSizeCSS(root)+'\n'+placeholderExportCSS(root),cacheBust:false,includeQueryParams:true,skipAutoScale:true,
     filter:(node:HTMLElement)=>!['SCRIPT','NOSCRIPT'].includes(node.tagName)&&!node.hasAttribute?.('data-openui-editor'),
   };
   if(format==='png') {const blob=await toBlob(root,options);if(!blob)throw new Error('PNG capture failed. Please retry.');return blob;}

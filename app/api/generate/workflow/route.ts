@@ -13,6 +13,7 @@ import { prompts } from "@/prompts";
 import { buildRedesignPrompt, REDESIGN_SYSTEM_PROMPT, summarizeScreenStyle } from "@/lib/ai/redesign-context";
 import fs from "fs/promises";
 import path from "path";
+import { designTargetInstruction, projectDesignTarget } from '@/lib/design-target';
 
 export const POST=withPersonalProvider(async function POST(request: NextRequest) {
   try {
@@ -148,7 +149,7 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
           content: messagesContent,
         },
       ],
-      system: REDESIGN_SYSTEM_PROMPT,
+      system: REDESIGN_SYSTEM_PROMPT+designTargetInstruction(projectDesignTarget(project.sketchesData)),
       temperature: 0.7,
     });
 

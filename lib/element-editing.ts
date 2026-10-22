@@ -3,7 +3,7 @@ export const ELEMENT_ID = "data-openui-element";
 const VOID = new Set("area base br col embed hr img input link meta param source track wbr".split(" "));
 const EXCLUDED = new Set("html head body script style meta link title base noscript template".split(" "));
 type Tag = { start: number; end: number; tag: string; close: boolean; raw: string; id?: string; selfClosing: boolean };
-export type ElementPatch = { styles?: Record<string, string>; attributes?: Record<string, string | null>; text?: string; icon?: string; loadFont?:boolean };
+export type ElementPatch = { styles?: Record<string, string>; attributes?: Record<string, string | null>; text?: string; icon?: string; loadFont?:boolean; color?: import('@/lib/color-values').ColorEdit };
 export const EDITABLE_STYLES = new Set("box-sizing width height min-width max-width min-height max-height margin margin-top margin-right margin-bottom margin-left padding padding-top padding-right padding-bottom padding-left display align-items justify-content align-self flex-direction flex-wrap flex-grow flex-shrink flex-basis gap row-gap column-gap grid-template-columns grid-template-rows grid-column grid-row border-radius font-family font-size font-weight line-height letter-spacing text-align color background-color background-image border-color border-width border-style opacity box-shadow visibility translate".split(" "));
 const ATTRIBUTES = new Set(["src", "alt", "href", "disabled", "placeholder", "type", "value", "aria-label", "srcset", "data-openui-asset", "data-image-query", "data-openui-image-fallback"]);
 const escapeAttribute = (value: string) => value.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
@@ -161,4 +161,4 @@ export function prepareElementConversionHtml(html: string): string {
 }
 
 // Shared source-preserving scanner for generated image hydration.
-export { tags as scanHtmlTags,attributeValue as htmlAttribute,setAttribute as setHtmlAttribute };
+export { tags as scanHtmlTags,attributeValue as htmlAttribute,setAttribute as setHtmlAttribute,declarations as parseInlineDeclarations };

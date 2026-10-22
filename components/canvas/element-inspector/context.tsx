@@ -1,11 +1,13 @@
 "use client";
-import React, { createContext, useContext, useRef, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { Shape, GeneratedUIShape, editGeneratedElement, clearSelection, selectShape } from "@/redux/slice/shapes";
 import { ELEMENT_ID, ElementPatch, identifyHtmlElements, patchElementHtml, liveElementHtml, ownsEditableElement } from "@/lib/element-editing";
 import { toast } from "sonner";
+import { describeElementColors, type ColorControlInfo } from '@/lib/element-color-info';
+import { patchElementColor, COLOR_ORIGINAL, PLACEHOLDER_RULE } from '@/lib/element-colors';
 
-export type ElementInfo = { tag: string; name: string; text: string; textEditable: boolean; isIcon:boolean; parentDisplay:string; x: number; y: number; width: number; height: number; styles: Record<string,string>; attributes: Record<string,string>; parents: Array<{id:string;name:string}> };
+export type ElementInfo = { tag: string; name: string; text: string; textEditable: boolean; isIcon:boolean; parentDisplay:string; x: number; y: number; width: number; height: number; styles: Record<string,string>; attributes: Record<string,string>; parents: Array<{id:string;name:string}>; colors:ColorControlInfo[]; svgChildren:Array<{id:string;name:string}> };
 export type ElementSelection = { shapeId:string; elementId:string; info:ElementInfo };
 type InspectorContext = {
   selection:ElementSelection|null; open:boolean; setOpen:(open:boolean)=>void;
@@ -27,7 +29,7 @@ export function describeElement(element:Element):ElementInfo {
   const hasBlocks=[...element.children].some(child=>! /^(span|strong|em|b|i|u|small|br|svg|path)$/i.test(child.tagName));
   const walker=doc.createTreeWalker(element,4);let text="",node:Node|null;
   while((node=walker.nextNode()))if(!node.parentElement?.closest('svg,script,style'))text+=node.textContent||"";
-  return {tag,name:element.getAttribute('aria-label')||element.id||text.trim().slice(0,45)||tag,text:text.trim(),parentDisplay:element.parentElement?win.getComputedStyle(element.parentElement).display:'',isIcon:tag==='svg'&&box.width<=64&&box.height<=64,textEditable:!/^(img|svg|input|select|textarea|video|canvas|iframe)$/.test(tag)&&(!hasBlocks||/^(h[1-6]|p|button|a|label)$/.test(tag)),x:box.x-(parent?.x||0),y:box.y-(parent?.y||0),width:box.width,height:box.height,styles,attributes,parents};
+  return {tag,name:element.getAttribute('aria-label')||element.id||text.trim().slice(0,45)||tag,text:text.trim(),parentDisplay:element.parentElement?win.getComputedStyle(element.parentElement).display:'',isIcon:tag==='svg'&&box.width<=64&&box.height<=64,textEditable:!element.closest('svg')&&!/^(img|svg|input|select|textarea|video|canvas|iframe)$/.test(tag)&&(!hasBlocks||/^(h[1-6]|p|button|a|label)$/.test(tag)),x:box.x-(parent?.x||0),y:box.y-(parent?.y||0),width:box.width,height:box.height,styles,attributes,parents,colors:describeElementColors(element),svgChildren:tag==='svg'?Array.from(element.querySelectorAll('path,rect,circle,ellipse,line,polygon,polyline,text,use')).flatMap((child,index)=>{const id=child.getAttribute(ELEMENT_ID);return id?[{id,name:`${child.tagName} ${index+1}`}]:[];}):[]};
 }
 function synchronizeTextTree(target: Node, source: Node) {
   let cursor = target.firstChild;
@@ -46,9 +48,23 @@ function synchronizeTextTree(target: Node, source: Node) {
   while (cursor) { const next = cursor.nextSibling; if (cursor.nodeType === 3) target.removeChild(cursor); cursor = next; }
 }
 
+export function synchronizePlaceholderColors(doc:Document, parsed:Document){
+  const wanted=Array.from(parsed.querySelectorAll(`style[${PLACEHOLDER_RULE}]`));
+  const existing=Array.from(doc.querySelectorAll(`style[${PLACEHOLDER_RULE}]`));
+  if(existing.length===wanted.length&&existing.every((rule,index)=>rule.getAttribute(PLACEHOLDER_RULE)===wanted[index].getAttribute(PLACEHOLDER_RULE)&&rule.textContent===wanted[index].textContent))return;
+  doc.querySelectorAll(`style[${PLACEHOLDER_RULE}]`).forEach(node=>node.remove());
+  for(const rule of wanted)doc.head.appendChild(doc.importNode(rule,true));
+}
+
 function synchronizeTarget(element:Element,html:string,id:string,patch:ElementPatch){
   const parsed=new DOMParser().parseFromString(html,'text/html');const updated=parsed.querySelector(`[${ELEMENT_ID}="${CSS.escape(id)}"]`);if(!updated)return;
   if(patch.styles)element.setAttribute('style',updated.getAttribute('style')||'');
+  if(patch.color){
+    const targetId=patch.color.targetId||id;
+    const target=element.ownerDocument.querySelector(`[${ELEMENT_ID}="${CSS.escape(targetId)}"]`),source=parsed.querySelector(`[${ELEMENT_ID}="${CSS.escape(targetId)}"]`);
+    if(target&&source)for(const key of ['style',COLOR_ORIGINAL]){const value=source.getAttribute(key);if(target.getAttribute(key)===value)continue;if(value===null)target.removeAttribute(key);else target.setAttribute(key,value);}
+    if(patch.color.property==='placeholder-color')synchronizePlaceholderColors(element.ownerDocument,parsed);
+  }
   for(const key of Object.keys(patch.attributes||{})){const value=updated.getAttribute(key);if(value===null)element.removeAttribute(key);else element.setAttribute(key,value);if(key==='value' && 'value' in element)(element as HTMLInputElement).value=value||'';}
   if(patch.icon) {element.innerHTML=updated.innerHTML;element.setAttribute('viewBox','0 0 24 24');element.setAttribute('fill','none');element.setAttribute('stroke','currentColor');element.setAttribute('stroke-width','2');}
   if(patch.text!==undefined){if(element.tagName.toLowerCase()==='textarea')(element as HTMLTextAreaElement).value=patch.text;synchronizeTextTree(element,updated);}
@@ -62,7 +78,12 @@ export function ElementInspectorProvider({children}:{children:React.ReactNode}){
   const selectedRef=useRef<{iframe:HTMLIFrameElement;shapeId:string;id:string}|null>(null);
   const lastEdit=useRef({key:'',time:0});
   const clear=useCallback(()=>{selectedRef.current=null;setSelection(null);lastEdit.current={key:'',time:0};},[]);
-  const refresh=useCallback(()=>{const selected=selectedRef.current;if(!selected)return;const shape=entitiesRef.current[selected.shapeId];const element=selected.iframe.contentDocument?.querySelector(`[${ELEMENT_ID}="${CSS.escape(selected.id)}"]`);if(!shape||!element||shape.type!=='generatedui'||shape.isGenerating){clear();return;}setSelection({shapeId:selected.shapeId,elementId:selected.id,info:describeElement(element)});},[clear]);
+  const refresh=useCallback(()=>{const selected=selectedRef.current;if(!selected)return;const shape=entitiesRef.current[selected.shapeId];const element=selected.iframe.contentDocument?.querySelector(`[${ELEMENT_ID}="${CSS.escape(selected.id)}"]`);if(!shape||!element||shape.type!=='generatedui'||shape.isGenerating){clear();return;}
+    const next={shapeId:selected.shapeId,elementId:selected.id,info:describeElement(element)};
+    // Computed descriptions contain plain data. Preserve identity for unchanged reads;
+    // otherwise a refresh is itself a context update for every canvas consumer.
+    setSelection(previous=>JSON.stringify(previous)===JSON.stringify(next)?previous:next);
+  },[clear]);
   const select=useCallback((iframe:HTMLIFrameElement,shapeId:string,element:Element)=>{
     const shape=entitiesRef.current[shapeId];const id=element.getAttribute(ELEMENT_ID);
     // Direct same-origin bridge: no arbitrary message payload or foreign window can edit a screen.
@@ -77,8 +98,9 @@ export function ElementInspectorProvider({children}:{children:React.ReactNode}){
       if ((patch.styles?.width || patch.styles?.height) && /^(div|section|article|main|nav|header|footer|aside|form|ul|li|figure|p|h[1-6]|button|a|span|label)$/i.test(element.tagName)) patch={...patch,styles:{'min-height':'min-content',...patch.styles}};
       if ((patch.styles?.width || patch.styles?.height) && element.ownerDocument.defaultView?.getComputedStyle(element).display==='inline') patch={...patch,styles:{display:'inline-block',...patch.styles}};
       for(const [key,value] of Object.entries(patch.styles||{}))if(value&&!CSS.supports(key,value))return false;
-      const source=identifyHtmlElements(shape.uiSpecData);const html=patchElementHtml(source,selected.id,patch);
-      const key=`${shape.id}:${selected.id}:${group}`;const recordHistory=lastEdit.current.key!==key||Date.now()-lastEdit.current.time>800;
+      const source=identifyHtmlElements(shape.uiSpecData);const html=patch.color?patchElementColor(source,selected.id,patch.color):patchElementHtml(source,selected.id,patch);
+      if(html===shape.uiSpecData)return true;
+      const key=`${shape.id}:${selected.id}:${group}`;const recordHistory=lastEdit.current.key!==key||!group.startsWith('color:')&&Date.now()-lastEdit.current.time>800;
       synchronizeTarget(element,html,selected.id,patch);liveElementHtml.set(selected.iframe,html);
       entitiesRef.current={...entitiesRef.current,[shape.id]:{...shape,uiSpecData:html}};
       dispatch(editGeneratedElement({id:shape.id,html,recordHistory}));lastEdit.current={key,time:Date.now()};refresh();return true;
@@ -87,10 +109,11 @@ export function ElementInspectorProvider({children}:{children:React.ReactNode}){
   const pickParent=useCallback((id:string)=>{const selected=selectedRef.current;if(!selected)return;const element=selected.iframe.contentDocument?.querySelector(`[${ELEMENT_ID}="${CSS.escape(id)}"]`);if(element)select(selected.iframe,selected.shapeId,element);},[select]);
   useEffect(()=>{
     const selected=selectedRef.current;
-    if(selected){const shape=entities[selected.shapeId];if(shape?.type==='generatedui'&&liveElementHtml.get(selected.iframe)!==shape.uiSpecData)lastEdit.current={key:'',time:0};}
+    if(selected){const shape=entities[selected.shapeId];if(shape?.type==='generatedui'&&liveElementHtml.get(selected.iframe)!==shape.uiSpecData){lastEdit.current={key:'',time:0};if(shape.uiSpecData&&selected.iframe.contentDocument)synchronizePlaceholderColors(selected.iframe.contentDocument,new DOMParser().parseFromString(shape.uiSpecData,'text/html'));}}
     refresh();
   },[entities,refresh]);
   useEffect(()=>{const selected=selectedRef.current;if(selected&&!selectedShapes[selected.shapeId])clear();},[selectedShapes,clear]);
   useEffect(()=>{const media=matchMedia('(min-width: 1024px)');const update=()=>document.documentElement.style.setProperty('--openui-inspector-width',open&&media.matches?'320px':'0px');update();media.addEventListener('change',update);return()=>{media.removeEventListener('change',update);document.documentElement.style.removeProperty('--openui-inspector-width');};},[open]);
-  return <Context.Provider value={{selection,open,setOpen,select,refresh,clear,apply,pickParent}}>{children}</Context.Provider>;
+  const value=useMemo(()=>({selection,open,setOpen,select,refresh,clear,apply,pickParent}),[selection,open,select,refresh,clear,apply,pickParent]);
+  return <Context.Provider value={value}>{children}</Context.Provider>;
 }

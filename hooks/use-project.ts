@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useAuth } from '@/components/auth/provider';
 import { nanoid } from "@reduxjs/toolkit";
 import { useRouter } from "next/navigation";
+import type { DesignTarget } from '@/lib/design-target';
 
 const generateGradientThumbnail = () => {
   const gradients = [
@@ -53,7 +54,7 @@ export const useProjectCreation = () => {
   const router = useRouter();
   const {user,ready}=useAuth();
 
-  const createProject = async (name?: string, initialPrompt?: string) => {
+  const createProject = async (name?: string, initialPrompt?: string, designTarget?: DesignTarget) => {
     if(!ready){toast.info('Please wait while your session is restored.');return;}
     if(!user){router.push('/sign-in?next=%2Fdashboard%2Fworkspace');return;}
     dispatch(createProjectStart());
@@ -61,6 +62,7 @@ export const useProjectCreation = () => {
       const thumbnail = generateGradientThumbnail();
       const frameId = nanoid();
       const defaultSketchesData = {
+        ...(designTarget ? {designTarget} : {}),
         shapes: {
           ids: [frameId],
           entities: {
@@ -69,8 +71,8 @@ export const useProjectCreation = () => {
               type: "frame",
               x: 100,
               y: 100,
-              w: 1600,
-              h: 900,
+              w: designTarget === 'app' ? 375 : 1600,
+              h: designTarget === 'app' ? 812 : 900,
               frameNumber: 1,
               stroke: "transparent",
               strokeWidth: 0,

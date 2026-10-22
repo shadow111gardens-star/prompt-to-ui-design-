@@ -7,6 +7,7 @@ import {
 } from "@reduxjs/toolkit";
 import type { Point } from "../viewport";
 import type { ProjectChatMessage, ChatChange } from "@/lib/project-chat";
+import type { DesignTarget } from '@/lib/design-target';
 
 export type Tool =
   | "select"
@@ -143,6 +144,7 @@ export interface HistoryState {
 }
 
 interface ShapesState {
+  designTarget?: DesignTarget;
   activeProjectId?: string;
   projectMessages: ProjectChatMessage[];
   tool: Tool;
@@ -601,10 +603,12 @@ const shapesSlice = createSlice({
         frameCounter: number;
         projectId?: string;
         projectMessages?: ProjectChatMessage[];
+        designTarget?: DesignTarget;
       }>
     ) {
       // Load project data into the shapes state
       state.activeProjectId=action.payload.projectId;
+      state.designTarget=action.payload.designTarget==='web'||action.payload.designTarget==='app'?action.payload.designTarget:undefined;
       state.projectMessages=action.payload.projectMessages||[];
       state.shapes = action.payload.shapes;
       // A persisted request cannot still be running after loading a project.

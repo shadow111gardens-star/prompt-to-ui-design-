@@ -6,6 +6,7 @@ import { createResilientStreamResponse } from '@/lib/ai/resilient-stream';
 import { prisma } from '@/lib/db';
 import { PROJECT_CHAT_SYSTEM } from '@/lib/project-chat';
 import { EDITABLE_STYLES } from '@/lib/element-editing';
+import { designTargetInstruction, projectDesignTarget } from '@/lib/design-target';
 
 const requestSchema=z.object({
   projectId:z.string().min(1),streamId:z.string().min(1),userMessage:z.string().min(1).max(16000),
@@ -25,7 +26,7 @@ export async function projectChatResponse(request:NextRequest,body:unknown) {
     if(!project)return NextResponse.json({error:'Project not found.'},{status:404});
     const model=await resolveModelForProject(data.projectId);
     const context={...data.context,projectName:project.name,editableStyles:[...EDITABLE_STYLES]};
-    return createResilientStreamResponse(model=>streamText({model,system:PROJECT_CHAT_SYSTEM,
+    return createResilientStreamResponse(model=>streamText({model,system:PROJECT_CHAT_SYSTEM+designTargetInstruction(projectDesignTarget(project.sketchesData)),
       messages:[{role:'user',content:`PROJECT REFERENCE DATA:\n${JSON.stringify(context)}\n\nCURRENT USER REQUEST:\n${data.userMessage}`}],
       abortSignal:request.signal,maxRetries:0,maxOutputTokens:24000,
     }),model,data.streamId,project.settings?.provider,project.settings?.model);

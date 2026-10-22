@@ -9,12 +9,12 @@ import { useAppDispatch } from "@/redux/store";
 export interface MoodBoardImage {
   id: string;
   file?: File; // Optional for server-loaded images
-  preview: string; // Local preview URL or Convex URL
+  preview: string; // Local blob URL or persisted same-origin upload URL
   storageId?: string;
   uploaded: boolean;
   uploading: boolean;
   error?: string;
-  url?: string; // Convex URL for uploaded images
+  url?: string;
   isFromServer?: boolean; // Track if image came from server
 }
 
@@ -36,8 +36,10 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 
   const { watch, setValue, getValues } = form;
   const images = watch("images");
+  const blobUrlsRef = useRef<Set<string>>(new Set());
+  const inFlight = useRef<Set<string>>(new Set());
 
-  const uploadImage = async (file: File): Promise<{ storageId: string }> => {
+  const uploadImage = async (file: File): Promise<{ storageId: string; url: string }> => {
     try {
       const formData = new FormData();
       formData.append("file", file);
@@ -49,12 +51,10 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error(`Upload failed: ${response.statusText}`);
-      }
-
       const data = await response.json();
-      return { storageId: data.storageId };
+      if (!response.ok) throw new Error(data.error || `Upload failed (${response.status}).`);
+      if (typeof data.storageId !== 'string' || !data.storageId || typeof data.url !== 'string' || !data.url.startsWith('/api/uploads/')) throw new Error('The upload response did not include a valid image URL.');
+      return { storageId: data.storageId, url: data.url };
     } catch (error) {
       console.error(error);
       throw error;
@@ -63,15 +63,18 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
 
   useEffect(() => {
     if (guideImages && guideImages.length > 0) {
-      const serverImages: MoodBoardImage[] = guideImages.map((img: any) => ({
-        id: img._id,
+      const serverImages: MoodBoardImage[] = guideImages.flatMap((img) => {
+        const id = ('_id' in img ? img._id : img.storageId || img.id);
+        if (typeof id !== 'string' || !img.url) return [];
+        return [{
+        id,
         preview: img.url,
-        storageId: img._id,
+        storageId: id,
         uploaded: true,
         uploading: false,
         url: img.url,
         isFromServer: true,
-      }));
+      }]; });
 
       const currentImages = getValues("images");
 
@@ -86,44 +89,47 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
           );
 
           if (clientIndex !== -1) {
-            // Clean up old blob URL if it exists
-            if (mergedImages[clientIndex].preview.startsWith("blob:")) {
-              URL.revokeObjectURL(mergedImages[clientIndex].preview);
-            }
-
-            // Replace with server image
-            mergedImages[clientIndex] = serverImg;
+            // Keep the client ID stable so refresh does not rotate/remount its card.
+            mergedImages[clientIndex] = { ...serverImg, id: mergedImages[clientIndex].id };
+          } else {
+            mergedImages.push(serverImg);
           }
         });
 
-        setValue("images", mergedImages);
+        if (JSON.stringify(currentImages) !== JSON.stringify(mergedImages)) setValue("images", mergedImages);
       }
     }
   }, [guideImages, setValue, getValues]);
 
   const addImage = (file: File) => {
-    if (images.length >= 5) {
+    const currentImages = getValues("images");
+    if (currentImages.length >= 5) {
       toast.error("Maximum 5 images allowed!");
       return;
     }
 
+    if (!['image/png','image/jpeg','image/gif','image/webp','image/svg+xml'].includes(file.type) || file.size > 10 * 1024 * 1024) {
+      toast.error('Choose a PNG, JPEG, GIF, WebP or SVG image up to 10 MB.');return;
+    }
+    const preview = URL.createObjectURL(file);
+    blobUrlsRef.current.add(preview);
     const newImage: MoodBoardImage = {
       id: `${Date.now()}-${Math.random()}`,
       file,
-      preview: URL.createObjectURL(file),
+      preview,
       uploaded: false,
       uploading: false,
       isFromServer: false,
     };
 
-    const updatedImages = [...images, newImage];
+    const updatedImages = [...currentImages, newImage];
     setValue("images", updatedImages);
 
     toast.success("Images added to mood board.");
   };
 
   const removeImage = async (imageId: string) => {
-    const imageToRemove = images.find((img) => img.id === imageId);
+    const imageToRemove = getValues("images").find((img) => img.id === imageId);
     if (!imageToRemove) return;
 
     if (imageToRemove.isFromServer && imageToRemove.storageId && projectId) {
@@ -142,10 +148,11 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
       }
     }
 
-    const updatedImages = images.filter((img) => {
+    const updatedImages = getValues("images").filter((img) => {
       if (img.id === imageId) {
         if (!img.isFromServer && img.preview.startsWith("blob:")) {
           URL.revokeObjectURL(img.preview);
+          blobUrlsRef.current.delete(img.preview);
         }
         return false;
       }
@@ -194,13 +201,14 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
     const uploadPendingImages = async () => {
       const currentImages = getValues("images");
       for (let i = 0; i < currentImages.length; i++) {
-        const image = currentImages[i];
-        if (!image.uploaded && !image.uploading && !image.error) {
-          const updatedImages = [...currentImages];
-          updatedImages[i] = { ...image, uploading: true };
+        const image = getValues("images").find(img => img.id === currentImages[i].id);
+        if (image && !image.uploaded && !image.uploading && !image.error && !inFlight.current.has(image.id)) {
+          inFlight.current.add(image.id);
+          const updatedImages = getValues("images").map(img => img.id === image.id ? { ...img, uploading: true } : img);
           setValue("images", updatedImages);
           try {
-            const { storageId } = await uploadImage(image.file!);
+            if (!image.file) throw new Error('Select the image file again to upload it.');
+            const { storageId, url } = await uploadImage(image.file);
             const finalImages = getValues("images");
             const finalIndex = finalImages.findIndex(
               (img) => img.id === image.id,
@@ -209,6 +217,8 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
               finalImages[finalIndex] = {
                 ...finalImages[finalIndex],
                 storageId,
+                url,
+                preview: url,
                 uploaded: true,
                 uploading: false,
                 isFromServer: true,
@@ -226,28 +236,17 @@ export const useMoodBoard = (guideImages: MoodBoardImage[]) => {
               errorImages[errorIndex] = {
                 ...errorImages[errorIndex],
                 uploading: false,
-                error: "Upload failed!",
+                uploaded: false,
+                error: error instanceof Error ? error.message : "Upload failed!",
               };
               setValue("images", [...errorImages]);
             }
-          }
+          } finally { inFlight.current.delete(image.id); }
         }
       }
     };
     if (images.length > 0) uploadPendingImages();
   }, [images, setValue, getValues]);
-
-  // M6 fix: Track blob URLs in a ref so cleanup revokes all, not just initial
-  const blobUrlsRef = useRef<Set<string>>(new Set());
-
-  // Track new blob URLs as they're created
-  useEffect(() => {
-    images.forEach((image) => {
-      if (image.preview.startsWith("blob:")) {
-        blobUrlsRef.current.add(image.preview);
-      }
-    });
-  }, [images]);
 
   useEffect(() => {
     const urlsRef = blobUrlsRef;

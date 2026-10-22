@@ -10,7 +10,7 @@ for(const row of db.prepare('SELECT id,name,sketchesData,styleGuide FROM Project
 // Prefer the immutable source snapshot captured alongside the user's broken exports.
 const snapshot=path.resolve('reports/export-layout/source');
 for(let i=0;i<screens.length;i++){const name=screens[i].screenName,meta=path.join(snapshot,name+'.json'),html=path.join(snapshot,name+'.html');if(fs.existsSync(meta)&&fs.existsSync(html))screens[i]={...JSON.parse(fs.readFileSync(meta,'utf8')),uiSpecData:fs.readFileSync(html,'utf8')};}
-const modules={};for(const name of ['lib/screen-render-readiness','lib/screen-image-export','lib/images/portable-assets','lib/screen-html-export','lib/html-parser','lib/element-editing'])modules['@/'+name]=ts.transpileModule(fs.readFileSync(name+'.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
+const modules={};for(const name of ['lib/screen-render-readiness','lib/screen-image-export','lib/images/portable-assets','lib/screen-html-export','lib/html-parser','lib/element-editing','lib/element-color-info','lib/element-colors','lib/color-values'])modules['@/'+name]=ts.transpileModule(fs.readFileSync(name+'.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
 fs.copyFileSync('node_modules/html-to-image/dist/html-to-image.js',path.join(out,'html-to-image.js'));fs.copyFileSync('node_modules/jszip/dist/jszip.min.js',path.join(out,'jszip.min.js'));
 const safeJSON=value=>JSON.stringify(value).replace(/</g,'\\u003c');
 fs.writeFileSync(path.join(out,'cases.js'),'window.EXPORT_CASES='+safeJSON(screens)+';\nwindow.EXPORT_MODULES='+safeJSON(modules)+';');

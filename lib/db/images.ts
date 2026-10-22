@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import path from "path";
 
 const UPLOADS_ROOT = path.join(process.cwd(), "data", "uploads");
+const uploadURL = (filePath: string) => '/api/uploads/' + filePath.split('/').map(encodeURIComponent).join('/');
 
 // Helper to ensure directory exists
 async function ensureDir(dirPath: string) {
@@ -41,7 +42,7 @@ export async function addMoodBoardImage(
   return {
     _id: image.id,
     projectId: image.projectId,
-    url: `/api/uploads/${image.filePath}`,
+    url: uploadURL(image.filePath),
     createdAt: image.createdAt.getTime(),
   };
 }
@@ -83,7 +84,7 @@ export async function getMoodBoardImages(projectId: string) {
   }) => ({
     _id: img.id,
     projectId: img.projectId,
-    url: `/api/uploads/${img.filePath}`,
+    url: uploadURL(img.filePath),
     createdAt: img.createdAt.getTime(),
   }));
 }
@@ -116,7 +117,7 @@ export async function addInspirationImage(
   return {
     _id: image.id,
     projectId: image.projectId,
-    url: `/api/uploads/${image.filePath}`,
+    url: uploadURL(image.filePath),
     createdAt: image.createdAt.getTime(),
   };
 }
@@ -158,7 +159,7 @@ export async function getInspirationImages(projectId: string) {
   }) => ({
     _id: img.id,
     projectId: img.projectId,
-    url: `/api/uploads/${img.filePath}`,
+    url: uploadURL(img.filePath),
     createdAt: img.createdAt.getTime(),
   }));
 }

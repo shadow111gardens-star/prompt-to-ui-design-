@@ -1,13 +1,16 @@
 import { MoodBoardImage } from "@/hooks/use-styles";
 import { Loader2, CheckCircle, AlertCircle, X } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
 const UploadStatus = (image: {
   uploading: boolean;
   uploaded: boolean;
   error?: string;
 }) => {
+  if (image.error) {
+    return <div role="alert" className="absolute inset-x-0 bottom-0 bg-black/80 p-2 text-xs text-white"><AlertCircle className="mr-1 inline h-4 w-4 text-red-400" />{image.error}</div>;
+  }
   if (image.uploading) {
     return (
       <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-2xl">
@@ -20,14 +23,6 @@ const UploadStatus = (image: {
     return (
       <div className="absolute top-2 right-2">
         <CheckCircle className="w-5 h-5 text-green-400" />
-      </div>
-    );
-  }
-
-  if (image.error) {
-    return (
-      <div className="absolute top-2 right-2">
-        <AlertCircle className="w-5 h-5 text-red-400" />
       </div>
     );
   }
@@ -56,6 +51,8 @@ const ImagesBoard = ({
   marginLeft,
   marginTop,
 }: Props) => {
+  const [preview, setPreview] = useState<{src:string;status:'loaded'|'error'} | null>(null);
+  const status = preview?.src === image.preview ? preview.status : 'loading';
   return (
     <div
       key={`board-${image.id}`}
@@ -75,14 +72,20 @@ hover:scale-105 transition-all duration-200"
       >
         <Image
           src={image.preview}
-          alt="Mood board image"
+          alt={image.file?.name || "Mood board image"}
           fill
+          sizes="160px"
+          // The optimizer's internal fetch has no session cookie. Read the
+          // authenticated upload URL directly in the user's browser instead.
+          unoptimized
+          onLoad={() => setPreview({src:image.preview,status:'loaded'})}
+          onError={() => setPreview({src:image.preview,status:'error'})}
           className="object-cover"
         />
         <UploadStatus
-          uploading={image.uploading}
-          uploaded={image.uploaded}
-          error={image.error}
+          uploading={image.uploading || (!image.error && status === 'loading')}
+          uploaded={image.uploaded && status === 'loaded'}
+          error={image.error || (status === 'error' ? 'Image preview could not load. Check your connection or sign in again, then reload.' : undefined)}
         />
         <button
           onClick={() => removeImage(image.id)}

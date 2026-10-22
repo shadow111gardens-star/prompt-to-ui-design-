@@ -7,6 +7,7 @@ import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
 import GenerateStyleGuideButton from "@/components/buttons/style-guide";
+import GenerateMoodboardUI from '@/components/style/moodboard/generate-ui';
 
 type Props = {
   guideImages: MoodBoardImage[];
@@ -33,11 +34,14 @@ const MoodBoard = ({ guideImages }: Props) => {
 
   return (
     <div className="flex flex-col gap-10">
+      <div className="flex flex-wrap items-center justify-end gap-3">
+      <GenerateMoodboardUI images={images} projectId={projectId ?? ''} />
       <GenerateStyleGuideButton
         images={images}
         fileInputRef={fileInputRef}
         projectId={projectId ?? ""}
       />
+      </div>
 
       <div
         className={cn(

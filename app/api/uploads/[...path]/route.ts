@@ -34,7 +34,7 @@ export async function GET(
       const ext = path.extname(safePath).toLowerCase();
       let contentType = "application/octet-stream";
       if (ext === ".png") contentType = "image/png";
-      else if (ext === ".jpg" || ext === ".jpeg") contentType = "image/jpeg";
+      else if (ext === ".jpg" || ext === ".jpeg" || ext === ".jfif") contentType = "image/jpeg";
       else if (ext === ".gif") contentType = "image/gif";
       else if (ext === ".webp") contentType = "image/webp";
       else if (ext === ".svg") contentType = "image/svg+xml";
