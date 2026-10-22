@@ -6,7 +6,7 @@ function harness(file,auth,helpers={}){
  const filename=path.resolve(file),mod=new Module(filename,module);mod.filename=filename;mod.paths=Module._nodeModulePaths(path.dirname(filename));
  mod.require=function(request){if(request==='react')return hooks;if(request==='@/components/auth/provider')return{useAuth:()=>auth};if(request==='@/lib/firebase/email-verification')return helpers;if(request==='@/lib/firebase/errors')return{authErrorMessage:e=>e.message};if(request==='next/navigation')return{useRouter:()=>({replace:helpers.redirect}),usePathname:()=>'/dashboard/workspace',useSearchParams:()=>new URLSearchParams()};if(request==='next/image'||request==='next/link'||request==='@/components/navbar/theme-toggle')return{__esModule:true,default:()=>null};return Module.prototype.require.call(this,request);};
  mod._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText,filename);
- return{render(){cursor=0;return mod.exports.default({children:'protected-content'});},mount(){return effects.splice(0).map(fn=>fn());}};
+ return{render(){cursor=0;return mod.exports.default({children:'protected-content',ownerUid:auth.user?.uid});},mount(){return effects.splice(0).map(fn=>fn());}};
 }
 test('verification page renders email, cooldown, resend failure and reload confirmation before session/redirect',async t=>{
  const previous=global.window;let target;global.window={location:{search:'',replace:v=>target=v}};t.after(()=>global.window=previous);

@@ -203,6 +203,31 @@ test('rename/delete/autosave/thumbnail/style-guide mutations reject other or una
   assert.equal((await detail.PATCH(req('/api/projects/pa', 'alice', 'PATCH', { name: 'CSRF' }, 'https://other.test'), params('pa'))).status, 403);
 });
 
+test('different UID sessions cannot read or mutate each other nested settings, uploads or generation entrypoints', async () => {
+  for (const [user, foreign] of [['alice', 'pb'], ['bob', 'pa']]) {
+    const f = fixture(), original = structuredClone(f.records);
+    const style = f.load('app/api/projects/[id]/style-guide/route.ts');
+    assert.equal((await style.GET(req('/api/projects/' + foreign + '/style-guide', user), params(foreign))).status, 404);
+    assert.equal((await style.PUT(req('/api/projects/' + foreign + '/style-guide', user, 'PUT', { styleGuide: {} }), params(foreign))).status, 404);
+    const settings = f.load('app/api/models/select/route.ts');
+    assert.equal((await settings.GET(req('/api/models/select?projectId=' + foreign, user))).status, 404);
+    assert.equal((await settings.POST(req('/api/models/select', user, 'POST', { projectId: foreign, provider: 'google', model: 'google/gemini-test' }))).status, 404);
+    const upload = f.load('app/api/upload/route.ts');
+    const form = new FormData(); form.set('projectId', foreign); form.set('type', 'moodboard'); form.set('file', new File(['test'], 'test.png', { type: 'image/png' }));
+    assert.equal((await upload.POST(req('/api/upload', user, 'POST', form))).status, 404);
+    assert.equal((await upload.DELETE(req('/api/upload?id=m-' + foreign + '&type=moodboard', user, 'DELETE'))).status, 404);
+    const serve = f.load('app/api/uploads/[...path]/route.ts');
+    assert.equal((await serve.GET(req('/api/uploads/moodboard/' + foreign + '/original.svg', user), { params: Promise.resolve({ path: ['moodboard', foreign, 'original.svg'] }) })).status, 404);
+    for (const suffix of ['', '/convert', '/redesign', '/workflow', '/workflow-redesign', '/style', '/theme', '/retheme']) {
+      const route = f.load('app/api/generate' + suffix + '/route.ts');
+      const body = suffix ? { projectId: foreign } : new FormData(); if (!suffix) body.set('projectId', foreign);
+      assert.equal((await route.POST(req('/api/generate' + suffix, user, 'POST', body))).status, 404);
+    }
+    assert.deepEqual(f.records, original);
+    assert.deepEqual([f.writes, f.files, f.providerCalls], [[], [], []]);
+  }
+});
+
 test('nested styles/settings/debug and direct DB helpers enforce parent ownership', async () => {
   const f = fixture(), style = f.load('app/api/projects/[id]/style-guide/route.ts');
   assert.equal((await style.GET(req('/api/projects/pb/style-guide'), params('pb'))).status, 404);

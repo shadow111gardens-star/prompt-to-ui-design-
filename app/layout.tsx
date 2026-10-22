@@ -41,9 +41,9 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ReduxProvider>
-            <AuthProvider>{children}<Toaster /></AuthProvider>
-          </ReduxProvider>
+          <AuthProvider>
+            <ReduxProvider>{children}<Toaster /></ReduxProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
