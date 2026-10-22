@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-10-22T09:48:31.462Z",
+  "target": {
+    "database": "neondb",
+    "branch": "br-calm-morning-b4md3ubx",
+    "compute": "ep-tiny-thunder-b4xpxxw4",
+    "project": "icy-sun-12796122",
+    "read_only": "on"
+  },
+  "backupFile": "C:\\Users\\Abhay Solanki\\Downloads\\openui-production-recovery-backups\\2026-10-22T09-48-31-462Z\\snapshot.json",
+  "sha256": "9e3d96cea46965580ba960c6438bc7a4ba7d1ce8ca55272dad50ca312eeb3791",
+  "tableCounts": {
+    "Project": 5,
+    "MoodBoardImage": 2,
+    "InspirationImage": 0,
+    "ProjectSettings": 4,
+    "_prisma_migrations": 1
+  },
+  "fileRoundTripVerified": true,
+  "foreignKeysVerified": true,
+  "snapshotIsolation": "RepeatableRead",
+  "databaseReadOnly": true,
+  "restoreIntoPostgresqlTested": false,
+  "containsPrivateProjectData": true,
+  "environmentSecretsIncluded": false
+}

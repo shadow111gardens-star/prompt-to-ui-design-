@@ -1,0 +1,95 @@
+{
+  "checkedAt": "2026-10-22T09:46:10.277Z",
+  "readOnly": true,
+  "productionFingerprintMatchesPriorVerification": true,
+  "identity": {
+    "database": "neondb",
+    "read_only": "on",
+    "branch": "br-calm-morning-b4md3ubx",
+    "project": "icy-sun-12796122",
+    "compute": "ep-tiny-thunder-b4xpxxw4"
+  },
+  "projectColumns": [
+    {
+      "column_name": "id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "column_name": "name",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "column_name": "description",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "column_name": "projectNumber",
+      "data_type": "integer",
+      "is_nullable": "NO"
+    },
+    {
+      "column_name": "thumbnail",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "column_name": "sketchesData",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "column_name": "viewportData",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "column_name": "styleGuide",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "column_name": "isPublic",
+      "data_type": "boolean",
+      "is_nullable": "NO"
+    },
+    {
+      "column_name": "tags",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "column_name": "lastModified",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "NO"
+    },
+    {
+      "column_name": "createdAt",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "NO"
+    }
+  ],
+  "migrationHistory": [
+    {
+      "migration_name": "20261022000000_initial_postgresql",
+      "checksum": "540deb74296fa0e776079a92107bb1cc041edb36e6c88aa09aa69703e346e186",
+      "completed": true,
+      "rolled_back": false
+    }
+  ],
+  "counts": {
+    "projects": 5,
+    "settings": 4,
+    "moodboard": 2,
+    "inspiration": 0
+  },
+  "ownershipQueryProbe": {
+    "passed": false,
+    "sqlState": "42703",
+    "missingOwnerUid": true
+  },
+  "deployedCommitVerified": false,
+  "noWrites": true
+}
