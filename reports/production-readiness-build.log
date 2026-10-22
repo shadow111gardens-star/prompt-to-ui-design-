@@ -1,0 +1,84 @@
+
+> openui@1.0.0 build
+> prisma generate && next build
+
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to .\..\openui-main\node_modules\@prisma\client in 196ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+▲ Next.js 16.2.9 (Turbopack)
+- Experiments (use with caution):
+  ⨯ turbopackFileSystemCacheForDev
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 15.6s
+  Running TypeScript ...
+  Finished TypeScript in 42s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/46) ...
+  Generating static pages using 7 workers (11/46) 
+  Generating static pages using 7 workers (22/46) 
+  Generating static pages using 7 workers (34/46) 
+✓ Generating static pages using 7 workers (46/46) in 1364ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ● /[slug]
+│ ├ /features
+│ ├ /pricing
+│ ├ /changelog
+│ └ [+13 more paths]
+├ ƒ /api/ai-provider-keys
+├ ƒ /api/auth/session
+├ ƒ /api/autosave
+├ ƒ /api/debug-settings
+├ ƒ /api/generate
+├ ƒ /api/generate/convert
+├ ƒ /api/generate/redesign
+├ ƒ /api/generate/retheme
+├ ƒ /api/generate/style
+├ ƒ /api/generate/theme
+├ ƒ /api/generate/workflow
+├ ƒ /api/generate/workflow-redesign
+├ ƒ /api/images/assets
+├ ƒ /api/images/assets/[id]
+├ ƒ /api/images/search
+├ ƒ /api/integration/projects
+├ ƒ /api/models
+├ ƒ /api/models/select
+├ ƒ /api/projects
+├ ƒ /api/projects/[id]
+├ ƒ /api/projects/[id]/style-guide
+├ ƒ /api/projects/[id]/thumbnail
+├ ƒ /api/upload
+├ ƒ /api/uploads/[...path]
+├ ƒ /api/workspace-key
+├ ● /blog/[article]
+│ ├ /blog/better-ui-prompts
+│ ├ /blog/consistent-screens
+│ └ /blog/export-checklist
+├ ƒ /dashboard
+├ ƒ /dashboard/[session]
+├ ƒ /dashboard/[session]/canvas
+├ ƒ /dashboard/[session]/design-system
+├ ƒ /dashboard/[session]/settings
+├ ƒ /dashboard/[session]/style-guide
+├ ○ /sign-in
+├ ○ /sign-up
+└ ○ /verify-email
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

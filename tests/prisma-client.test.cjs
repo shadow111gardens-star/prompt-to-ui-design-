@@ -11,18 +11,30 @@ test('generated Prisma client exposes PrismaClient and matches the locked CLI/ad
   assert.equal(typeof PrismaClient, 'function');
   assert.equal(Prisma.prismaVersion.client, version);
   assert.equal(lock.packages['node_modules/@prisma/client'].version, version);
+  assert.equal(lock.packages['node_modules/@prisma/adapter-neon'].version, version);
   assert.equal(lock.packages['node_modules/@prisma/adapter-better-sqlite3'].version, version);
   assert.equal(lock.packages['node_modules/@prisma/engines'].version, version);
 });
 
-test('PrismaClient and the SQLite adapter execute a query using only an in-memory database', async () => {
+test('PrismaClient accepts the Neon adapter without connecting to a database', async () => {
   const { PrismaClient } = require('@prisma/client');
-  const { PrismaBetterSqlite3 } = require('@prisma/adapter-better-sqlite3');
-  const client = new PrismaClient({ adapter: new PrismaBetterSqlite3({ url: 'file::memory:' }) });
+  const { PrismaNeon } = require('@prisma/adapter-neon');
+  const adapter = new PrismaNeon({ connectionString: 'postgresql://phase1:phase1@127.0.0.1:1/phase1' });
+  const client = new PrismaClient({ adapter });
   try {
-    const rows = await client.$queryRawUnsafe('SELECT 1 AS value');
-    assert.equal(Number(rows[0].value), 1);
+    assert.equal(adapter.provider, 'postgres');
+    assert.ok(client.project);
+    assert.ok(client.moodBoardImage);
+    assert.ok(client.inspirationImage);
+    assert.ok(client.projectSettings);
   } finally { await client.$disconnect(); }
+});
+
+test('retained SQLite driver remains usable without opening the original database', () => {
+  const Database = require('better-sqlite3');
+  const database = new Database(':memory:');
+  try { assert.equal(database.prepare('SELECT 1 AS value').get().value, 1); }
+  finally { database.close(); }
 });
 
 test('missing generation reproduces TS2305, while the generated client resolves the existing application import', () => {

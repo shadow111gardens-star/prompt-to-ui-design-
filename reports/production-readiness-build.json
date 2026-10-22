@@ -1,0 +1,10 @@
+{
+  "directory": "C:\\Users\\Abhay Solanki\\Downloads\\openui-main\\openui-production-check-K5kK1F",
+  "exitCode": 0,
+  "syntheticCredentialsOnly": true,
+  "realEnvironmentFilesCopied": false,
+  "applicationSourceChanges": false,
+  "isolationConfigDifference": "Turbopack filesystem root widened only in isolated copy to resolve the existing dependency junction",
+  "command": "npm run build",
+  "deployed": false
+}

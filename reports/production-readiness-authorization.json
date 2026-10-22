@@ -1,0 +1,9 @@
+{
+  "syntheticOnly": true,
+  "realNetworkOrDatabaseAccess": false,
+  "anonymousProjectAccessBlocked": true,
+  "twoAuthenticatedUsersReceiveSamePrivateProject": true,
+  "listingHasNoOwnerFilter": true,
+  "detailFilterContainsOnlyProjectId": true,
+  "conclusion": "Authentication is enforced, but project-level user isolation is absent. Production release blocker for private multi-user projects."
+}

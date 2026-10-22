@@ -1,0 +1,31 @@
+{
+  "localOnly": true,
+  "vercelVariablesNotInspected": true,
+  "configured": {
+    "DATABASE_URL": true,
+    "DIRECT_URL": true,
+    "NEXT_PUBLIC_FIREBASE_API_KEY": true,
+    "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN": true,
+    "NEXT_PUBLIC_FIREBASE_PROJECT_ID": true,
+    "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET": true,
+    "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": true,
+    "NEXT_PUBLIC_FIREBASE_APP_ID": true,
+    "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID": true,
+    "OPENUI_PROVIDER_KEYS_SECRET": true,
+    "PIXABAY_API_KEY": true
+  },
+  "providerEncryptionSecretValid": true,
+  "localFirebaseProjectMatchesExpected": true,
+  "localAuthDomainMatchesExpected": true,
+  "developmentFlags": {
+    "OPENUI_LOCAL_BYOK_TESTING": true,
+    "OPENUI_LIFETIME_UI_PREVIEW": true
+  },
+  "installedPrismaVersions": {
+    "prisma": "7.8.0",
+    "@prisma/client": "7.8.0",
+    "@prisma/adapter-neon": "7.8.0",
+    "@prisma/adapter-better-sqlite3": "7.8.0",
+    "@prisma/engines": "7.8.0"
+  }
+}

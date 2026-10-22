@@ -1,0 +1,22 @@
+{
+  "verifiedAt": "2026-10-22T07:19:18.129Z",
+  "targetFingerprint": "ea283bf46c069a080be318f4057d19ef6ae7e9e6b32ee1c3cb71aa87dc6bc6b9",
+  "targetLabelsSuppliedByUser": {
+    "project": "openui-production",
+    "branch": "production"
+  },
+  "backupSha256": "a85646e6caba52076357304885b51183ad6e9a2115e610d05b1d92b6e1815bcc",
+  "migration": "20261022000000_initial_postgresql",
+  "migrationSha256": "540deb74296fa0e776079a92107bb1cc041edb36e6c88aa09aa69703e346e186",
+  "migrationStatus": "up-to-date",
+  "counts": {
+    "Project": 5,
+    "MoodBoardImage": 2,
+    "InspirationImage": 0,
+    "ProjectSettings": 4
+  },
+  "allFieldsMatch": true,
+  "relationshipsValid": true,
+  "pooledPostCommitReadMatches": true,
+  "validatedForeignKeys": 3
+}

@@ -1,0 +1,8 @@
+{
+  "originalSQLiteUnchanged": true,
+  "backupUnchanged": true,
+  "legacyMigrationsUnchanged": true,
+  "existingUploadsAndOpenuiMetadataUnchanged": true,
+  "realEnvFileTracked": false,
+  "productionDatabaseQueried": false
+}

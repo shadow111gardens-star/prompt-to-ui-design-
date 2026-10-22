@@ -1,0 +1,50 @@
+{
+  "syntheticCredentialsOnly": true,
+  "productionDatabaseUsed": false,
+  "successfulRealFirebaseLoginTested": false,
+  "results": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/sign-in",
+      "status": 200
+    },
+    {
+      "path": "/sign-up",
+      "status": 200
+    },
+    {
+      "path": "/verify-email",
+      "status": 200
+    },
+    {
+      "path": "/dashboard/workspace",
+      "status": 307,
+      "redirectsTo": "/sign-in"
+    },
+    {
+      "path": "/api/projects",
+      "status": 401
+    },
+    {
+      "path": "/api/uploads/not-a-file",
+      "status": 401
+    },
+    {
+      "path": "/api/integration/projects",
+      "status": 401
+    },
+    {
+      "path": "/api/auth/session",
+      "check": "forged token rejected",
+      "status": 401
+    },
+    {
+      "path": "/api/auth/session",
+      "check": "cross-origin request rejected",
+      "status": 403
+    }
+  ]
+}
