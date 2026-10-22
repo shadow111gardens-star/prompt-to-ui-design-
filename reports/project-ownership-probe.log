@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: real signed Firebase identities scope listings, detail and server-side helpers; legacy and public flags grant no bypass
+ok 1 - real signed Firebase identities scope listings, detail and server-side helpers; legacy and public flags grant no bypass
+  ---
+  duration_ms: 189.1078
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 736.9661

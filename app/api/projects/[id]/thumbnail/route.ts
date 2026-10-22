@@ -1,7 +1,8 @@
+import { withProjectRoute, projectAccessResponse, ownedProjectWhere } from '@/lib/server/project-access';
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-export async function POST(
+export const POST = withProjectRoute(async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -23,13 +24,14 @@ export async function POST(
     }
 
     await prisma.project.update({
-      where: { id },
+      where: await ownedProjectWhere(id),
       data: { thumbnail },
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    const denied = projectAccessResponse(error); if (denied) return denied;
     console.error("Failed to update project thumbnail:", error);
     return NextResponse.json({ error: "Failed to update thumbnail" }, { status: 500 });
   }
-}
+});

@@ -1,6 +1,7 @@
 import { generatedImageContext } from '@/lib/images/generation-context';
 import { createImageHydrator } from '@/lib/images/hydrate-html';
 import { prisma } from '@/lib/db';
+import { requireOwnedProject } from '@/lib/server/project-access';
 // The transformer preserves progressive previews, then replaces final markup with persisted assets.
 export function hydrateImageStream(response:Response,hydrate:(source:string)=>Promise<string>,warnings:Set<string>):Response{
  if(!response.body||!response.headers.get('content-type')?.includes('text/event-stream'))return response;
@@ -20,6 +21,8 @@ export async function withGeneratedImages<T extends Request>(request:T,uid:strin
  const pathname=new URL(request.url).pathname;if(!/^\/api\/generate(?:\/|$)/.test(pathname)||/\/(?:convert|style|theme)$/.test(pathname))return handler();
  let projectId='',prompt='',moodboardMode=false;try{const clone=request.clone();if(clone.headers.get('content-type')?.includes('multipart/form-data')){const form=await clone.formData();projectId=String(form.get('projectId')||'');prompt=String(form.get('prompt')||'');moodboardMode=form.get('generationMode')==='moodboard';}else{const data=await clone.json();projectId=typeof data.projectId==='string'?data.projectId:'';prompt=String(data.prompt||data.userMessage||data.description||'');}}catch{return handler();}
  if(!projectId)return handler();let uploaded:string[]=[];
- try{const project=await prisma.project.findUnique({where:{id:projectId},select:{inspirationImages:{select:{filePath:true}},moodBoardImages:{select:{filePath:true}}}});uploaded=[...(project?.inspirationImages||[]),...(moodboardMode?[]:project?.moodBoardImages||[])].slice(0,20).map(image=>'/api/uploads/'+image.filePath);}catch{}
+ const where=await requireOwnedProject(projectId);
+ const project=await prisma.project.findUnique({where,select:{inspirationImages:{select:{filePath:true}},moodBoardImages:{select:{filePath:true}}}});
+ uploaded=[...(project?.inspirationImages||[]),...(moodboardMode?[]:project?.moodBoardImages||[])].slice(0,20).map(image=>'/api/uploads/'+image.filePath);
  return generatedImageContext.run({uid,projectId,prompt,uploaded},async()=>{const result=await handler();const hydration=createImageHydrator(uid,projectId,prompt);return hydrateImageStream(result,hydration.document,hydration.warnings);});
 }

@@ -7,6 +7,8 @@ import { getMoodBoardImages } from "@/lib/db/images";
 import { MoodBoardImage } from "@/hooks/use-styles";
 import { StyleGuide } from "@/redux/api/style-guide";
 import React from "react";
+import { requireOwnedProject, ProjectAccessError } from '@/lib/server/project-access';
+import { notFound } from 'next/navigation';
 
 type Props = {
   searchParams: Promise<{
@@ -16,6 +18,7 @@ type Props = {
 
 const Page = async ({ searchParams }: Props) => {
   const projectId = (await searchParams).project;
+  try { await requireOwnedProject(projectId); } catch (error) { if(error instanceof ProjectAccessError && error.status===404)notFound();throw error; }
   const guide = (await getProjectStyleGuide(projectId)) as unknown as StyleGuide;
 
   const colorGuide = guide?.colorSections || [];

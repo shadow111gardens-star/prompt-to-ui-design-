@@ -8,6 +8,7 @@ datasource db {
 
 model Project {
   id              String   @id @default(cuid())
+  ownerUid        String?  // Verified Firebase UID; NULL legacy projects are inaccessible.
   name            String
   description     String?
   projectNumber   Int
@@ -23,6 +24,8 @@ model Project {
   moodBoardImages   MoodBoardImage[]
   inspirationImages InspirationImage[]
   settings          ProjectSettings?
+
+  @@index([ownerUid])
 }
 
 model MoodBoardImage {

@@ -1,10 +1,11 @@
+import { withProjectRoute } from '@/lib/server/project-access';
 import { z } from 'zod';
 import { imageUser,imageProject,imageOrigin,imageError } from '@/lib/images/api-auth';
 import { pixabay,ImageServiceError } from '@/lib/images/pixabay';
 import { imageAssets,assetUrl,MAX_IMAGE_BYTES } from '@/lib/images/asset-store';
 export const runtime='nodejs';
 const schema=z.object({projectId:z.string().min(1).max(100),cacheKey:z.string().regex(/^[a-f0-9]{64}$/),imageId:z.number().int().positive(),alt:z.string().trim().max(300)}).strict();
-export async function POST(request:Request){try{
+export const POST=withProjectRoute(async function POST(request:Request){try{
  const uid=await imageUser(request);imageOrigin(request);let asset;
  if(request.headers.get('content-type')?.startsWith('multipart/form-data')){
   if(Number(request.headers.get('content-length'))>MAX_IMAGE_BYTES+100000)throw new ImageServiceError('Image upload is too large.',413);
@@ -16,4 +17,4 @@ export async function POST(request:Request){try{
   asset=await imageAssets.importHit(uid,input.projectId,hit,input.alt||hit.tags);
  }
  return Response.json({id:asset.id,url:assetUrl(asset.id),alt:asset.alt,width:asset.width,height:asset.height,source:asset.source,sourcePage:asset.sourcePage,author:asset.author},{headers:{'Cache-Control':'no-store'}});
- }catch(error){return imageError(error);}}
+ }catch(error){return imageError(error);}});

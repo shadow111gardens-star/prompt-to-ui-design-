@@ -7,6 +7,7 @@ import { prisma } from '@/lib/db';
 import { PROJECT_CHAT_SYSTEM } from '@/lib/project-chat';
 import { EDITABLE_STYLES } from '@/lib/element-editing';
 import { designTargetInstruction, projectDesignTarget } from '@/lib/design-target';
+import { ownedProjectWhere, projectAccessResponse } from '@/lib/server/project-access';
 
 const requestSchema=z.object({
   projectId:z.string().min(1),streamId:z.string().min(1),userMessage:z.string().min(1).max(16000),
@@ -22,7 +23,7 @@ export async function projectChatResponse(request:NextRequest,body:unknown) {
   const data=parsed.data;
   if(JSON.stringify(data.context).length>700000)return NextResponse.json({error:'This project is too large for one chat request. Reduce screen source size before retrying.'},{status:413});
   try {
-    const project=await prisma.project.findUnique({where:{id:data.projectId},include:{settings:true}});
+    const project=await prisma.project.findUnique({where:await ownedProjectWhere(data.projectId),include:{settings:true}});
     if(!project)return NextResponse.json({error:'Project not found.'},{status:404});
     const model=await resolveModelForProject(data.projectId);
     const context={...data.context,projectName:project.name,editableStyles:[...EDITABLE_STYLES]};
@@ -31,6 +32,7 @@ export async function projectChatResponse(request:NextRequest,body:unknown) {
       abortSignal:request.signal,maxRetries:0,maxOutputTokens:24000,
     }),model,data.streamId,project.settings?.provider,project.settings?.model);
   }catch(error){
+    const denied=projectAccessResponse(error);if(denied)return denied;
     if(error instanceof ProjectNotFoundError)return NextResponse.json({error:'Project not found.'},{status:404});
     return NextResponse.json({error:error instanceof Error?error.message:'Could not start project chat.'},{status:500});
   }

@@ -1,3 +1,4 @@
+import { withProjectRoute, projectAccessResponse } from '@/lib/server/project-access';
 import { NextRequest, NextResponse } from "next/server";
 import {
   addMoodBoardImage,
@@ -15,7 +16,7 @@ const ALLOWED_MIME_TYPES = [
   "image/svg+xml",
 ];
 
-export async function POST(request: NextRequest) {
+export const POST = withProjectRoute(async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;
@@ -65,12 +66,13 @@ export async function POST(request: NextRequest) {
       url: result.url,
     });
   } catch (error) {
+    const denied = projectAccessResponse(error); if (denied) return denied;
     console.error("Error processing file upload:", error);
     return NextResponse.json({ error: "Failed to upload file" }, { status: 500 });
   }
-}
+});
 
-export async function DELETE(request: NextRequest) {
+export const DELETE = withProjectRoute(async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
@@ -91,7 +93,8 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
+    const denied = projectAccessResponse(error); if (denied) return denied;
     console.error("Error deleting upload:", error);
     return NextResponse.json({ error: "Failed to delete file" }, { status: 500 });
   }
-}
+});

@@ -1,11 +1,13 @@
+import { withProjectRoute, projectAccessResponse, ownerFilter } from '@/lib/server/project-access';
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-export async function GET(request: NextRequest) {
+export const GET = withProjectRoute(async function GET(request: NextRequest) {
   try {
-    const settings = await prisma.projectSettings.findMany();
+    const settings = await prisma.projectSettings.findMany({ where: { project: await ownerFilter() } });
     return NextResponse.json({ success: true, count: settings.length, settings });
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to load settings" }, { status: 500 });
+    const denied = projectAccessResponse(error); if (denied) return denied;
+    return NextResponse.json({ error: "Unable to load settings" }, { status: 500 });
   }
-}
+});

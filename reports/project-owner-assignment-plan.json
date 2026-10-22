@@ -1,0 +1,31 @@
+{
+  "mode": "offline-plan-only",
+  "productionChanges": false,
+  "backupSha256": "a85646e6caba52076357304885b51183ad6e9a2115e610d05b1d92b6e1815bcc",
+  "expectedProjectCount": 5,
+  "expectedCurrentOwnerUid": null,
+  "identitySourceRequired": "Explicit Firebase Authentication UID confirmed in the correct Firebase project; never inferred from email/project order.",
+  "readyForReview": false,
+  "assignments": [
+    {
+      "projectId": "cmvh5b97y00025guyv7jefm3t",
+      "ownerUid": null
+    },
+    {
+      "projectId": "cmvh5hwfh00045guyq5ik93eq",
+      "ownerUid": null
+    },
+    {
+      "projectId": "cmvht27jd0000m0uylzzqxrem",
+      "ownerUid": null
+    },
+    {
+      "projectId": "cmvhtlb0o0003m0uyylqeghtg",
+      "ownerUid": null
+    },
+    {
+      "projectId": "cmvj315os0002y4uylrjws5dc",
+      "ownerUid": null
+    }
+  ]
+}

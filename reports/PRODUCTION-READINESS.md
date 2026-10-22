@@ -1,5 +1,10 @@
 # Production readiness audit — 22 October 2026
 
+Subsequent source update: project ownership enforcement and a pending additive
+migration are documented in `PROJECT-OWNERSHIP.md`. No ownership migration or
+production owner assignment has been applied. The findings below describe the
+original audit; production release still requires the approved rollout and storage work.
+
 **Build passes; release remains blocked by persistent storage and project authorization.**
 No deployment, production database connection, schema/data change, backup deletion,
 or application behavior change was performed during this audit.

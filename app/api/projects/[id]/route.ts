@@ -1,7 +1,8 @@
+import { withProjectRoute, projectAccessResponse } from '@/lib/server/project-access';
 import { NextResponse } from "next/server";
 import { getProject, deleteProject, renameProject } from "@/lib/db/projects";
 
-export async function GET(
+export const GET = withProjectRoute(async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -13,12 +14,13 @@ export async function GET(
     }
     return NextResponse.json(project);
   } catch (error) {
+    const denied = projectAccessResponse(error); if (denied) return denied;
     console.error(`Error fetching project:`, error);
     return NextResponse.json({ error: "Failed to fetch project" }, { status: 500 });
   }
-}
+});
 
-export async function DELETE(
+export const DELETE = withProjectRoute(async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -27,12 +29,13 @@ export async function DELETE(
     const result = await deleteProject(id);
     return NextResponse.json(result);
   } catch (error) {
+    const denied = projectAccessResponse(error); if (denied) return denied;
     console.error(`Error deleting project:`, error);
     return NextResponse.json({ error: "Failed to delete project" }, { status: 500 });
   }
-}
+});
 
-export async function PATCH(
+export const PATCH = withProjectRoute(async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -45,7 +48,8 @@ export async function PATCH(
     const result = await renameProject(id, name);
     return NextResponse.json(result);
   } catch (error) {
+    const denied = projectAccessResponse(error); if (denied) return denied;
     console.error(`Error renaming project:`, error);
     return NextResponse.json({ error: "Failed to rename project" }, { status: 500 });
   }
-}
+});

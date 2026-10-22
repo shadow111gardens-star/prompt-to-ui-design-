@@ -17,20 +17,20 @@ test('workspace keys persist only hashes; rotation and revocation invalidate ear
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'openui-key-test-'));
   try{
     const store=createWorkspaceKeyStore(dir);
-    assert.deepEqual(await store.status(),{configured:false});
-    const first=await store.generate();
+    assert.deepEqual(await store.status('key-owner'),{configured:false});
+    const first=await store.generate('key-owner');
     assert.equal(await store.verify(first.key),true);
     assert.equal(await store.verify('wrong'),false);
     assert.equal(fs.readFileSync(path.join(dir,'workspace-key.json'),'utf8').includes(first.key),false);
-    assert.equal('key' in await store.status(),false);
+    assert.equal('key' in await store.status('key-owner'),false);
     assert.equal(await createWorkspaceKeyStore(dir).verify(first.key),true);
-    const second=await store.generate();
+    const second=await store.generate('key-owner');
     assert.notEqual(first.key,second.key);
     assert.equal(await store.verify(first.key),false);
     assert.equal(await store.verify(second.key),true);
-    await store.revoke();
+    await store.revoke('key-owner');
     assert.equal(await store.verify(second.key),false);
-    assert.deepEqual(await store.status(),{configured:false});
+    assert.deepEqual(await store.status('key-owner'),{configured:false});
   }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
 test('key administration rejects missing/cross-site origins and remote hosts',()=>{
@@ -42,8 +42,8 @@ test('key administration rejects missing/cross-site origins and remote hosts',()
 });
 test('integration projects requires a valid Bearer key and never includes HTML or secrets',async()=>{
   const {GET}=load('app/api/integration/projects/route.ts',{
-    '@/lib/workspace-key':{workspaceKeyStore:{verify:async value=>value==='valid'}},
-    '@/lib/db':{prisma:{project:{findMany:async options=>{assert.deepEqual(Object.keys(options.select).sort(),['id','lastModified','name','projectNumber']);return [{id:'p1',name:'Test',projectNumber:1,lastModified:'today'}];}}}},
+    '@/lib/workspace-key':{workspaceKeyStore:{owner:async value=>value==='valid'?'key-owner':null}},
+    '@/lib/db':{prisma:{project:{findMany:async options=>{assert.deepEqual(options.where,{ownerUid:'key-owner'});assert.deepEqual(Object.keys(options.select).sort(),['id','lastModified','name','projectNumber']);return [{id:'p1',name:'Test',projectNumber:1,lastModified:'today'}];}}}},
   });
   assert.equal((await GET(new Request('http://localhost/api/integration/projects'))).status,401);
   const response=await GET(new Request('http://localhost/api/integration/projects',{headers:{authorization:'Bearer valid'}}));

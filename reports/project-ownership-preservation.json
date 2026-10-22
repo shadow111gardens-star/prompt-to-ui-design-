@@ -1,0 +1,8 @@
+{
+  "originalSQLiteUnchanged": true,
+  "backupUnchanged": true,
+  "legacyMigrationsUnchanged": true,
+  "existingUploadsAndOpenuiMetadataUnchanged": true,
+  "initialPostgresqlMigrationUnchanged": true,
+  "productionDatabaseAccessed": false
+}

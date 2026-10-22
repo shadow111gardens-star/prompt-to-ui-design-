@@ -1,3 +1,4 @@
+import { ownedProjectWhere } from '@/lib/server/project-access';
 import {
   getLanguageModel,
   getVisionLanguageModel,
@@ -20,7 +21,7 @@ export async function resolveModelForProject(
   requireVision: boolean = false,
 ): Promise<LanguageModel> {
   const project = await prisma.project.findUnique({
-    where: { id: projectId },
+    where: await ownedProjectWhere(projectId),
     include: { settings: true },
   });
 
@@ -63,7 +64,7 @@ export async function getProjectWithRelations(
   } = { settings: true },
 ) {
   const project = await prisma.project.findUnique({
-    where: { id: projectId },
+    where: await ownedProjectWhere(projectId),
     include: {
       settings: relations.settings ?? false,
       inspirationImages: relations.inspirationImages ?? false,

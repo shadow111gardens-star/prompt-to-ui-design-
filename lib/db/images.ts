@@ -1,6 +1,8 @@
-import { prisma } from "../db";
+import { requireOwnedProject, ownerFilter, ProjectAccessError } from '@/lib/server/project-access';
+import { prisma } from "@/lib/db";
 import fs from "fs/promises";
 import path from "path";
+import { randomUUID } from 'node:crypto';
 
 const UPLOADS_ROOT = path.join(process.cwd(), "data", "uploads");
 const uploadURL = (filePath: string) => '/api/uploads/' + filePath.split('/').map(encodeURIComponent).join('/');
@@ -20,7 +22,8 @@ export async function addMoodBoardImage(
   mimeType: string,
   fileBuffer: Buffer
 ) {
-  const uniqueName = `${Date.now()}_${fileName.replace(/\s+/g, "_")}`;
+  await requireOwnedProject(projectId);
+  const uniqueName = `${randomUUID()}_${path.basename(fileName.replace(/\\/g, '/')).replace(/[\s\x00-\x1f]/g, "_")}`;
   const relativeDir = path.join("moodboard", projectId);
   const targetDir = path.join(UPLOADS_ROOT, relativeDir);
   await ensureDir(targetDir);
@@ -49,10 +52,10 @@ export async function addMoodBoardImage(
 
 export async function removeMoodBoardImage(id: string) {
   const image = await prisma.moodBoardImage.findUnique({
-    where: { id },
+    where: { id, project: await ownerFilter() },
   });
 
-  if (!image) return { success: false };
+  if (!image) throw new ProjectAccessError(404, "Image not found.");
 
   // Delete file from disk
   const absolutePath = path.join(UPLOADS_ROOT, image.filePath);
@@ -64,15 +67,16 @@ export async function removeMoodBoardImage(id: string) {
 
   // Delete from DB
   await prisma.moodBoardImage.delete({
-    where: { id },
+    where: { id, project: await ownerFilter() },
   });
 
   return { success: true };
 }
 
 export async function getMoodBoardImages(projectId: string) {
+  await requireOwnedProject(projectId);
   const images = await prisma.moodBoardImage.findMany({
-    where: { projectId },
+    where: { projectId, project: await ownerFilter() },
     orderBy: { createdAt: "asc" },
   });
 
@@ -95,7 +99,8 @@ export async function addInspirationImage(
   mimeType: string,
   fileBuffer: Buffer
 ) {
-  const uniqueName = `${Date.now()}_${fileName.replace(/\s+/g, "_")}`;
+  await requireOwnedProject(projectId);
+  const uniqueName = `${randomUUID()}_${path.basename(fileName.replace(/\\/g, '/')).replace(/[\s\x00-\x1f]/g, "_")}`;
   const relativeDir = path.join("inspiration", projectId);
   const targetDir = path.join(UPLOADS_ROOT, relativeDir);
   await ensureDir(targetDir);
@@ -124,10 +129,10 @@ export async function addInspirationImage(
 
 export async function removeInspirationImage(id: string) {
   const image = await prisma.inspirationImage.findUnique({
-    where: { id },
+    where: { id, project: await ownerFilter() },
   });
 
-  if (!image) return { success: false };
+  if (!image) throw new ProjectAccessError(404, "Image not found.");
 
   // Delete file from disk
   const absolutePath = path.join(UPLOADS_ROOT, image.filePath);
@@ -139,15 +144,16 @@ export async function removeInspirationImage(id: string) {
 
   // Delete from DB
   await prisma.inspirationImage.delete({
-    where: { id },
+    where: { id, project: await ownerFilter() },
   });
 
   return { success: true };
 }
 
 export async function getInspirationImages(projectId: string) {
+  await requireOwnedProject(projectId);
   const images = await prisma.inspirationImage.findMany({
-    where: { projectId },
+    where: { projectId, project: await ownerFilter() },
     orderBy: { createdAt: "asc" },
   });
 

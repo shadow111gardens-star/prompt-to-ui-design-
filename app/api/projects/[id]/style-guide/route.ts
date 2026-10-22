@@ -1,7 +1,8 @@
+import { withProjectRoute, projectAccessResponse } from '@/lib/server/project-access';
 import { NextResponse } from "next/server";
 import { getProjectStyleGuide, updateProjectStyleGuide } from "@/lib/db/projects";
 
-export async function GET(
+export const GET = withProjectRoute(async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -10,15 +11,16 @@ export async function GET(
     const styleGuide = await getProjectStyleGuide(id);
     return NextResponse.json({ styleGuide });
   } catch (error) {
+    const denied = projectAccessResponse(error); if (denied) return denied;
     console.error("Error fetching style guide:", error);
     return NextResponse.json(
       { error: "Failed to fetch style guide" },
       { status: 500 }
     );
   }
-}
+});
 
-export async function PATCH(
+export const PATCH = withProjectRoute(async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -35,15 +37,16 @@ export async function PATCH(
     const result = await updateProjectStyleGuide(id, styleGuide);
     return NextResponse.json(result);
   } catch (error) {
+    const denied = projectAccessResponse(error); if (denied) return denied;
     console.error("Error updating style guide:", error);
     return NextResponse.json(
       { error: "Failed to update style guide" },
       { status: 500 }
     );
   }
-}
+});
 
-export async function PUT(
+export const PUT = withProjectRoute(async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -61,11 +64,12 @@ export async function PUT(
     const result = await updateProjectStyleGuide(id, styleGuide);
     return NextResponse.json(result);
   } catch (error) {
+    const denied = projectAccessResponse(error); if (denied) return denied;
     console.error("Error updating style guide via PUT:", error);
     return NextResponse.json(
       { error: "Failed to update style guide" },
       { status: 500 }
     );
   }
-}
+});
 

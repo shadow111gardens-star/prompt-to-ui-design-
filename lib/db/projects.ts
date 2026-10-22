@@ -1,3 +1,4 @@
+import { ownerFilter, ownedProjectWhere, requireOwnedProject, serverIdentity } from '@/lib/server/project-access';
 import { deriveProjectDesignSystem } from "@/lib/project-design-system";
 import { prisma } from "@/lib/db";
 import fs from "fs/promises";
@@ -5,6 +6,7 @@ import path from "path";
 
 export async function getAllProjects() {
   const projects = await prisma.project.findMany({
+    where: await ownerFilter(),
     orderBy: { lastModified: "desc" },
     select: {
       id: true,
@@ -102,7 +104,7 @@ export async function getAllProjects() {
 
 export async function getProject(id: string) {
   const project = await prisma.project.findUnique({
-    where: { id },
+    where: await ownedProjectWhere(id),
     include: {
       moodBoardImages: true,
       inspirationImages: true,
@@ -305,7 +307,9 @@ export async function createProject(data: {
   sketchesData?: Record<string, unknown>;
   thumbnail?: string;
 }) {
+  const { sub: ownerUid } = await serverIdentity();
   const maxProject = await prisma.project.findFirst({
+    where: { ownerUid },
     orderBy: { projectNumber: "desc" },
     select: { projectNumber: true },
   });
@@ -315,6 +319,7 @@ export async function createProject(data: {
   const project = await prisma.project.create({
     data: {
       name,
+      ownerUid,
       projectNumber,
       sketchesData: data.sketchesData
         ? JSON.stringify(data.sketchesData)
@@ -345,7 +350,7 @@ export async function updateProjectSketches(
   }
 
   await prisma.project.update({
-    where: { id },
+    where: await ownedProjectWhere(id),
     data: updateData,
   });
 
@@ -354,7 +359,7 @@ export async function updateProjectSketches(
 
 export async function updateProjectStyleGuide(id: string, styleGuideData: any) {
   await prisma.project.update({
-    where: { id },
+    where: await ownedProjectWhere(id),
     data: {
       styleGuide: JSON.stringify(styleGuideData),
     },
@@ -364,8 +369,9 @@ export async function updateProjectStyleGuide(id: string, styleGuideData: any) {
 }
 
 export async function getProjectStyleGuide(id: string) {
+  await requireOwnedProject(id);
   const project = await prisma.project.findUnique({
-    where: { id },
+    where: await ownedProjectWhere(id),
     select: { styleGuide: true, sketchesData: true, name: true },
   });
 
@@ -380,6 +386,7 @@ export async function getProjectStyleGuide(id: string) {
 }
 
 export async function deleteProject(id: string) {
+  await requireOwnedProject(id);
   // Delete uploads folders on disk
   const uploadsRoot = path.join(process.cwd(), "data", "uploads");
   const moodboardDir = path.join(uploadsRoot, "moodboard", id);
@@ -398,14 +405,14 @@ export async function deleteProject(id: string) {
   }
 
   await prisma.project.delete({
-    where: { id },
+    where: await ownedProjectWhere(id),
   });
   return { success: true };
 }
 
 export async function renameProject(id: string, name: string) {
   const project = await prisma.project.update({
-    where: { id },
+    where: await ownedProjectWhere(id),
     data: { name },
   });
   return { success: true, name: project.name };

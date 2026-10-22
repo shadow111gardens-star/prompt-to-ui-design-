@@ -1,3 +1,4 @@
+import { ownedProjectWhere } from '@/lib/server/project-access';
 import { withPersonalProvider } from '@/lib/ai/with-personal-provider';
 import { prompts, deviceContexts } from "@/prompts";
 import {
@@ -73,7 +74,7 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
 
     const imageBuffer = imageFile ? await imageFile.arrayBuffer() : null;
     const project = await prisma.project.findUnique({
-      where: { id: projectId },
+      where: await ownedProjectWhere(projectId),
       include: { settings: true, inspirationImages: true, moodBoardImages: true },
     });
 

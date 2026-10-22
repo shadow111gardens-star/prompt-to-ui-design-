@@ -1,7 +1,8 @@
+import { withProjectRoute, projectAccessResponse, ownedProjectWhere } from '@/lib/server/project-access';
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-export async function POST(request: NextRequest) {
+export const POST = withProjectRoute(async function POST(request: NextRequest) {
   try {
     const { projectId, shapesData, viewportData } = await request.json();
 
@@ -15,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     await prisma.project.update({
-      where: { id: projectId },
+      where: await ownedProjectWhere(projectId),
       data: {
         sketchesData: JSON.stringify(shapesData),
         viewportData: viewportData ? JSON.stringify(viewportData) : undefined,
@@ -24,7 +25,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    const denied = projectAccessResponse(error); if (denied) return denied;
     console.error("Autosave error:", error);
     return NextResponse.json({ error: "Autosave failed" }, { status: 500 });
   }
-}
+});

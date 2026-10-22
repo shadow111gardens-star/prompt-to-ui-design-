@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const Module = require('node:module');
 const ts = require('typescript');
-function load(source, mocks = {}) {
+function load(source, mocks = {}){mocks={'@/lib/server/project-access':require('./helpers/project-feature-identity.cjs'),...mocks};
   const filename = path.resolve(source);
   const mod = new Module(filename, module);
   mod.filename = filename;

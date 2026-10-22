@@ -1,0 +1,43 @@
+{
+  "verifiedAt": "2026-10-22T09:28:54.970Z",
+  "committed": true,
+  "branchId": "br-square-mud-b4xx4iwp",
+  "computeId": "ep-calm-mouse-b4nvpc6s",
+  "database": "neondb",
+  "assignments": [
+    {
+      "projectId": "cmvh5b97y00025guyv7jefm3t",
+      "ownerUid": "XGHpu36d3ZUwhiY1Aoep2IcNn0z2"
+    },
+    {
+      "projectId": "cmvh5hwfh00045guyq5ik93eq",
+      "ownerUid": "XGHpu36d3ZUwhiY1Aoep2IcNn0z2"
+    },
+    {
+      "projectId": "cmvht27jd0000m0uylzzqxrem",
+      "ownerUid": "XGHpu36d3ZUwhiY1Aoep2IcNn0z2"
+    },
+    {
+      "projectId": "cmvhtlb0o0003m0uyylqeghtg",
+      "ownerUid": "XGHpu36d3ZUwhiY1Aoep2IcNn0z2"
+    },
+    {
+      "projectId": "cmvj315os0002y4uylrjws5dc",
+      "ownerUid": "XGHpu36d3ZUwhiY1Aoep2IcNn0z2"
+    }
+  ],
+  "updatedRows": 5,
+  "allOtherProjectFieldsAndTimestampsUnchanged": true,
+  "nestedRecordsUnchanged": true,
+  "migrationHistoryUnchanged": true,
+  "counts": {
+    "Project": 5,
+    "MoodBoardImage": 2,
+    "InspirationImage": 0,
+    "ProjectSettings": 4
+  },
+  "productionConnected": false,
+  "keysRotated": false,
+  "pushed": false,
+  "deployed": false
+}
