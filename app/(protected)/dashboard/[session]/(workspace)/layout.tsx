@@ -1,5 +1,6 @@
 import Navbar from "@/components/navbar";
 import React from "react";
+import { tokenHarborConfigurationError } from '@/lib/ai/tokenharbor';
 
 type Props = {
   children: React.ReactNode;
@@ -8,7 +9,7 @@ type Props = {
 const Layout = async ({ children }: Props) => {
   return (
     <div className="grid min-w-0 grid-cols-1">
-      <Navbar />
+      <Navbar modelConfigurationError={tokenHarborConfigurationError()} />
       {children}
     </div>
   );

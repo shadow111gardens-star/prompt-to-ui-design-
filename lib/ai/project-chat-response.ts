@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { streamText } from 'ai';
+import { streamText } from "@/lib/ai/generation-sdk";
 import { z } from 'zod';
 import { resolveModelForProject, ProjectNotFoundError } from '@/lib/ai/route-utils';
 import { createResilientStreamResponse } from '@/lib/ai/resilient-stream';

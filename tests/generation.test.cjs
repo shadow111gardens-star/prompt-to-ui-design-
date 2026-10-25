@@ -40,28 +40,12 @@ test('parallel generations remain isolated', async () => {
   const wire = [{streamId:'other', text:'wrong'}, {streamId:'ui', text:'<main>OK</main>'}].map(x => `data: ${JSON.stringify(x)}\n\n`).join('');
   assert.equal(await parseSSEStream(readerFor(wire), 'ui', () => {}), '<main>OK</main>');
 });
-test('NVIDIA and Ollama use chat completions', t => {
-  const old=process.env.NVIDIA_NIM_API_KEY;process.env.NVIDIA_NIM_API_KEY='unit-test-key';t.after(()=>{if(old===undefined)delete process.env.NVIDIA_NIM_API_KEY;else process.env.NVIDIA_NIM_API_KEY=old;});
-  assert.equal(getLanguageModel('nvidia', 'test').provider, 'openai.chat');
-  assert.equal(getLanguageModel('ollama', 'test').provider, 'openai.chat');
+test('legacy selections are mapped to the one fixed TokenHarbor model',()=>{
+ const registry=load('lib/ai/provider-registry.ts',{'@/lib/ai/tokenharbor':{createTokenHarborModel:()=>({modelId:'deepseek-v4.1-flash:free'}),tokenHarborConfiguration:()=>({model:'deepseek-v4.1-flash:free'})}});
+ for(const provider of ['nvidia','ollama','google','openai'])assert.equal(registry.getLanguageModel(provider,'legacy').modelId,'deepseek-v4.1-flash:free');
+ assert.equal(registry.getFallbackSelection().provider,'tokenharbor');
 });
-test('Ollama normalizes base URLs to one v1 suffix', async () => {
-  const previous = process.env.OLLAMA_BASE_URL;
-  const originalFetch = global.fetch;
-  try {
-    for (const base of ['http://localhost:11434', 'http://localhost:11434/', 'http://localhost:11434/v1/']) {
-      process.env.OLLAMA_BASE_URL = base;
-      let requested;
-      global.fetch = async url => { requested = String(url); throw new Error('test interception'); };
-      await assert.rejects(getLanguageModel('ollama', 'test').doGenerate({ prompt: [{ role: 'user', content: [{ type: 'text', text: 'test' }] }] }));
-      assert.equal(requested, 'http://localhost:11434/v1/chat/completions');
-    }
-  } finally {
-    global.fetch = originalFetch;
-    if (previous === undefined) delete process.env.OLLAMA_BASE_URL;
-    else process.env.OLLAMA_BASE_URL = previous;
-  }
-});
+
 test('usage metadata does not contaminate generated HTML', async () => {
   const wire = [{streamId:'ui',text:'<main>OK</main>'},{streamId:'ui',type:'usage',usage:{inputTokens:12,outputTokens:8,totalTokens:20}}].map(x=>`data: ${JSON.stringify(x)}\n\n`).join('');
   assert.equal(await parseSSEStream(readerFor(wire),'ui',()=>{}),'<main>OK</main>');
@@ -156,12 +140,12 @@ test('theme application persists one override, updates literal color classes and
  assert.equal((second.match(/id="openui-theme-override"/g)||[]).length,1);
  assert.match(second,/Keep me/);assert.match(second,/#c6ff4d/);assert.match(second,/!important/);
 });
-test('transient stream failure falls back once before output', async t => {
+test('transient stream failure is surfaced once without fallback', async t => {
  const old=process.env.GEMINI_API_KEY;process.env.GEMINI_API_KEY='unit-test-key';t.after(()=>{if(old===undefined)delete process.env.GEMINI_API_KEY;else process.env.GEMINI_API_KEY=old;});
  const {createResilientStreamResponse}=load('lib/ai/resilient-stream.ts',{'@/lib/db':{prisma:{}}});
  let calls=0;
  const response=createResilientStreamResponse(()=>({fullStream:(async function*(){calls++;if(calls===1){yield {type:'error',error:Object.assign(new Error('high demand'),{statusCode:503})};}else{yield {type:'text-delta',text:'<main>Ready</main>'};}})(),totalUsage:Promise.resolve({totalTokens:10}),finishReason:Promise.resolve('stop')}),{},'ui','google','gemini-test');
- assert.equal(await parseSSEStream(response.body.getReader(),'ui',()=>{}),'<main>Ready</main>');assert.equal(calls,2);
+ await assert.rejects(parseSSEStream(response.body.getReader(),'ui',()=>{}),/high demand/);assert.equal(calls,1);
 });
 test('stream failure after partial output never silently switches model', async () => {
  const {createResilientStreamResponse}=load('lib/ai/resilient-stream.ts',{'@/lib/db':{prisma:{}}});let calls=0;

@@ -9,7 +9,7 @@ import {
 } from "@/lib/ai/provider-registry";
 import { createStreamResponse } from "@/lib/ai/route-utils";
 import { prisma } from "@/lib/db";
-import { streamText } from "ai";
+import { streamText } from "@/lib/ai/generation-sdk";
 import { buildRedesignPrompt, REDESIGN_SYSTEM_PROMPT } from "@/lib/ai/redesign-context";
 import fs from "fs/promises";
 import path from "path";
@@ -162,28 +162,12 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
       temperature: 0.7,
     });
 
-    let result = createGeneration(model as Parameters<typeof streamText>[0]["model"]);
-    let providerAttempts = 1;
+    const result = createGeneration(model as Parameters<typeof streamText>[0]["model"]);
+    const providerAttempts = 1;
     async function* checkedStream() {
-      let emittedText = false;
-      try {
-        for await (const part of result.fullStream) {
-          if (part.type === "error") throw part.error;
-          if (part.type === "text-delta") { emittedText = true; yield part.text; }
-        }
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        const status = typeof error === "object" && error !== null && "statusCode" in error ? error.statusCode : undefined;
-        const busy = status === 503 || /high demand|overload|temporarily unavailable|no longer available|not found/i.test(message);
-        if (emittedText || !busy || project?.settings?.provider !== "google") throw error;
-        const fallbackId = process.env.GOOGLE_REDESIGN_FALLBACK_MODEL || "gemini-3.5-flash-lite";
-        if (project.settings.model?.replace(/^google\//, "") === fallbackId) throw error;
-        providerAttempts = 2;
-        result = createGeneration(getLanguageModel("google", fallbackId) as Parameters<typeof streamText>[0]["model"]);
-        for await (const part of result.fullStream) {
-          if (part.type === "error") throw part.error;
-          if (part.type === "text-delta") yield part.text;
-        }
+      for await (const part of result.fullStream) {
+        if (part.type === "error") throw part.error;
+        if (part.type === "text-delta") yield part.text;
       }
     }
     return createStreamResponse(checkedStream(), "text/event-stream; charset=utf-8", activeStreamId, async () => ({

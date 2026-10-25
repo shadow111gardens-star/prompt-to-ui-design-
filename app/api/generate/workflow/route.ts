@@ -9,7 +9,7 @@ import {
 } from "@/lib/ai/provider-registry";
 import { createResilientStreamResponse } from "@/lib/ai/resilient-stream";
 import { prisma } from "@/lib/db";
-import { streamText } from "ai";
+import { streamText } from "@/lib/ai/generation-sdk";
 import { prompts } from "@/prompts";
 import { buildRedesignPrompt, REDESIGN_SYSTEM_PROMPT, summarizeScreenStyle } from "@/lib/ai/redesign-context";
 import fs from "fs/promises";

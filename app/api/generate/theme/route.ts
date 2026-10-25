@@ -7,7 +7,7 @@ import {
   ProviderKey,
 } from "@/lib/ai/provider-registry";
 import { prisma } from "@/lib/db";
-import { generateText, Output } from "ai";
+import { generateText, Output } from "@/lib/ai/generation-sdk";
 import z from "zod";
 
 const ColorSwatchSchema = z.object({

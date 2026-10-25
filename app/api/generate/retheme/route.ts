@@ -7,7 +7,7 @@ import {
   ProviderKey,
 } from "@/lib/ai/provider-registry";
 import { prisma } from "@/lib/db";
-import { streamText } from "ai";
+import { streamText } from "@/lib/ai/generation-sdk";
 import { createResilientStreamResponse } from "@/lib/ai/resilient-stream";
 
 const RETHEME_SYSTEM_PROMPT = `You are a frontend design system expert. Your task is to retheme an existing HTML UI by applying new design tokens.

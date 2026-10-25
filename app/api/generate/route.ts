@@ -9,7 +9,7 @@ import {
 } from "@/lib/ai/provider-registry";
 import { createStreamResponse } from "@/lib/ai/route-utils";
 import { prisma } from "@/lib/db";
-import { streamText } from "ai";
+import { streamText } from "@/lib/ai/generation-sdk";
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";

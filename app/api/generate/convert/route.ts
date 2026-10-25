@@ -9,7 +9,7 @@ import {
 } from "@/lib/ai/provider-registry";
 import { createResilientStreamResponse } from "@/lib/ai/resilient-stream";
 import { prisma } from "@/lib/db";
-import { streamText } from "ai";
+import { streamText } from "@/lib/ai/generation-sdk";
 
 const FRAMEWORK_PROMPTS: Record<string, string> = {
   react: `You are a senior React developer. Convert the given HTML + Tailwind CSS into a modern React functional component.

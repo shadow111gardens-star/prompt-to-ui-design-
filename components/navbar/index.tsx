@@ -51,7 +51,7 @@ type TabProps = {
   icon: React.ReactNode;
 };
 
-const Navbar = () => {
+const Navbar = ({ modelConfigurationError }: { modelConfigurationError?: string | null }) => {
   const dispatch = useAppDispatch();
   const params = useSearchParams();
   const projectId = params.get("project");
@@ -625,7 +625,7 @@ const Navbar = () => {
           </Button>
         )}
 
-        {projectId && <ModelSelector />}
+        {projectId && <ModelSelector configurationError={modelConfigurationError} />}
 
         {/* Export Button (Coral Primary) */}
         {projectId && (

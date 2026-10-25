@@ -10,7 +10,7 @@ import {
 import { prisma } from "@/lib/db";
 import { updateProjectStyleGuide } from "@/lib/db/projects";
 import { prompts } from "@/prompts";
-import { generateText, Output } from "ai";
+import { generateText, Output } from "@/lib/ai/generation-sdk";
 import z from "zod";
 import fs from "fs/promises";
 import path from "path";

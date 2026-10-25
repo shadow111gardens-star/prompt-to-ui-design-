@@ -12,20 +12,14 @@ test('Moodboard references read persisted project-owned bytes with MIME types an
  const broken=loader({'fs/promises':{__esModule:true,default:{stat:async()=>{throw Error('missing');}}}})('lib/moodboard-references.ts');await assert.rejects(()=>broken.readMoodboardReferences(records,['a'],'google'),/Re-upload/);
 });
 
-test('strict vision selection retains configured providers and personal overrides; text-only/unknown models never silently fall back',async()=>{
- const calls=[];const modules=loader({'@/lib/ai/provider-registry':{getFallbackSelection:()=>({provider:'google',modelId:'gemini-2.5-flash'}),getLanguageModel:(provider,modelId)=>{calls.push({provider,modelId});return {provider,modelId};}}});const {getMoodboardModel}=modules('lib/ai/moodboard-model.ts'),{personalProviderContext}=modules('lib/ai/personal-provider-context.ts');
- for(const [provider,model]of Object.entries({google:'gemini-2.5-flash',openai:'gpt-4o',anthropic:'claude-sonnet-4-5',xai:'grok-4',nvidia:'meta/llama-3.2-11b-vision-instruct'})){const selected=await getMoodboardModel({provider,model});assert.equal(selected.provider,provider);assert.equal(selected.modelId,model);}
- for(const [provider,model]of [['openai','gpt-3.5-turbo'],['google','gemma-text'],['xai','grok-3'],['nvidia','qwen-coder'],['anthropic','unknown']])await assert.rejects(()=>getMoodboardModel({provider,model}),/No model was substituted/);
- const selected=await personalProviderContext.run({uid:'test',settings:{active:'openai',providers:{openai:{model:'gpt-4o',key:'synthetic'}}}},()=>getMoodboardModel({provider:'google',model:'gemini-2.5-flash'}));assert.equal(selected.provider,'openai');
- await assert.rejects(()=>personalProviderContext.run({uid:'test',settings:{active:'openai',providers:{openai:{model:'gpt-3.5-turbo',key:'synthetic'}}}},()=>getMoodboardModel({provider:'google',model:'gemini-2.5-flash'})),/not confirmed/);assert.equal((await getMoodboardModel(null)).provider,'google');
+test('Moodboard selection uses only the fixed model and never an active personal override',async()=>{
+ const modules=loader({'@/lib/ai/tokenharbor':{tokenHarborConfiguration:()=>({model:'deepseek-v4.1-flash:free'})},'@/lib/ai/provider-registry':{getLanguageModel:()=>({modelId:'deepseek-v4.1-flash:free'})}}),{getMoodboardModel}=modules('lib/ai/moodboard-model.ts'),{personalProviderContext}=modules('lib/ai/personal-provider-context.ts');
+ for(const provider of ['google','openrouter','ollama']){const result=await getMoodboardModel({provider,model:'legacy'});assert.equal(result.provider,'tokenharbor');assert.equal(result.modelId,'deepseek-v4.1-flash:free');}
+ await personalProviderContext.run({uid:'synthetic',settings:{active:'google',providers:{google:{key:'synthetic',model:'other',models:[]}}}},async()=>assert.equal((await getMoodboardModel()).provider,'tokenharbor'));
 });
 
-test('OpenRouter and Ollama require real metadata image capability, and discovery failures are explicit',async()=>{
- const modules=loader({'@/lib/ai/provider-registry':{getLanguageModel:(provider,modelId)=>({provider,modelId})}}),{getMoodboardModel}=modules('lib/ai/moodboard-model.ts');const original=global.fetch;
- try{global.fetch=async()=>Response.json({data:[{id:'model/vision',architecture:{input_modalities:['text','image'],output_modalities:['text']}}]});assert.equal((await getMoodboardModel({provider:'openrouter',model:'model/vision'})).modelId,'model/vision');await assert.rejects(()=>getMoodboardModel({provider:'openrouter',model:'text-only'}),/not confirmed/);
- global.fetch=async()=>Response.json({capabilities:['completion','vision']});assert.equal((await getMoodboardModel({provider:'ollama',model:'local-custom'})).modelId,'local-custom');global.fetch=async()=>Response.json({capabilities:['completion']});await assert.rejects(()=>getMoodboardModel({provider:'ollama',model:'local-text'}),/not confirmed/);
- global.fetch=async()=>new Response('',{status:503});await assert.rejects(()=>getMoodboardModel({provider:'openrouter',model:'model/vision'}),/Could not verify/);await assert.rejects(()=>getMoodboardModel({provider:'ollama',model:'local-custom'}),/server is running/);
- }finally{global.fetch=original;}
+test('missing fixed configuration fails before Moodboard generation instead of probing other catalogs',async()=>{
+ const modules=loader({'@/lib/ai/tokenharbor':{tokenHarborConfiguration:()=>{throw Error('Set TOKENHARBOR_MODEL');}},'@/lib/ai/provider-registry':{getLanguageModel:()=>{throw Error('Should not resolve a model');}}});await assert.rejects(modules('lib/ai/moodboard-model.ts').getMoodboardModel({provider:'openrouter',model:'legacy'}),/TOKENHARBOR_MODEL/);
 });
 
 test('existing generation route forwards actual Moodboard image parts and inspiration instructions without altering normal mode',async()=>{
@@ -63,10 +57,7 @@ test('save failure retains the added screen and retry saves it without another A
  try{global.fetch=async(url,init)=>{if(url==='/api/generate'){requests++;return stream(init.body);}return fail?new Response('',{status:500}):f.modules('app/api/autosave/route.ts').POST(new Request('http://localhost/api/autosave',init));};await assert.rejects(()=>generateMoodboardScreen({store:f.store,projectId:'p',imageIds:['saved'],prompt:'',device:'web',signal:new AbortController().signal,onProgress(){}}),error=>error instanceof MoodboardSaveError);assert.equal(Object.keys(f.store.getState().shapes.shapes.entities).length,1);fail=false;await saveMoodboardCanvas(f.store,'p');assert.equal(requests,1);}finally{global.fetch=original;}
 });
 
-for(const[provider,modelId]of Object.entries({google:'gemini-2.5-flash',openai:'gpt-4o',anthropic:'claude-sonnet-4-5',xai:'grok-4',nvidia:'meta/llama-3.2-11b-vision-instruct',ollama:'llava',openrouter:'google/gemini-2.5-flash'})){
- test(`${provider}: installed adapter forwards image bytes to its native multimodal request`,async()=>{
-  let wire;const mocks={};for(const[pkg,factory]of [['@ai-sdk/openai','createOpenAI'],['@ai-sdk/anthropic','createAnthropic'],['@ai-sdk/google','createGoogleGenerativeAI'],['@openrouter/ai-sdk-provider','createOpenRouter']]){const real=require(pkg);mocks[pkg]={...real,[factory]:options=>real[factory]({...options,apiKey:'synthetic',fetch:async(url,init)=>{wire=JSON.parse(init.body);throw Error('Synthetic transport; no paid request');}})};}
-  const vars=['OPENAI_API_KEY','ANTHROPIC_API_KEY','GEMINI_API_KEY','XAI_API_KEY','NVIDIA_NIM_API_KEY','OPENROUTER_API_KEY'],before=Object.fromEntries(vars.map(key=>[key,process.env[key]]));vars.forEach(key=>process.env[key]='synthetic');
-  try{const {getLanguageModel}=loader(mocks)('lib/ai/provider-registry.ts');await assert.rejects(()=>require('ai').generateText({model:getLanguageModel(provider,modelId),maxRetries:0,messages:[{role:'system',content:'Generate editable UI'},{role:'user',content:[{type:'image',image:new Uint8Array([1,2,3]),mediaType:'image/png'},{type:'text',text:'Analyze this reference'}]}],maxOutputTokens:32}));assert.ok(wire);assert.match(JSON.stringify(wire),/AQID/);assert.match(JSON.stringify(wire),/image/);}finally{for(const[key,value]of Object.entries(before)){if(value===undefined)delete process.env[key];else process.env[key]=value;}}
- });
-}
+test('fixed model metadata does not trigger an unrelated vision catalog request',async()=>{
+ let calls=0;const modules=loader({'@/lib/ai/tokenharbor':{tokenHarborConfiguration:()=>({model:'deepseek-v4.1-flash:free'})},'@/lib/ai/provider-registry':{getLanguageModel:()=>{calls++;return {modelId:'deepseek-v4.1-flash:free'};}}});
+ const selected=await modules('lib/ai/moodboard-model.ts').getMoodboardModel({provider:'google',model:'legacy'});assert.equal(selected.provider,'tokenharbor');assert.equal(selected.modelId,'deepseek-v4.1-flash:free');assert.equal(calls,1);
+});

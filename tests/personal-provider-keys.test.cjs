@@ -36,13 +36,11 @@ test('provider API validates entitlement/origin, persists models, activates keys
  assert.equal((await api.DELETE(req('DELETE',{provider:'openai'}))).status,200);assert.equal((await store.read(uid)).active,undefined);
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
-test('personal keys and active models reach SDK calls without changing environment or leaking across concurrent requests',async()=>{
- const calls=[];const client=provider=>config=>{const fn=model=>{const value={provider,key:config?.apiKey,model};calls.push(value);return value;};fn.chat=fn;return fn;};
- const load=loader({'@ai-sdk/openai':{createOpenAI:client('openai-compatible')},'@ai-sdk/anthropic':{createAnthropic:client('anthropic')},'@ai-sdk/google':{createGoogleGenerativeAI:client('google')},'@openrouter/ai-sdk-provider':{createOpenRouter:client('openrouter')}});
- const {personalProviderContext}=load('lib/ai/personal-provider-context.ts'),registry=load('lib/ai/provider-registry.ts');
- await Promise.all(['openai','anthropic','google','xai'].map((provider,index)=>personalProviderContext.run({uid:'user-'+index,settings:{active:provider,providers:{[provider]:{key:'own-key-'+index,model:'own-model-'+index,models:[]}}}},async()=>{await new Promise(resolve=>setImmediate(resolve));const result=registry.getLanguageModel('openai','environment-model');assert.equal(result.key,'own-key-'+index);assert.equal(result.model,'own-model-'+index);assert.equal(registry.getFallbackModel().key,'own-key-'+index);})));assert.equal(personalProviderContext.getStore(),undefined);
- assert.equal(calls.filter(call=>call.key?.startsWith('own-key')).length,8);
+test('saved personal provider keys cannot override fixed TokenHarbor generation',async()=>{
+ const load=loader({'@/lib/ai/tokenharbor':{createTokenHarborModel:()=>({modelId:'deepseek-v4.1-flash:free'}),tokenHarborConfiguration:()=>({model:'deepseek-v4.1-flash:free'})}});const {personalProviderContext}=load('lib/ai/personal-provider-context.ts'),registry=load('lib/ai/provider-registry.ts');
+ await Promise.all(['openai','google'].map(provider=>personalProviderContext.run({uid:'synthetic-'+provider,settings:{active:provider,providers:{[provider]:{key:'synthetic-personal',model:'other-model',models:[]}}}},async()=>{await new Promise(r=>setImmediate(r));assert.equal(registry.getLanguageModel(provider,'old').modelId,'deepseek-v4.1-flash:free');assert.equal(registry.getFallbackSelection().provider,'tokenharbor');})));assert.equal(personalProviderContext.getStore(),undefined);
 });
+
 test('localhost testing override works only in development, never for remote hosts or production',()=>{
  const previous={mode:process.env.NODE_ENV,flag:process.env.OPENUI_LOCAL_BYOK_TESTING};try{const {localByokTesting}=loader()('lib/ai/personal-provider-auth.ts');process.env.OPENUI_LOCAL_BYOK_TESTING='true';process.env.NODE_ENV='development';assert.equal(localByokTesting(new Request('http://localhost:3000')),true);assert.equal(localByokTesting(new Request('https://example.com')),false);process.env.NODE_ENV='production';assert.equal(localByokTesting(new Request('http://localhost:3000')),false);}finally{if(previous.mode===undefined)delete process.env.NODE_ENV;else process.env.NODE_ENV=previous.mode;if(previous.flag===undefined)delete process.env.OPENUI_LOCAL_BYOK_TESTING;else process.env.OPENUI_LOCAL_BYOK_TESTING=previous.flag;}
 });
@@ -61,9 +59,9 @@ test('provider controls save, reveal, test, select a model, activate and remove 
  find(n=>n.props?.['aria-label']==='Remove OpenAI key').props.onClick();await flush();assert.equal(calls.at(-1).method,'DELETE');
  global.fetch=async()=>Response.json({error:'Invalid key'},{status:400});find(n=>n.props?.id==='provider-key-openai').props.onChange({target:{value:'sk-invalid-unit-key'}});find(n=>n.type==='button'&&n.props.children?.includes?.('Save Key')).props.onClick();await flush();assert.ok(nodes(render()).some(n=>n.props?.role==='alert'&&n.props.children==='Invalid key'));
 });
-test('generation wrapper restores each authenticated user context across streamed asynchronous work',async()=>{
+test('fixed model catalog requests never activate personal provider credentials',async()=>{
  const load=loader({'@/lib/db':{prisma:{}},'@/lib/ai/personal-provider-auth':{personalProviderIdentity:async request=>({sub:request.headers.get('x-user'),plan:'lifetime'}),canUsePersonalProviders:()=>true},'@/lib/ai/personal-provider-store':{personalProviderStore:{read:async uid=>({active:'openai',providers:{openai:{key:'private-'+uid,model:'model-'+uid,models:[]}}})}}});
  const {personalProviderContext}=load('lib/ai/personal-provider-context.ts'),{withPersonalProvider}=load('lib/ai/with-personal-provider.ts');
- const handler=withPersonalProvider(async()=>new Response(new ReadableStream({async start(controller){await new Promise(resolve=>setImmediate(resolve));controller.enqueue(new TextEncoder().encode(personalProviderContext.getStore().settings.providers.openai.model));controller.close();}})));
- const results=await Promise.all(['alice','bob'].map(async uid=>(await handler(new Request('http://localhost/api/models',{headers:{'x-user':uid}}))).text()));assert.deepEqual(results,['model-alice','model-bob']);assert.equal(personalProviderContext.getStore(),undefined);
+ const handler=withPersonalProvider(async()=>new Response(new ReadableStream({async start(controller){await new Promise(resolve=>setImmediate(resolve));assert.equal(personalProviderContext.getStore(),undefined);controller.enqueue(new TextEncoder().encode('fixed-model'));controller.close();}})));
+ const results=await Promise.all(['alice','bob'].map(async uid=>(await handler(new Request('http://localhost/api/models',{headers:{'x-user':uid}}))).text()));assert.deepEqual(results,['fixed-model','fixed-model']);assert.equal(personalProviderContext.getStore(),undefined);
 });
