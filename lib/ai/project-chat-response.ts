@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { resolveModelForProject, ProjectNotFoundError } from '@/lib/ai/route-utils';
 import { createResilientStreamResponse } from '@/lib/ai/resilient-stream';
 import { prisma } from '@/lib/db';
-import { PROJECT_CHAT_SYSTEM } from '@/lib/project-chat';
+import { PROJECT_CHAT_SYSTEM, parseChatPlan } from '@/lib/project-chat';
 import { EDITABLE_STYLES } from '@/lib/element-editing';
 import { designTargetInstruction, projectDesignTarget } from '@/lib/design-target';
 import { ownedProjectWhere, projectAccessResponse } from '@/lib/server/project-access';
@@ -31,8 +31,8 @@ export async function projectChatResponse(request:NextRequest,body:unknown) {
     const context={...data.context,projectName:project.name,editableStyles:[...EDITABLE_STYLES]};
     return createResilientStreamResponse(model=>streamText({model,system:PROJECT_CHAT_SYSTEM+designTargetInstruction(projectDesignTarget(project.sketchesData)),
       messages:[{role:'user',content:`PROJECT REFERENCE DATA:\n${JSON.stringify(context)}\n\nCURRENT USER REQUEST:\n${data.userMessage}`}],
-      abortSignal:request.signal,maxRetries:0,maxOutputTokens:24000,
-    }),model,data.streamId,project.settings?.provider,project.settings?.model);
+      abortSignal:request.signal,maxRetries:0,maxOutputTokens:4000,
+    }),model,data.streamId,project.settings?.provider,project.settings?.model,parseChatPlan);
   }catch(error){
     const denied=projectAccessResponse(error);if(denied)return denied;
     if(error instanceof ProjectNotFoundError)return NextResponse.json({error:'Project not found.'},{status:404});

@@ -176,25 +176,12 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
 
     const deviceContext = deviceContexts[deviceType] || "";
 
-    const userPrompt = `
-Generate a fully responsive UI layout corresponding to the specifications below:
-
-1. Device Target Layout:
-   - Screen Viewport: ${deviceType.toUpperCase()}
-   - Ensure the layout is designed specifically for a ${deviceType} screen size (e.g. mobile stacking and small-screen layouts vs desktop spacing, sidebars, and grids).
-   ${deviceContext ? `- Device-specific layout rules:\n${deviceContext}` : ""}
-
-2. User Prompt Instruction:
-   - Required Layout Content: "${prompt || "Generate a modern interface based on style system."}"
-
-3. Style Guide & Design Tokens (DESIGN.md):
-   - ${moodboardMode ? 'Derive a cohesive palette, typography, spacing, borders and component language from the attached Moodboard. Existing project tokens are secondary guidance where compatible: ' + styleConstraints : styleConstraints}
-
-4. Reference Images:
-   - Use the attached design reference images ONLY for visual style interpretation (overall layout spacing structure, component ideas, mood, accent placements) to bias visual choices within the style tokens above.
-   - Do NOT extract new colors or fonts not defined in the Style System.
-   - Design System / DESIGN.md rules always override conflicting cues in the images.
-`;
+    const userPrompt = [
+      'Generate responsive ' + deviceType + ' UI. Device rules: ' + deviceContext,
+      'USER REQUIREMENTS (verbatim):\n' + (prompt || 'Generate a modern interface based on style system.'),
+      'DESIGN SYSTEM (unchanged):\n' + (moodboardMode ? 'Derive visual direction from attached Moodboard; existing tokens are secondary where compatible. ' : '') + styleConstraints,
+      ...(visionImages.length || imageBuffer ? ['Reference images guide layout/style only; do not override supplied DESIGN.md colors/fonts.'] : []),
+    ].join('\n\n');
 
     const moodboardInstruction = `\nMOODBOARD-TO-UI: Analyze all attached references for layout, visual hierarchy, palette, typography, spacing, borders, imagery and component style. Create a NEW responsive interface inspired by their shared visual direction and the user's optional description. These design references are inspiration only: never map them into image slots. Do not copy a reference pixel-for-pixel, and do not render the Moodboard itself or use reference screenshots as the resulting UI. Build real editable HTML elements, CSS and SVG components, not a single screenshot/image. Return only complete runnable HTML. No analysis prose. For this task the references provide primary visual direction; preserve explicit user requirements.`;
     const messagesContent: Array<{ type: "text"; text: string } | { type: "image"; image: Uint8Array; mediaType?: string }> = [

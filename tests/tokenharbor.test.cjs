@@ -25,13 +25,23 @@ test('real OpenAI-compatible adapter uses the exact endpoint/model, server key, 
 
 test('full input validation includes system instructions and rejects oversized and uncountable image input before fetch',async t=>{
  configured(t);let calls=0;global.fetch=async()=>{calls++;return answer();};const load=loader(),sdk=load('lib/ai/generation-sdk.ts'),registry=load('lib/ai/provider-registry.ts');
- await assert.rejects(sdk.generateText({model:registry.getFallbackModel(),prompt:'small',system:'x'.repeat(8001)}),/8,000-token/);
- await assert.rejects(sdk.generateText({model:registry.getFallbackModel(),messages:[{role:'user',content:[{type:'image',image:new Uint8Array([1,2,3]),mediaType:'image/png'}]}]}),/Image input.*8,000-token/);
- assert.equal(calls,0);const validate=load('lib/ai/tokenharbor.ts').validateTokenHarborInput;assert.ok(validate([{role:'user',content:[{type:'text',text:'Hello'}]}])<8000);
+ await assert.rejects(sdk.generateText({model:registry.getFallbackModel(),prompt:'small',system:'x'.repeat(4001)}),/4,000-token/);
+ await assert.rejects(sdk.generateText({model:registry.getFallbackModel(),messages:[{role:'user',content:[{type:'image',image:new Uint8Array([1,2,3]),mediaType:'image/png'}]}]}),/Image input.*4,000-token/);
+ assert.equal(calls,0);const validate=load('lib/ai/tokenharbor.ts').validateTokenHarborInput;assert.ok(validate([{role:'user',content:[{type:'text',text:'Hello'}]}])<4000);
 });
 
 test('fixed selector renders its label and configuration error without making a catalog request or exposing key',t=>{
  configured(t);let calls=0;global.fetch=async()=>{calls++;throw Error('No requests expected');};const load=loader();const Component=load('components/canvas/model-selector.tsx').default;const html=require('react-dom/server').renderToStaticMarkup(require('react').createElement(Component,{configurationError:'Set TOKENHARBOR_API_KEY on the server.'}));assert.match(html,/DeepSeek V4.1 Flash \(Free\)/);assert.match(html,/role="alert"/);assert.equal(calls,0);assert.equal(html.includes(process.env.TOKENHARBOR_API_KEY),false);
+});
+
+test('structured generation keeps the existing schema, validates JSON locally, and never retries malformed output',async t=>{
+ configured(t);const load=loader(),sdk=load('lib/ai/generation-sdk.ts'),registry=load('lib/ai/provider-registry.ts'),{z}=require('zod');const schema=z.object({name:z.string()});
+ for(const content of ['{"name":"valid"}','{"name":42}','{"name":']){
+  let calls=0;global.fetch=async(_url,options)=>{calls++;const wire=JSON.parse(options.body);assert.equal(wire.max_tokens,4000);return Response.json({id:'json',model:modelId,choices:[{index:0,message:{role:'assistant',content},finish_reason:'stop'}],usage:{prompt_tokens:8,completion_tokens:4,total_tokens:12}});};
+  const generation=sdk.generateText({model:registry.getFallbackModel(),prompt:'Reply with a name.',output:sdk.Output.object({schema}),maxRetries:9});
+  if(content.includes('valid'))assert.equal((await generation).output.name,'valid');else await assert.rejects(generation);
+  assert.equal(calls,1);
+ }
 });
 
 test('duplicate generations are denied while response is active and released after completion',async t=>{

@@ -285,9 +285,10 @@ Return ONLY the JSON object matching the exact schema structure above.`;
       ],
     });
 
+    const validatedStyleGuide = StyleGuideSchema.parse(result.output);
     const styleGuideData = {
-      ...result.output,
-      designSystemDetails: generateDesignSystemDetails(result.output),
+      ...validatedStyleGuide,
+      designSystemDetails: generateDesignSystemDetails(validatedStyleGuide),
     };
 
     await updateProjectStyleGuide(projectId, styleGuideData);

@@ -21,13 +21,13 @@ export function validateTokenHarborInput(prompt: unknown, extra?: unknown): numb
   for (const message of messages) {
     const content = (message as { content?: unknown }).content;
     if (Array.isArray(content) && content.some(part => part && typeof part === 'object' && ['file', 'image'].includes(String((part as { type?: unknown }).type)))) {
-      throw new Error('Image input cannot currently be verified against the 8,000-token limit. Generate from text with drawing/references turned off. No provider request was sent.');
+      throw new Error('Image input cannot currently be verified against the 4,000-token limit. Generate from text with drawing/references turned off. No provider request was sent.');
     }
   }
   // Byte-level text tokens cannot exceed their UTF-8 bytes; reserve explicit
   // room for message framing. JSON also includes tools/schema when supplied.
   const upperBound = Buffer.byteLength(JSON.stringify({ prompt, extra }), 'utf8') + 512 + messages.length * 32;
-  if (upperBound > AI_INPUT_TOKEN_LIMIT) throw new Error('Input exceeds the safe 8,000-token budget. Shorten the prompt, history, HTML or design context. No provider request was sent.');
+  if (upperBound > AI_INPUT_TOKEN_LIMIT) throw new Error('Input exceeds the safe 4,000-token budget. Shorten the prompt, history, HTML or design context. No provider request was sent.');
   return upperBound;
 }
 export const tokenHarborLimitsMiddleware: LanguageModelMiddleware = {

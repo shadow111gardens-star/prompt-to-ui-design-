@@ -88,6 +88,7 @@ export function createStreamResponse(
   contentType: string = "text/event-stream; charset=utf-8",
   streamId: string = "default-stream-id",
   getMetadata?: () => Promise<Record<string, unknown>>,
+  validateOutput?: (text: string) => void,
 ): Response {
   const encoder = new TextEncoder();
   let cancelled = false;
@@ -95,8 +96,10 @@ export function createStreamResponse(
   const stream = new ReadableStream({
     async start(controller) {
       try {
+        let jsonOutput = '';
         for await (const chunk of textStream) {
           if (cancelled) break;
+          if (validateOutput) { jsonOutput += chunk; continue; }
           const payload = {
             streamId,
             text: chunk,
@@ -105,6 +108,13 @@ export function createStreamResponse(
           controller.enqueue(encoder.encode(sseMessage));
         }
         if (cancelled) return;
+        // JSON output is never presented as renderable content until the
+        // complete document passes its existing local schema. HTML keeps its
+        // progressive streaming behavior.
+        if (validateOutput) {
+          validateOutput(jsonOutput);
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ streamId, text: jsonOutput })}\n\n`));
+        }
         if (getMetadata) {
           const metadata = await getMetadata();
           if (cancelled) return;

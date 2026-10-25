@@ -111,7 +111,7 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
       ],
     });
 
-    const themeData = result.output;
+    const themeData = ThemeSchema.parse(result.output);
 
     // Build designMd from the generated theme
     const primaryColor = themeData.colorSections[0]?.swatches[0]?.hexColor || "#db2800";
