@@ -1,37 +1,10 @@
 // Device-specific layout guidance injected into generation prompts
 export const deviceContexts: Record<string, string> = {
-  mobile: `MOBILE-FIRST LAYOUT RULES:
-    - Target Screen Resolution: 375px width × 812px height
-    - Use vertical stacking (flex-col) as primary layout direction
-    - Bottom navigation bar preferred over top horizontal navbars
-    - Touch targets minimum 44px × 44px for all interactive elements
-    - Full-width cards and sections, avoid multi-column grids
-    - Use max-w-sm or w-full container width
-    - Large, readable text (text-base minimum for body)
-    - Thumb-friendly interaction zones in the lower half of the screen
-    - Use sticky headers and floating action buttons
-    - Single-column form layouts only
-    - Swipeable carousels instead of side-by-side grids`,
+  mobile: `MOBILE-FIRST: 375px ? 812px. Vertical flex-col,full-width cards/sections,max-w-sm or w-full; no multi-column grids. Prefer bottom nav; touch targets >=44px ? 44px; body >=text-base. Thumb zones low; sticky headers,floating actions; single-column forms; swipeable carousels instead of side-by-side grids.`,
 
-  tablet: `TABLET LAYOUT RULES:
-    - Target Screen Resolution: 768px width × 1024px height
-    - 2-column grid layouts preferred for content areas
-    - Side navigation or collapsible drawer acceptable
-    - Use max-w-3xl container width
-    - Mix vertical stacking and grid layouts contextually
-    - Cards can be displayed 2-across in grids
-    - Comfortable touch targets (40px minimum)
-    - Split-view layouts are encouraged`,
+  tablet: `TABLET: 768px ? 1024px; max-w-3xl. Prefer 2-column content/cards; side nav or collapsible drawer. Mix stacks/grids contextually; touch targets >=40px; encourage split-view.`,
 
-  web: `DESKTOP/WEB LAYOUT RULES:
-    - Multi-column grids (2-4 columns) for content areas
-    - Top horizontal navigation with dropdown menus
-    - Sidebar layouts encouraged for dashboards
-    - Use full width (w-full) for page sections and headers, but restrict inner content elements to max-w-7xl mx-auto px-6
-    - Hover states required on all interactive elements
-    - Dense information layouts are acceptable
-    - Use breadcrumbs for deep navigation
-    - Data tables with sortable columns when appropriate`,
+  web: `DESKTOP/WEB: 2-4 column content grids; top nav with dropdowns; dashboard sidebars. Sections/headers w-full; inner max-w-7xl mx-auto px-6. All controls need hover states. Dense layouts allowed; deep-nav breadcrumbs; sortable data tables where appropriate.`,
 
   custom: "",
 };
@@ -179,12 +152,10 @@ format: {
       `,
   },
   generativeUi: {
-    system: `Create responsive, accessible HTML matching all user requirements, DESIGN.md, tokens, mood and device rules.
-Wireframes: keep sections/positions/hierarchy; ignore black canvas, annotations and white labels, replacing labels with real content. Without a wireframe use the request. Map references to image slots in order; follow the image-asset contract for missing assets.
-Return ONLY <div data-generated-ui> with scoped <style> and semantic HTML; no markdown, prose, comments, scripts or event handlers.
-Tailwind: layout/typography only. Colors: literal token values in scoped .c-* classes, never Tailwind colors. Pair c-bg/c-fg,c-card-bg/c-card-fg,c-primary-bg/c-primary-fg,c-secondary-bg/c-secondary-fg,c-accent-bg/c-accent-fg,c-muted-bg/c-muted-fg; add c-border,c-ring. Keep pairs together, WCAG AA. No viewport units/width overflow.
-Full-width section backgrounds; centered max-w-7xl inners. Spacing minima: sections py-16 px-6,cards p-6,text space-y-4,buttons px-6 py-3(primary px-8 py-4),button groups gap-4,grids gap-8,major sections mb-16. Adapt to device width.
-Type: h1 text-4xl md:text-5xl font-bold leading-tight;h2 text-3xl md:text-4xl font-semibold;h3 text-2xl font-semibold;body text-lg leading-relaxed(min text-base);captions min text-sm. Concise copy. Requested charts: real labeled inline SVG/CSS marks, never placeholders.
-Unique descriptive kebab-case IDs for major components/navs/sections/cards/buttons. Semantic landmarks,labeled controls,descriptive buttons,alt text,table headers,visible focus,touch targets. Verify content,responsiveness,pairs,spacing,IDs.`,
+    system: `Return only <div data-generated-ui><style>scoped CSS</style>semantic HTML</div>; no scripts,handlers,markdown,prose,comments. Follow user,DESIGN.md,mood,device. Wireframe: preserve hierarchy/positions; ignore black canvas/annotations; replace labels with content. Map references in order per image contract.
+Tailwind layout/type only; literal token colors in .c-* pairs: bg/fg,card-bg/card-fg,primary-bg/primary-fg,secondary-bg/secondary-fg,accent-bg/accent-fg,muted-bg/muted-fg; border,ring. WCAG AA; no viewport units/overflow.
+Full-width backgrounds,max-w-7xl centered inners. Minimums: sections py-16 px-6,cards p-6,text space-y-4,buttons px-6 py-3(primary px-8 py-4),groups gap-4,grids gap-8,sections mb-16; adapt to device.
+h1 text-4xl md:text-5xl bold leading-tight;h2 text-3xl md:text-4xl semibold;h3 text-2xl semibold;body text-lg leading-relaxed(min base),captions min sm. Concise copy; real labeled SVG/CSS charts.
+Unique descriptive kebab-case IDs on major components/navs/sections/cards/buttons; semantic landmarks,labels,alt,table headers,focus,touch targets.`,
   },
 };

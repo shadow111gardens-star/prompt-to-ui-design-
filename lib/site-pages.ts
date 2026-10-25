@@ -9,29 +9,146 @@ export const footerGroups = [
 ];
 export const pageHref = (label: string) => `/${label.toLowerCase()}`;
 export const sitePages: Record<string, SitePage> = {
-  features: { title: 'One canvas. Your entire interface.', group: 'Product', description: 'Go from a rough idea to connected screens, then refine the details in one workspace.', sections: [
-    { title: 'Generate with a prompt', text: 'Describe a product, audience and visual direction. OpenUI streams generated screens into your project.', bullets: ['Choose your configured AI provider and model.', 'Keep multiple screens together.', 'Review the output directly on the canvas.'], href: '/templates', action: 'Explore starter prompts' },
-    { title: 'Edit the details', text: 'Select elements inside generated screens and adjust text, dimensions, spacing, colors and typography with the properties panel.', href: '/documentation#editing', action: 'Learn about editing' },
-    { title: 'Iterate with project chat', text: 'Ask for a new screen, a selected-element edit or a redesign. Project context helps related screens follow the same design system.' },
-    { title: 'Keep your design consistent', text: 'Inspect project colors and typography in Design System & Tokens. Review the page-specific design notes and refine shared styling.' },
-    { title: 'Preview at different sizes', text: 'Switch between phone, tablet and desktop frames. Pan, zoom and compare screens without leaving the workspace.' },
-    { title: 'Export your screens', text: 'Download the current screen or all screens as PNG, JPG or SVG. All-screen exports package the images in a ZIP archive.', href: '/documentation#exports', action: 'Export guide' },
-  ] },
-  pricing: { title: 'Simple Pricing for Everyone', group: 'Product', description: 'Explore the published plans and how this local installation works.', sections: [
-    { title: 'Your local workspace', text: 'This installation uses your configured AI providers. Paid checkout, subscriptions and credit metering are not connected here. Provider usage charges are separate.', href: '/dashboard/workspace/settings#tab-billing', action: 'View billing settings' },
-  ] },
-  changelog: { title: 'A better workflow, one update at a time.', group: 'Product', description: 'A digest of functionality implemented in this OpenUI workspace.', sections: [
-    { title: 'Responsive workspace', text: 'Responsive page gutters, mobile navigation, viewport-bounded panels and dialogs, and touch canvas navigation.', bullets: ['Two-finger zoom and pan.', 'Compact editor navigation.', 'Stacked token editors on smaller screens.'] },
-    { title: 'Workspace settings', text: 'Local profile persistence, project search, theme switching and an OpenUI integration key with generation, reveal, copy, rotation and revocation.' },
-    { title: 'Project chat and element editing', text: 'Project-scoped chat history and screen context, selected-element editing, and review of broad changes before applying them.' },
-    { title: 'Image exports', text: 'Current-screen and all-screen exports in PNG, JPG and SVG. Legacy code export options remain hidden in this build.' },
-  ] },
-  roadmap: { title: 'What comes next.', group: 'Product', description: 'Directions for future work. Planned items are not shipping commitments or release dates.', sections: [
-    { title: 'Available now', text: 'Multi-screen canvas, AI generation, project chat, element editing, shared design tokens and image exports.', href: '/features', action: 'See current features' },
-    { title: 'Improve next', text: 'Broader browser/device verification, more resilient generation recovery and deeper accessibility checks are areas for continued improvement.' },
-    { title: 'Under consideration', text: 'More reusable screen starters, richer integration APIs and connected subscription management. These are ideas, not enabled features.' },
-    { title: 'Help shape the direction', text: 'Share the task you are trying to complete and what gets in the way. Specific workflows are more useful than a feature name alone.', href: '/contact', action: 'Share feedback' },
-  ] },
+  features: {
+  "title": "From the first idea to the finer details.",
+  "group": "Product",
+  "description": "Generate a starting point, refine real interface elements, and bring connected screens together in one OpenUI workspace.",
+  "sections": [
+    {
+      "title": "Start with a clear brief",
+      "text": "Describe the product, audience, screens and visual direction. Choose Website or App in the workspace so the design follows the intended format.",
+      "bullets": [
+        "Choose the target device and describe the required content.",
+        "Review generated HTML on the canvas as it streams.",
+        "Keep related screens together in the same project."
+      ]
+    },
+    {
+      "title": "Make the details yours",
+      "text": "Select an element to change its text, layout, spacing, typography or colors. Color controls include alpha, reset, input placeholders and supported SVG fill and stroke.",
+      "bullets": [
+        "Adjust the selected element through Properties.",
+        "Use undo and redo as you explore a direction.",
+        "Save changes through the existing project save flow."
+      ]
+    },
+    {
+      "title": "Refine with project chat",
+      "text": "Request another screen or a focused change using the existing project as context. Review broader proposed edits before applying them."
+    },
+    {
+      "title": "Build a shared visual language",
+      "text": "Keep colors, typography and design notes together in Design System & Tokens and Style Guide. Save Moodboard references for visual research; image-based generation depends on provider capability."
+    },
+    {
+      "title": "Review before you hand off",
+      "text": "Compare screens at their intended dimensions. Inspect longer content, navigation, color contrast and mobile layout before exporting."
+    },
+    {
+      "title": "Take your screens with you",
+      "text": "Export the current screen or all screens as PNG, JPG or SVG. Multiple-screen image exports are packaged in a ZIP archive.",
+      "href": "/documentation#exports",
+      "action": "Read the export guide"
+    }
+  ]
+},
+  pricing: {
+  "title": "Know what you are starting with.",
+  "group": "Product",
+  "description": "Understand workspace access, AI generation limits and billing availability before you start your next project.",
+  "sections": [
+    {
+      "title": "Workspace access",
+      "text": "Create an account or sign in to use your own project workspace. Keep generated screens, design settings and edits together under your authenticated account."
+    },
+    {
+      "title": "AI usage is separate",
+      "text": "Generation uses the model configured by this OpenUI service. Availability and usage depend on that provider; workspace access does not imply unlimited AI requests."
+    },
+    {
+      "title": "Paid plans are not available to purchase",
+      "text": "Subscription checkout is not connected in this build. No paid plan, renewal, credit rollover or support entitlement is promised by this page."
+    },
+    {
+      "title": "Before choosing a paid plan",
+      "text": "When paid checkout becomes available, review the exact price, billing period, generation allowance, cancellation terms and included capabilities before paying.",
+      "href": "/contact",
+      "action": "Ask a billing question"
+    }
+  ]
+},
+  changelog: {
+  "title": "The details that move OpenUI forward.",
+  "group": "Product",
+  "description": "Follow improvements to generation, visual editing and exports, with practical notes for your workflow.",
+  "sections": [
+    {
+      "title": "More predictable generation",
+      "text": "Generation is configured for one server-selected model with 4,000 input and output limits. Component-level input preflight helps explain rejected requests without logging private prompts.",
+      "bullets": [
+        "Oversized input is rejected before the provider request.",
+        "Automatic provider retries and model fallback are disabled.",
+        "Structured responses are checked against their existing schemas."
+      ]
+    },
+    {
+      "title": "Color editing in Properties",
+      "text": "Text, background and border colors can be edited from the selected element inspector, with relevant controls for input placeholders and SVG elements.",
+      "bullets": [
+        "Custom hex values, alpha and theme presets.",
+        "Reset to the original or inherited styling.",
+        "Edits use existing history and persistence paths."
+      ]
+    },
+    {
+      "title": "A closer match between preview and export",
+      "text": "Export fixes address font loading and font-size differences between the canvas and image captures. Current-screen and multi-screen PNG, JPG and SVG workflows remain available."
+    },
+    {
+      "title": "Project ownership tied to sign-in",
+      "text": "New projects use the verified server-side Firebase identity. Ownership-aware queries restrict access to project data and nested resources."
+    },
+    {
+      "title": "Image assets that belong to the project",
+      "text": "The image workflow connects section-specific searches, uploaded assets, image replacement and saved project references. Availability depends on the configured image service."
+    }
+  ]
+},
+  roadmap: {
+  "title": "A considered path forward.",
+  "group": "Product",
+  "description": "The current foundation, the areas worth improving, and the ideas still being evaluated. Priorities are not promised release dates.",
+  "sections": [
+    {
+      "title": "The foundation today",
+      "text": "Prompt-based generation, editable screens, project chat, design tokens, authenticated project ownership and screen exports form the current workflow.",
+      "href": "/features",
+      "action": "Explore the current tools"
+    },
+    {
+      "title": "Generation reliability",
+      "text": "Evaluate better token accounting, clearer input-budget guidance and more useful recovery from provider errors. Preserve the complete user brief instead of silently cutting requirements."
+    },
+    {
+      "title": "Responsive and accessible editing",
+      "text": "Broaden real-device checks for canvas navigation, inspector controls and dialogs. Improve keyboard paths and check contrast and overflow with realistic content."
+    },
+    {
+      "title": "More dependable handoff",
+      "text": "Continue comparing fonts, images and layout across preview and export formats. Improve guidance for SVG compatibility and long or scrolling screen content."
+    },
+    {
+      "title": "Ideas under consideration",
+      "text": "Reusable screen starters, richer shared design patterns and connected subscription management need further evaluation. These are not purchasable features or committed deliveries."
+    },
+    {
+      "title": "Help us prioritize a real workflow",
+      "text": "Tell us what you are building, what you expected and where the workflow breaks down. Include the device and browser, but leave out private project data and API keys.",
+      "href": "/contact",
+      "action": "Share product feedback"
+    }
+  ]
+},
   documentation: { title: 'Build your first OpenUI project.', group: 'Resources', description: 'A practical guide to generation, editing, design consistency and exports.', sections: [
     { title: 'Start a project', text: 'Open Projects and choose New Project. Select an AI model configured on your server, then describe the screens you want.', bullets: ['Name the app and its audience.', 'Specify the screen list and shared visual style.', 'Include realistic content and device requirements.'], href: '/templates', action: 'Choose a starter prompt' },
     { title: 'Editing', text: 'Use Select to pick a screen or an element inside it. The properties panel edits element content and styling. Use Pan for navigation and Sandbox to interact with a prototype.', bullets: ['Use undo and redo to review edits.', 'Select the intended element before asking chat to change it.', 'Save through the existing autosave or manual Save control.'] },

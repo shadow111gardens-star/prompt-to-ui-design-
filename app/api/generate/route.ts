@@ -168,27 +168,23 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
       : "";
 
     const styleConstraints = designMd
-      ? `Follow this DESIGN.md specification strictly for spacing units, font sizes, colors, and border-radii:\n${designMd}`
+      ? designMd
       : `Use the user-provided styleGuide colors and typography for all visual decisions:
          colors: ${colors.map((color: any) => color.swatches.map((swatch: any) => `${swatch.name}: ${swatch.hexColor}, ${swatch.description}`).join(", ")).join("; ")}
          typography: ${typography.map((typo: any) => typo.styles.map((style: any) => `${style.name}: ${style.fontFamily}, size ${style.fontSize}`).join(", ")).join("; ")}
          enforce WCAG AA contrast (>=4.5:1), and if any token is missing fall back to neutral light defaults.`;
 
-    const deviceContext = deviceContexts[deviceType] || "";
-
-    const userPrompt = [
-      'Generate responsive ' + deviceType + ' UI. Device rules: ' + deviceContext,
-      'USER REQUIREMENTS (verbatim):\n' + (prompt || 'Generate a modern interface based on style system.'),
-      'DESIGN SYSTEM (unchanged):\n' + (moodboardMode ? 'Derive visual direction from attached Moodboard; existing tokens are secondary where compatible. ' : '') + styleConstraints,
-      ...(visionImages.length || imageBuffer ? ['Reference images guide layout/style only; do not override supplied DESIGN.md colors/fonts.'] : []),
-    ].join('\n\n');
+    // Remove indentation only; keep every device rule and numerical constraint.
+    const deviceContext = (deviceContexts[deviceType] || "").split('\n').map(line => line.trim()).join('\n');
 
     const moodboardInstruction = `\nMOODBOARD-TO-UI: Analyze all attached references for layout, visual hierarchy, palette, typography, spacing, borders, imagery and component style. Create a NEW responsive interface inspired by their shared visual direction and the user's optional description. These design references are inspiration only: never map them into image slots. Do not copy a reference pixel-for-pixel, and do not render the Moodboard itself or use reference screenshots as the resulting UI. Build real editable HTML elements, CSS and SVG components, not a single screenshot/image. Return only complete runnable HTML. No analysis prose. For this task the references provide primary visual direction; preserve explicit user requirements.`;
     const messagesContent: Array<{ type: "text"; text: string } | { type: "image"; image: Uint8Array; mediaType?: string }> = [
       {
         type: "text",
-        text: userPrompt + (moodboardMode ? moodboardInstruction : ''),
+        text: 'USER REQUIREMENTS (verbatim):\n' + (prompt || 'Generate a modern interface based on style system.'),
       },
+      { type: 'text', text: 'DEVICE RULES: ' + deviceType + '\n' + deviceContext },
+      { type: 'text', text: 'DESIGN SYSTEM:\n' + styleConstraints },
     ];
 
     if (imageBuffer) {

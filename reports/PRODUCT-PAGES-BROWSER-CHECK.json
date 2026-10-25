@@ -1,0 +1,416 @@
+{
+  "passed": true,
+  "exceptions": [],
+  "results": [
+    {
+      "slug": "features",
+      "width": 1440,
+      "theme": "light",
+      "title": "From the first idea to the finer details.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/features",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "features",
+      "width": 1440,
+      "theme": "dark",
+      "title": "From the first idea to the finer details.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/features",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "features",
+      "width": 768,
+      "theme": "light",
+      "title": "From the first idea to the finer details.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/features",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "features",
+      "width": 768,
+      "theme": "dark",
+      "title": "From the first idea to the finer details.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/features",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "features",
+      "width": 390,
+      "theme": "light",
+      "title": "From the first idea to the finer details.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/features",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "features",
+      "width": 390,
+      "theme": "dark",
+      "title": "From the first idea to the finer details.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/features",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "pricing",
+      "width": 1440,
+      "theme": "light",
+      "title": "Know what you are starting with.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/pricing",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "pricing",
+      "width": 1440,
+      "theme": "dark",
+      "title": "Know what you are starting with.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/pricing",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "pricing",
+      "width": 768,
+      "theme": "light",
+      "title": "Know what you are starting with.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/pricing",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "pricing",
+      "width": 768,
+      "theme": "dark",
+      "title": "Know what you are starting with.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/pricing",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "pricing",
+      "width": 390,
+      "theme": "light",
+      "title": "Know what you are starting with.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/pricing",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "pricing",
+      "width": 390,
+      "theme": "dark",
+      "title": "Know what you are starting with.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/pricing",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "changelog",
+      "width": 1440,
+      "theme": "light",
+      "title": "The details that move OpenUI forward.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/changelog",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "changelog",
+      "width": 1440,
+      "theme": "dark",
+      "title": "The details that move OpenUI forward.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/changelog",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "changelog",
+      "width": 768,
+      "theme": "light",
+      "title": "The details that move OpenUI forward.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/changelog",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "changelog",
+      "width": 768,
+      "theme": "dark",
+      "title": "The details that move OpenUI forward.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/changelog",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "changelog",
+      "width": 390,
+      "theme": "light",
+      "title": "The details that move OpenUI forward.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/changelog",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "changelog",
+      "width": 390,
+      "theme": "dark",
+      "title": "The details that move OpenUI forward.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/changelog",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "roadmap",
+      "width": 1440,
+      "theme": "light",
+      "title": "A considered path forward.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/roadmap",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "roadmap",
+      "width": 1440,
+      "theme": "dark",
+      "title": "A considered path forward.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/roadmap",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "roadmap",
+      "width": 768,
+      "theme": "light",
+      "title": "A considered path forward.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/roadmap",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "roadmap",
+      "width": 768,
+      "theme": "dark",
+      "title": "A considered path forward.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/roadmap",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "roadmap",
+      "width": 390,
+      "theme": "light",
+      "title": "A considered path forward.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/roadmap",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "roadmap",
+      "width": 390,
+      "theme": "dark",
+      "title": "A considered path forward.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "activeTab": "/roadmap",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    }
+  ],
+  "evidenceDirectory": "C:/Users/Abhay Solanki/AppData/Local/Temp/openui-product-pages-HvXLgC",
+  "target": "local isolated production build; synthetic configuration only"
+}
