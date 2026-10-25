@@ -15,6 +15,7 @@ import fs from "fs/promises";
 import path from "path";
 import { projectChatResponse } from "@/lib/ai/project-chat-response";
 import { designTargetInstruction, projectDesignTarget } from '@/lib/design-target';
+import { setGenerationDesignTarget } from '@/lib/ai/usage-logging';
 
 export const POST=withPersonalProvider(async function POST(request: NextRequest) {
   try {
@@ -51,6 +52,7 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
         { status: 404 },
       );
     }
+    setGenerationDesignTarget(projectDesignTarget(project.sketchesData));
 
 
 

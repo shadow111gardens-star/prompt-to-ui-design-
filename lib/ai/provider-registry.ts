@@ -4,6 +4,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { withUsageLogging } from '@/lib/ai/usage-logging';
 
 export type ProviderKey =
   | "xai"
@@ -21,6 +22,7 @@ function createLanguageModel(provider: ProviderKey, modelId: string) {
   const personal=active?context?.settings.providers[active]:undefined;
   if(active&&personal?.model){provider=active;modelId=personal.model;}
   const ownKey=personal?.key;
+  const tracked = <T,>(model: T) => withUsageLogging(model, provider);
   if(provider!=="ollama"&&!ownKey&&!hasProviderCredentials(provider))throw new Error(`No API key is configured for ${provider}. Add a provider key or select a configured model.`);
   // Strip provider prefix if present in the stored modelId (e.g. "openrouter/google/gemini" -> "google/gemini")
   let cleanModelId = modelId;
@@ -31,31 +33,31 @@ function createLanguageModel(provider: ProviderKey, modelId: string) {
 
   switch (provider) {
     case "xai":
-      return createOpenAI({baseURL:"https://api.x.ai/v1",apiKey:ownKey||process.env.XAI_API_KEY||""}).chat(cleanModelId);
+      return tracked(createOpenAI({baseURL:"https://api.x.ai/v1",apiKey:ownKey||process.env.XAI_API_KEY||""}).chat(cleanModelId));
     case "openrouter":
-      return createOpenRouter({
+      return tracked(createOpenRouter({
         apiKey: process.env.OPENROUTER_API_KEY || "",
-      })(cleanModelId);
+      })(cleanModelId, { usage: { include: true } }));
     case "nvidia":
-      return createOpenAI({
+      return tracked(createOpenAI({
         baseURL: "https://integrate.api.nvidia.com/v1",
         apiKey: process.env.NVIDIA_NIM_API_KEY || "",
-      }).chat(cleanModelId);
+      }).chat(cleanModelId));
     case "ollama":
-      return createOpenAI({
+      return tracked(createOpenAI({
         baseURL: `${(process.env.OLLAMA_BASE_URL || "http://localhost:11434").replace(/\/+$/, "").replace(/\/v1$/, "")}/v1`,
         apiKey: "ollama",
-      }).chat(cleanModelId);
+      }).chat(cleanModelId));
     case "anthropic":
-      return createAnthropic({apiKey:ownKey||process.env.ANTHROPIC_API_KEY})(cleanModelId);
+      return tracked(createAnthropic({apiKey:ownKey||process.env.ANTHROPIC_API_KEY})(cleanModelId));
     case "openai":
-      return createOpenAI({
+      return tracked(createOpenAI({
         apiKey: ownKey || process.env.OPENAI_API_KEY || "",
-      })(cleanModelId);
+      })(cleanModelId));
     case "google":
-      return createGoogleGenerativeAI({
+      return tracked(createGoogleGenerativeAI({
         apiKey: ownKey || process.env.GEMINI_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY,
-      })(cleanModelId);
+      })(cleanModelId));
     default:
       throw new Error(`Unsupported provider: ${provider}`);
   }

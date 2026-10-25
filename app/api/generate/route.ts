@@ -16,6 +16,7 @@ import path from "path";
 import { getMoodboardModel } from '@/lib/ai/moodboard-model';
 import { readMoodboardReferences } from '@/lib/moodboard-references';
 import { designTargetInstruction, projectDesignTarget } from '@/lib/design-target';
+import { setGenerationDesignTarget } from '@/lib/ai/usage-logging';
 
 export const POST=withPersonalProvider(async function POST(request: NextRequest) {
   try {
@@ -84,6 +85,7 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
         { status: 404 },
       );
     }
+    setGenerationDesignTarget(projectDesignTarget(project.sketchesData));
 
 
 

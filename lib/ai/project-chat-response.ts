@@ -8,6 +8,7 @@ import { PROJECT_CHAT_SYSTEM } from '@/lib/project-chat';
 import { EDITABLE_STYLES } from '@/lib/element-editing';
 import { designTargetInstruction, projectDesignTarget } from '@/lib/design-target';
 import { ownedProjectWhere, projectAccessResponse } from '@/lib/server/project-access';
+import { setGenerationDesignTarget } from '@/lib/ai/usage-logging';
 
 const requestSchema=z.object({
   projectId:z.string().min(1),streamId:z.string().min(1),userMessage:z.string().min(1).max(16000),
@@ -25,6 +26,7 @@ export async function projectChatResponse(request:NextRequest,body:unknown) {
   try {
     const project=await prisma.project.findUnique({where:await ownedProjectWhere(data.projectId),include:{settings:true}});
     if(!project)return NextResponse.json({error:'Project not found.'},{status:404});
+    setGenerationDesignTarget(projectDesignTarget(project.sketchesData));
     const model=await resolveModelForProject(data.projectId);
     const context={...data.context,projectName:project.name,editableStyles:[...EDITABLE_STYLES]};
     return createResilientStreamResponse(model=>streamText({model,system:PROJECT_CHAT_SYSTEM+designTargetInstruction(projectDesignTarget(project.sketchesData)),
