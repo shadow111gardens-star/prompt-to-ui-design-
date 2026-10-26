@@ -175,9 +175,10 @@ export const sitePages: Record<string, SitePage> = {
     { title: 'A local-first foundation', text: 'Projects are stored by this installation in a local SQLite database. AI requests still go to the selected provider unless you configure a local model.', href: '/privacy', action: 'How data is handled' },
     { title: 'Built in the open', text: 'This workspace builds on the MIT-licensed OpenUI codebase and its existing tooling. The repository LICENSE contains the original copyright and license terms.', href: '/contact', action: 'Meet the builder' },
   ] },
-  blog: { title: 'Practical guides for better interfaces.', group: 'Company', description: 'Complete guides to mobile app screen design and SaaS design systems.', sections: [
+  blog: { title: 'Practical guides for better interfaces.', group: 'Company', description: 'Complete guides to mobile app screens, SaaS design systems and meditation app interfaces.', sections: [
     { title: 'Design better mobile app screens with AI', text: 'Work through a clear brief, shared styling, layout refinement and connected mobile screens.', href: '/blog/design-better-mobile-app-screens', action: 'Read the mobile design guide' },
     { title: 'Create a design system for your SaaS product', text: 'Define colors, typography, spacing and reusable components with practical visual examples.', href: '/blog/create-saas-design-system', action: 'Read the design-system guide' },
+    { title: 'Design a meditation app UI', text: 'Explore a calm visual style, connected meditation screens and a practical review process.', href: '/blog/design-meditation-app-ui', action: 'Read the meditation design guide' },
   ] },
   contact: { title: 'Let’s talk about what you’re building.', group: 'Company', description: 'Questions, feedback or a workflow that could be better? Start a conversation.', sections: [
     { title: 'Email', text: 'For product, privacy or security enquiries, email solankiabhay722@gmail.com. Please do not include passwords or active API keys.', href: 'mailto:solankiabhay722@gmail.com', action: 'solankiabhay722@gmail.com' },

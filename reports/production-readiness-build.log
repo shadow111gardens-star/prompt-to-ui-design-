@@ -6,7 +6,7 @@ Loaded Prisma config from prisma.config.ts.
 
 Prisma schema loaded from prisma\schema.prisma.
 
-✔ Generated Prisma Client (v7.8.0) to .\..\openui-main\node_modules\@prisma\client in 198ms
+✔ Generated Prisma Client (v7.8.0) to .\..\openui-main\node_modules\@prisma\client in 163ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
@@ -19,13 +19,13 @@ Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
   Creating an optimized production build ...
 ✓ Compiled successfully in 15.0s
   Running TypeScript ...
-  Finished TypeScript in 48s ...
+  Finished TypeScript in 37.2s ...
   Collecting page data using 7 workers ...
-  Generating static pages using 7 workers (0/47) ...
-  Generating static pages using 7 workers (11/47)
-  Generating static pages using 7 workers (23/47)
-  Generating static pages using 7 workers (35/47)
-✓ Generating static pages using 7 workers (47/47) in 1432ms
+  Generating static pages using 7 workers (0/45) ...
+  Generating static pages using 7 workers (11/45)
+  Generating static pages using 7 workers (22/45)
+  Generating static pages using 7 workers (33/45)
+✓ Generating static pages using 7 workers (45/45) in 1107ms
   Finalizing page optimization ...
 
 Route (app)
@@ -64,8 +64,7 @@ Route (app)
 ├ ● /blog/[article]
 │ ├ /blog/design-better-mobile-app-screens
 │ ├ /blog/create-saas-design-system
-│ ├ /blog/better-ui-prompts
-│ └ [+2 more paths]
+│ └ /blog/design-meditation-app-ui
 ├ ƒ /dashboard
 ├ ƒ /dashboard/[session]
 ├ ƒ /dashboard/[session]/canvas

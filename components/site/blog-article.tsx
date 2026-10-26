@@ -5,6 +5,7 @@ import SiteHeader from '@/components/site/header';
 import SiteFooter from '@/components/site/footer';
 import ArticleSidebar, { ArticleShare } from '@/components/site/article-sidebar';
 import { MobileBriefExample, DesignSystemExample, RefinementExample, ConnectedScreensExample } from '@/components/site/mobile-design-examples';
+import { MeditationArticleVisual, MeditationNavigationExample } from '@/components/site/meditation-design-examples';
 import { DesignSystemArticleVisual } from '@/components/site/design-system-examples';
 import { blogArticles, articleReadingMinutes, type BlogArticle } from '@/lib/blog-content';
 
@@ -18,6 +19,7 @@ function ComparisonTable({ section }: { section: Section }) {
 
 export default function BlogArticlePage({ article, slug }: { article: BlogArticle; slug: string }) {
   const mobileGuide = slug === 'design-better-mobile-app-screens';
+  const meditationGuide = slug === 'design-meditation-app-ui';
   const related = Object.entries(blogArticles).filter(([id]) => id !== slug).map(([id,item]) => ({slug:id,title:item.title,image:item.cover.src,minutes:articleReadingMinutes(item)}));
   const accent = article.titleAccent;
   const titleStart = accent && article.title.endsWith(accent) ? article.title.slice(0, -accent.length).trim() : article.title;
@@ -30,14 +32,15 @@ export default function BlogArticlePage({ article, slug }: { article: BlogArticl
       <section aria-labelledby="takeaways" className="mt-5 rounded-xl border border-primary/25 bg-primary/[0.035] p-5 sm:p-6"><h2 id="takeaways" className="flex items-center gap-3 font-heading text-xl font-semibold"><span className="flex size-7 items-center justify-center rounded-full bg-primary text-primary-foreground"><Lightbulb className="size-4"/></span>TL;DR</h2><ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground marker:text-primary">{takeaways.map(item=><li key={item}>{item}</li>)}</ul></section>
       <div className="mt-7 space-y-9">{article.sections.map((section,index)=><section key={section.title} id={sectionId(section.title)} className="scroll-mt-24"><h2 className="font-heading text-2xl font-semibold leading-tight tracking-tight sm:text-[1.7rem]">{section.numbered === false ? section.title : `${index+1}. ${section.title}`}</h2><p className="mt-3 text-sm leading-7 text-muted-foreground sm:text-base">{section.text}</p>
         {mobileGuide && index===0 && <MobileBriefExample/>}
-        {section.table && <div className={`mt-6 ${mobileGuide && index===1 ? 'grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_220px]' : ''}`}><ComparisonTable section={section}/>{mobileGuide && index===1 && <DesignSystemExample/>}</div>}
+        {section.table && <div className={`mt-6 ${(mobileGuide && index===1 || meditationGuide && index===3) ? 'grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_220px]' : ''}`}><ComparisonTable section={section}/>{mobileGuide && index===1 && <DesignSystemExample/>}{meditationGuide && index===3 && <MeditationNavigationExample/>}</div>}
         {mobileGuide && index===2 && <RefinementExample/>}
         {mobileGuide && index===3 && <ConnectedScreensExample/>}
         {slug==='create-saas-design-system' && <DesignSystemArticleVisual index={index}/>}
+        {meditationGuide && <MeditationArticleVisual index={index}/>}
         {section.paragraphs?.map(paragraph=><p key={paragraph} className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">{paragraph}</p>)}
         {section.bullets && <ul className="mt-5 list-disc space-y-2 pl-5 text-sm leading-7 text-muted-foreground marker:text-primary">{section.bullets.map(bullet=><li key={bullet}>{bullet}</li>)}</ul>}
         {section.example && <div className="mt-5 rounded-xl border border-primary/20 bg-primary/5 p-5"><p className="mb-3 text-xs font-semibold uppercase tracking-wider text-primary">Example prompt</p><blockquote className="whitespace-pre-wrap text-sm leading-8">{section.example}</blockquote></div>}
-        {section.href && (slug === 'create-saas-design-system' && section.numbered === false ? <div className="mt-6 flex flex-col items-start justify-between gap-5 rounded-xl border border-primary/20 bg-primary/5 p-5 sm:flex-row sm:items-center"><div><h3 className="font-heading text-base font-semibold">Ready to build your own design system?</h3><p className="mt-1 text-xs leading-6 text-muted-foreground">Explore a direction, refine the details and keep your screens consistent.</p></div><Link href={section.href} className="inline-flex min-h-11 shrink-0 items-center rounded-lg bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground">{section.action} →</Link></div> : <Link href={section.href} className="mt-5 inline-flex min-h-10 items-center gap-2 text-sm font-medium text-primary underline underline-offset-4">{section.action}</Link>)}
+        {section.href && ((slug === 'create-saas-design-system' || meditationGuide) && section.numbered === false ? <div className="mt-6 flex flex-col items-start justify-between gap-5 rounded-xl border border-primary/20 bg-primary/5 p-5 sm:flex-row sm:items-center"><div><h3 className="font-heading text-base font-semibold">{meditationGuide ? 'Ready to design your meditation app screens?' : 'Ready to build your own design system?'}</h3><p className="mt-1 text-xs leading-6 text-muted-foreground">Explore a direction, refine the details and keep your screens consistent.</p></div><Link href={section.href} className="inline-flex min-h-11 shrink-0 items-center rounded-lg bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground">{section.action} →</Link></div> : <Link href={section.href} className="mt-5 inline-flex min-h-10 items-center gap-2 text-sm font-medium text-primary underline underline-offset-4">{section.action}</Link>)}
       </section>)}</div><Link href="/blog" className="mt-10 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-primary"><ArrowLeft className="size-4"/>All OpenUI articles</Link></article>
       <ArticleSidebar related={related} sections={article.sections.map(section=>({title:section.title,id:sectionId(section.title)}))}/>
     </div>

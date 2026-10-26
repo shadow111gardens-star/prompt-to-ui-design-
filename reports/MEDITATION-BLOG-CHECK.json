@@ -1,0 +1,490 @@
+{
+  "passed": true,
+  "exceptions": [],
+  "results": [
+    {
+      "slug": "blog",
+      "width": 1440,
+      "theme": "light",
+      "title": "Practical ideas for better interfaces.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog",
+      "width": 1440,
+      "theme": "dark",
+      "title": "Practical ideas for better interfaces.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog",
+      "width": 768,
+      "theme": "light",
+      "title": "Practical ideas for better interfaces.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog",
+      "width": 768,
+      "theme": "dark",
+      "title": "Practical ideas for better interfaces.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog",
+      "width": 390,
+      "theme": "light",
+      "title": "Practical ideas for better interfaces.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog",
+      "width": 390,
+      "theme": "dark",
+      "title": "Practical ideas for better interfaces.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/design-better-mobile-app-screens",
+      "width": 1440,
+      "theme": "light",
+      "title": "How to Design Better Mobile App Screens with AI:A Complete Guide",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/design-better-mobile-app-screens",
+      "width": 1440,
+      "theme": "dark",
+      "title": "How to Design Better Mobile App Screens with AI:A Complete Guide",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/design-better-mobile-app-screens",
+      "width": 768,
+      "theme": "light",
+      "title": "How to Design Better Mobile App Screens with AI:A Complete Guide",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/design-better-mobile-app-screens",
+      "width": 768,
+      "theme": "dark",
+      "title": "How to Design Better Mobile App Screens with AI:A Complete Guide",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/design-better-mobile-app-screens",
+      "width": 390,
+      "theme": "light",
+      "title": "How to Design Better Mobile App Screens with AI:A Complete Guide",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/design-better-mobile-app-screens",
+      "width": 390,
+      "theme": "dark",
+      "title": "How to Design Better Mobile App Screens with AI:A Complete Guide",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/create-saas-design-system",
+      "width": 1440,
+      "theme": "light",
+      "title": "How to Create a Design System for Your SaaS Product:A Complete Guide",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/create-saas-design-system",
+      "width": 1440,
+      "theme": "dark",
+      "title": "How to Create a Design System for Your SaaS Product:A Complete Guide",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/create-saas-design-system",
+      "width": 768,
+      "theme": "light",
+      "title": "How to Create a Design System for Your SaaS Product:A Complete Guide",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/create-saas-design-system",
+      "width": 768,
+      "theme": "dark",
+      "title": "How to Create a Design System for Your SaaS Product:A Complete Guide",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/create-saas-design-system",
+      "width": 390,
+      "theme": "light",
+      "title": "How to Create a Design System for Your SaaS Product:A Complete Guide",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/create-saas-design-system",
+      "width": 390,
+      "theme": "dark",
+      "title": "How to Create a Design System for Your SaaS Product:A Complete Guide",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/design-meditation-app-ui",
+      "width": 1440,
+      "theme": "light",
+      "title": "How to Design a Meditation App UI:A Complete Guide with Examples",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/design-meditation-app-ui",
+      "width": 1440,
+      "theme": "dark",
+      "title": "How to Design a Meditation App UI:A Complete Guide with Examples",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/design-meditation-app-ui",
+      "width": 768,
+      "theme": "light",
+      "title": "How to Design a Meditation App UI:A Complete Guide with Examples",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/design-meditation-app-ui",
+      "width": 768,
+      "theme": "dark",
+      "title": "How to Design a Meditation App UI:A Complete Guide with Examples",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/design-meditation-app-ui",
+      "width": 390,
+      "theme": "light",
+      "title": "How to Design a Meditation App UI:A Complete Guide with Examples",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "blog/design-meditation-app-ui",
+      "width": 390,
+      "theme": "dark",
+      "title": "How to Design a Meditation App UI:A Complete Guide with Examples",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "contact",
+      "width": 1440,
+      "theme": "light",
+      "title": "Let’s talk aboutwhat you’re building.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "contact",
+      "width": 1440,
+      "theme": "dark",
+      "title": "Let’s talk aboutwhat you’re building.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "contact",
+      "width": 768,
+      "theme": "light",
+      "title": "Let’s talk aboutwhat you’re building.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "contact",
+      "width": 768,
+      "theme": "dark",
+      "title": "Let’s talk aboutwhat you’re building.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "contact",
+      "width": 390,
+      "theme": "light",
+      "title": "Let’s talk aboutwhat you’re building.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    },
+    {
+      "slug": "contact",
+      "width": 390,
+      "theme": "dark",
+      "title": "Let’s talk aboutwhat you’re building.",
+      "h1": 1,
+      "overflow": false,
+      "brokenImages": [],
+      "fontStatus": "loaded",
+      "footerLinks": [
+        "/features",
+        "/pricing",
+        "/changelog",
+        "/roadmap"
+      ]
+    }
+  ],
+  "evidenceDirectory": "C:/Users/Abhay Solanki/AppData/Local/Temp/openui-product-pages-EGWz85",
+  "target": "isolated localhost production build with synthetic configuration",
+  "contactFormSubmitted": false,
+  "relatedSearchAndReset": true
+}
