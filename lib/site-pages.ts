@@ -4,7 +4,7 @@ export type SitePage = { title: string; group: string; description: string; sect
 export const footerGroups = [
   { title: 'Product', items: ['Features', 'Pricing', 'Changelog', 'Roadmap'] },
   { title: 'Resources', items: ['Documentation', 'Templates', 'Showcase', 'Community'] },
-  { title: 'Company', items: ['About', 'Blog', 'Careers', 'Contact'] },
+  { title: 'Company', items: ['About', 'Blog', 'Contact'] },
   { title: 'Legal', items: ['Terms', 'Privacy', 'Security', 'Cookies'] },
 ];
 export const pageHref = (label: string) => `/${label.toLowerCase()}`;
@@ -180,10 +180,6 @@ export const sitePages: Record<string, SitePage> = {
     { title: 'Keep a multi-screen app consistent', text: 'Use existing screens as a reference and describe which details a redesign must preserve.', href: '/blog/consistent-screens', action: 'Read the guide' },
     { title: 'Prepare a design for export', text: 'Check the screen boundaries, preview sizes and output format before sharing a design.', href: '/blog/export-checklist', action: 'Read the guide' },
   ] },
-  careers: { title: 'Build tools that help people create.', group: 'Company', description: 'An honest look at opportunities around this project.', sections: [
-    { title: 'No open roles listed', text: 'There are currently no published job openings or application process on this site. New roles will be listed here when available.' },
-    { title: 'Interested in the work?', text: 'Introduce yourself with the kind of problem you enjoy solving and a link to relevant work. Please do not send identity documents or sensitive personal details through public social posts.', href: '/contact', action: 'Get in touch' },
-  ] },
   contact: { title: 'Let’s talk about what you’re building.', group: 'Company', description: 'Questions, feedback or a workflow that could be better? Start a conversation.', sections: [
     { title: 'Email', text: 'For product, privacy or security enquiries, email solankiabhay722@gmail.com. Please do not include passwords or active API keys.', href: 'mailto:solankiabhay722@gmail.com', action: 'solankiabhay722@gmail.com' },
     { title: 'Product questions and feedback', text: 'Reach Abhay on X. Share a short description of the issue and the outcome you expected.', href: 'https://x.com/abhay8769', action: 'Contact on X' },
@@ -193,23 +189,4 @@ export const sitePages: Record<string, SitePage> = {
   ...legalPages,
 };
 
-export const blogArticles: Record<string, SitePage> = {
-  'better-ui-prompts': { group: 'Guide', title: 'Give your UI prompt a clear direction.', description: 'A useful design brief is specific about the product and flexible about the execution.', sections: [
-    { title: 'Start with the task', text: 'Say who the interface is for and what they need to do. “A fitness tracker for people planning three weekly workouts” gives the model a clearer product than “a beautiful dashboard”.' },
-    { title: 'Name the connected screens', text: 'List the screens and the content each one needs. Include realistic numbers, labels and empty-state expectations. Ask for the same navigation and design system across the set.' },
-    { title: 'Define the visual rules', text: 'Specify a palette, font direction, spacing rhythm, card treatment and target devices. Give a few useful constraints instead of a long collection of unrelated style references.' },
-    { title: 'Iterate one decision at a time', text: 'Review the first result, select the screen or element you mean, and describe a concrete change. Keep successful details and request broader changes only when needed.', href: '/templates', action: 'Try a starter prompt' },
-  ] },
-  'consistent-screens': { group: 'Guide', title: 'Make every screen belong to the same app.', description: 'Consistency comes from a small set of shared decisions.', sections: [
-    { title: 'Choose a reference', text: 'Use an existing screen as the reference for colors, typography, spacing, navigation and button styles. Tell a redesign request which parts must remain consistent.' },
-    { title: 'Separate layout from styling', text: 'A profile page can have a different content structure while sharing the dashboard’s surfaces, text hierarchy and controls. Ask for a new arrangement while preserving those rules.' },
-    { title: 'Compare at the same size', text: 'Review neighboring screens at matching device dimensions. Look at heading weights, card padding and primary-action placement before adjusting individual decorations.' },
-    { title: 'Review shared changes', text: 'A project-wide button change affects several screens. Inspect the proposed changes, apply only the intended set and verify the result before exporting.', href: '/documentation#design-system', action: 'Read the design-system guide' },
-  ] },
-  'export-checklist': { group: 'Guide', title: 'A short checklist before you export.', description: 'Help the next person see the design as you intended.', sections: [
-    { title: 'Check the boundaries', text: 'Open Preview and check that content fits the intended screen. Review scrolling sections, fixed navigation and the corners of device frames.' },
-    { title: 'Use realistic content', text: 'Replace unfinished labels and check wrapping with longer names and descriptions. Verify the selected screen and the full screen set before choosing an all-screen export.' },
-    { title: 'Choose the format', text: 'PNG works well for sharp interface screenshots. JPG is useful when a smaller photographic raster is preferred. SVG exports can embed HTML, so test compatibility in the destination tool.' },
-    { title: 'Review the download', text: 'Open the downloaded image or ZIP archive. Confirm screen names and content. A picture of an interface is a design handoff, not a tested production application.', href: '/documentation#exports', action: 'Export documentation' },
-  ] },
-};
+export { blogArticles } from '@/lib/blog-content';

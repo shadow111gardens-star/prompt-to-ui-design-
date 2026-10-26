@@ -2,6 +2,7 @@
 const fs = require('node:fs'), os = require('node:os'), path = require('node:path'), cp = require('node:child_process');
 const origin = new URL(process.argv[2] || 'http://localhost:3108');
 if (!['localhost', '127.0.0.1'].includes(origin.hostname)) throw Error('Only local QA targets are allowed.');
+const company = process.argv.includes('--company');
 const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'openui-product-pages-'));
 const chrome = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const child = cp.spawn(chrome, ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--remote-debugging-port=9338', '--remote-debugging-address=127.0.0.1', '--user-data-dir=' + path.join(directory, 'profile'), 'about:blank'], { windowsHide: true, stdio: 'ignore' });
@@ -19,7 +20,7 @@ let ws;
   const evaluate = async expression => { const result = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true }); if (result.exceptionDetails) throw Error('Browser evaluation failed'); return result.result.value; };
   await call('Page.enable'); await call('Runtime.enable');
   const results = [];
-  for (const slug of ['features', 'pricing', 'changelog', 'roadmap']) {
+  for (const slug of (company ? ['blog', 'blog/better-ui-prompts', 'blog/consistent-screens', 'blog/export-checklist', 'contact'] : ['features', 'pricing', 'changelog', 'roadmap'])) {
     for (const width of [1440, 768, 390]) {
       await call('Emulation.setDeviceMetricsOverride', { width, height: 1000, deviceScaleFactor: 1, mobile: width < 500 });
       for (const theme of ['light', 'dark']) {
@@ -31,21 +32,30 @@ let ws;
         await evaluate(`(async()=>{await Promise.race([document.fonts.ready,new Promise(resolve=>setTimeout(resolve,5000))]); const images=[...document.images].filter(image=>image.getClientRects().length); for(const image of images){image.loading='eager';} for(let attempt=0;attempt<150;attempt++){if(images.every(image=>image.complete&&image.naturalWidth>0))break;await new Promise(resolve=>setTimeout(resolve,100));} await Promise.all(images.filter(image=>image.complete&&image.naturalWidth>0).map(image=>image.decode().catch(()=>{}))); return true;})()`);
         await pause(150);
         const result = await evaluate(`({title:document.querySelector('h1').textContent,h1:document.querySelectorAll('h1').length,overflow:document.documentElement.scrollWidth>innerWidth,brokenImages:[...document.images].filter(image=>image.getClientRects().length&&(!image.complete||image.naturalWidth===0)).map(image=>image.getAttribute('src')),fontStatus:document.fonts.status,activeTab:document.querySelector('nav[aria-label="Product pages"] [aria-current="page"]')?.getAttribute('href'),footerLinks:[...document.querySelectorAll('footer nav[aria-label="Product footer"] a')].map(a=>a.getAttribute('href'))})`);
+        if(company) {
+          const companyLinks=await evaluate(`[...document.querySelectorAll('footer nav[aria-label="Company footer"] a')].map(a=>a.getAttribute('href'))`);
+          if(JSON.stringify(companyLinks)!==JSON.stringify(['/about','/blog','/contact']))throw Error('Company links incorrect');
+          if(slug==='contact') {
+            const formWorks=await evaluate(`(()=>{const form=document.querySelector('form');const wasInvalid=!form.checkValidity();form.elements.name.value='Test Reader';form.elements.email.value='reader@example.com';form.elements.message.value='Please help me understand interface exports.';return wasInvalid&&form.checkValidity()&&form.querySelector('button[type="submit"]').textContent.includes('Open email draft');})()`);
+            if(!formWorks)throw Error('Contact form validation failed');
+          }
+        }
         results.push({ slug, width, theme, ...result });
         if (slug === 'pricing') {
           const faqWorks = await evaluate(`(()=>{const details=document.querySelector('details');if(!details)return false;details.querySelector('summary').click();const opened=details.open;details.querySelector('summary').click();return opened&&!details.open;})()`);
           if (!faqWorks) throw Error('Pricing FAQ did not open and close.');
         }
-        if (width === 390 || width === 1440) { const shot = await call('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); fs.writeFileSync(path.join(directory, `${slug}-${width}-${theme}.png`), Buffer.from(shot.data, 'base64')); }
+        if (width === 390 || width === 1440) { const shot = await call('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); fs.writeFileSync(path.join(directory, `${slug.replaceAll('/', '-')}-${width}-${theme}.png`), Buffer.from(shot.data, 'base64')); }
         if (width === 1440 && theme === 'light') {
           const metrics = await call('Page.getLayoutMetrics');
           const shot = await call('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, clip: { x: 0, y: 0, width: 1440, height: Math.ceil(metrics.cssContentSize.height), scale: 1 } });
-          fs.writeFileSync(path.join(directory, `${slug}-full.png`), Buffer.from(shot.data, 'base64'));
+          fs.writeFileSync(path.join(directory, `${slug.replaceAll('/', '-')}-full.png`), Buffer.from(shot.data, 'base64'));
         }
       }
     }
   }
-  const passed = results.every(item => item.h1 === 1 && !item.overflow && !item.brokenImages.length && item.fontStatus === 'loaded' && item.activeTab === '/' + item.slug && item.footerLinks.length === 4) && !exceptions.length;
+  if(company && (await fetch(origin.origin+'/careers')).status!==404)throw Error('Removed Careers route must return 404');
+  const passed = results.every(item => item.h1 === 1 && !item.overflow && !item.brokenImages.length && item.fontStatus === 'loaded' && (company || item.activeTab === '/' + item.slug) && item.footerLinks.length === 4) && !exceptions.length;
   fs.writeFileSync(path.join(directory, 'results.json'), JSON.stringify({ passed, exceptions, results }, null, 2));
   console.log(JSON.stringify({ directory, passed, checks: results.length, exceptions, failures: results.filter(item => item.h1 !== 1 || item.overflow || item.brokenImages.length || item.fontStatus !== 'loaded') }, null, 2));
   if (!passed) process.exitCode = 1;

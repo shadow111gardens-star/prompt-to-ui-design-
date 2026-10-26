@@ -6,7 +6,7 @@ Loaded Prisma config from prisma.config.ts.
 
 Prisma schema loaded from prisma\schema.prisma.
 
-✔ Generated Prisma Client (v7.8.0) to .\..\openui-main\node_modules\@prisma\client in 238ms
+✔ Generated Prisma Client (v7.8.0) to .\..\openui-main\node_modules\@prisma\client in 3.16s
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
@@ -17,15 +17,15 @@ Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
   ⨯ turbopackFileSystemCacheForDev
 
   Creating an optimized production build ...
-✓ Compiled successfully in 21.2s
+✓ Compiled successfully in 73s
   Running TypeScript ...
-  Finished TypeScript in 29.3s ...
+  Finished TypeScript in 44s ...
   Collecting page data using 7 workers ...
-  Generating static pages using 7 workers (0/46) ...
-  Generating static pages using 7 workers (11/46) 
-  Generating static pages using 7 workers (22/46) 
-  Generating static pages using 7 workers (34/46) 
-✓ Generating static pages using 7 workers (46/46) in 1352ms
+  Generating static pages using 7 workers (0/45) ...
+  Generating static pages using 7 workers (11/45)
+  Generating static pages using 7 workers (22/45)
+  Generating static pages using 7 workers (33/45)
+✓ Generating static pages using 7 workers (45/45) in 1241ms
   Finalizing page optimization ...
 
 Route (app)
@@ -35,7 +35,7 @@ Route (app)
 │ ├ /features
 │ ├ /pricing
 │ ├ /changelog
-│ └ [+13 more paths]
+│ └ [+12 more paths]
 ├ ƒ /api/ai-provider-keys
 ├ ƒ /api/auth/session
 ├ ƒ /api/autosave
