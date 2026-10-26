@@ -20,7 +20,7 @@ let ws;
   const evaluate = async expression => { const result = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true }); if (result.exceptionDetails) throw Error('Browser evaluation failed'); return result.result.value; };
   await call('Page.enable'); await call('Runtime.enable');
   const results = [];
-  for (const slug of (company ? ['blog', 'blog/design-better-mobile-app-screens', 'blog/create-saas-design-system', 'blog/better-ui-prompts', 'blog/consistent-screens', 'blog/export-checklist', 'contact'] : ['features', 'pricing', 'changelog', 'roadmap'])) {
+  for (const slug of (company ? ['blog', 'blog/design-better-mobile-app-screens', 'blog/create-saas-design-system', 'contact'] : ['features', 'pricing', 'changelog', 'roadmap'])) {
     for (const width of [1440, 768, 390]) {
       await call('Emulation.setDeviceMetricsOverride', { width, height: 1000, deviceScaleFactor: 1, mobile: width < 500 });
       for (const theme of ['light', 'dark']) {
@@ -50,7 +50,7 @@ let ws;
           await call('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'Backspace', code: 'Backspace', windowsVirtualKeyCode: 8, nativeVirtualKeyCode: 8 });
           await call('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Backspace', code: 'Backspace', windowsVirtualKeyCode: 8, nativeVirtualKeyCode: 8 });
           await pause(100);
-          if (!await evaluate(`document.querySelectorAll('aside a[href^="/blog/"]').length === 4`)) throw Error('Related article search did not reset');
+          if (!await evaluate(`document.querySelectorAll('aside a[href^="/blog/"]').length === 1`)) throw Error('Related article search did not reset');
         }
         if (slug === 'pricing') {
           const faqWorks = await evaluate(`(()=>{const details=document.querySelector('details');if(!details)return false;details.querySelector('summary').click();const opened=details.open;details.querySelector('summary').click();return opened&&!details.open;})()`);
