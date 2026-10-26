@@ -6,7 +6,7 @@ test('Careers is absent from site routes and company footer',()=>{
 });
 
 test('each original guide has a real local cover, full article content, unique section anchors and a calculated reading time',()=>{
- const {blogArticles,articleReadingMinutes}=load('lib/blog-content.ts');assert.equal(Object.keys(blogArticles).length,3);
+ const {blogArticles,articleReadingMinutes}=load('lib/blog-content.ts');assert.equal(Object.keys(blogArticles).length,4);
  for(const article of Object.values(blogArticles)){
   assert.ok(fs.existsSync(path.join('public',article.cover.src)));assert.ok(article.cover.alt.length>15);assert.ok(article.sections.length>=5);assert.ok(articleReadingMinutes(article)>=2);
   const words=article.sections.flatMap(section=>[section.text,...(section.paragraphs||[]),...(section.bullets||[]),section.example||'']).join(' ').split(/\s+/).length;assert.ok(words>400,article.title);

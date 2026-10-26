@@ -20,7 +20,7 @@ let ws;
   const evaluate = async expression => { const result = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true }); if (result.exceptionDetails) throw Error('Browser evaluation failed'); return result.result.value; };
   await call('Page.enable'); await call('Runtime.enable');
   const results = [];
-  for (const slug of (company ? ['blog', 'blog/better-ui-prompts', 'blog/consistent-screens', 'blog/export-checklist', 'contact'] : ['features', 'pricing', 'changelog', 'roadmap'])) {
+  for (const slug of (company ? ['blog', 'blog/design-better-mobile-app-screens', 'blog/better-ui-prompts', 'blog/consistent-screens', 'blog/export-checklist', 'contact'] : ['features', 'pricing', 'changelog', 'roadmap'])) {
     for (const width of [1440, 768, 390]) {
       await call('Emulation.setDeviceMetricsOverride', { width, height: 1000, deviceScaleFactor: 1, mobile: width < 500 });
       for (const theme of ['light', 'dark']) {
@@ -41,6 +41,17 @@ let ws;
           }
         }
         results.push({ slug, width, theme, ...result });
+        if (company && slug === 'blog/design-better-mobile-app-screens' && width === 1440 && theme === 'light') {
+          await evaluate(`document.querySelector('input[type="search"]').focus()`);
+          await call('Input.insertText', { text: 'no-matching-openui-article-qa' });
+          await pause(100);
+          if (!await evaluate(`document.querySelector('aside').textContent.includes('No matching articles')`)) throw Error('Related article search did not filter');
+          await evaluate(`document.querySelector('input[type="search"]').select()`);
+          await call('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'Backspace', code: 'Backspace', windowsVirtualKeyCode: 8, nativeVirtualKeyCode: 8 });
+          await call('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Backspace', code: 'Backspace', windowsVirtualKeyCode: 8, nativeVirtualKeyCode: 8 });
+          await pause(100);
+          if (!await evaluate(`document.querySelectorAll('aside a[href^="/blog/"]').length === 3`)) throw Error('Related article search did not reset');
+        }
         if (slug === 'pricing') {
           const faqWorks = await evaluate(`(()=>{const details=document.querySelector('details');if(!details)return false;details.querySelector('summary').click();const opened=details.open;details.querySelector('summary').click();return opened&&!details.open;})()`);
           if (!faqWorks) throw Error('Pricing FAQ did not open and close.');
