@@ -84,9 +84,9 @@ export const sitePages: Record<string, SitePage> = {
   "sections": [
     {
       "title": "More predictable generation",
-      "text": "Generation is configured for one server-selected model with 4,000 input and output limits. Component-level input preflight helps explain rejected requests without logging private prompts.",
+      "text": "Generation uses one server-selected Gemini model without application-imposed input or output token caps. Provider model limits apply, and usage logging does not include private prompts.",
       "bullets": [
-        "Oversized input is rejected before the provider request.",
+        "Generation consistently uses Gemini 3.5 Flash-Lite.",
         "Automatic provider retries and model fallback are disabled.",
         "Structured responses are checked against their existing schemas."
       ]

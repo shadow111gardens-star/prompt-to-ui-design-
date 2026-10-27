@@ -223,5 +223,5 @@ function update(call: Call, usage: unknown, responseModel?: string, metadata?: u
 }
 function fail(generation: Generation, call: Call, error: unknown) {
   if (call.logged) return;
-  call.status = 'failed'; call.error = object(error).name === 'GeminiPreflightError' ? 'input_preflight_rejected_or_unavailable' : 'provider_call_failed'; call.statusCode = errorCode(error); recordCall(generation, call);
+  call.status = 'failed'; call.error = 'provider_call_failed'; call.statusCode = errorCode(error); recordCall(generation, call);
 }

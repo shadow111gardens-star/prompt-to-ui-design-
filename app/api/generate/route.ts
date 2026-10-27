@@ -41,7 +41,6 @@ export const POST=withPersonalProvider(async function POST(request: NextRequest)
         if (!Array.isArray(ids) || !ids.length || ids.length > 5 || ids.some(id => typeof id !== 'string' || !id || id.length > 200)) throw new Error();
         moodboardIds = ids;
       } catch { return NextResponse.json({ error: 'Select one to five saved Moodboard images.' }, { status: 400 }); }
-      if (prompt.length > 4000) return NextResponse.json({ error: 'Keep the description under 4,000 characters.' }, { status: 400 });
     }
 
     let selectedImageIds: string[] = [];

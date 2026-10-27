@@ -31,7 +31,7 @@ export async function projectChatResponse(request:NextRequest,body:unknown) {
     const context={...data.context,projectName:project.name,editableStyles:[...EDITABLE_STYLES]};
     return createResilientStreamResponse(model=>streamText({model,system:PROJECT_CHAT_SYSTEM+designTargetInstruction(projectDesignTarget(project.sketchesData)),
       messages:[{role:'user',content:`PROJECT REFERENCE DATA:\n${JSON.stringify(context)}\n\nCURRENT USER REQUEST:\n${data.userMessage}`}],
-      abortSignal:request.signal,maxRetries:0,maxOutputTokens:4000,
+      abortSignal:request.signal,maxRetries:0,
     }),model,data.streamId,project.settings?.provider,project.settings?.model,parseChatPlan);
   }catch(error){
     const denied=projectAccessResponse(error);if(denied)return denied;
