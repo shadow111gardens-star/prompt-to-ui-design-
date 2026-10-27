@@ -147,6 +147,7 @@ test('provider/model identity uses provider-returned model rather than requested
 test('actual redesign route logs one fixed Gemini attempt and app target regardless of stale personal/project settings', async () => {
   let attempts = 0;
   const modules = loader({
+    '@/lib/billing/generation': {withBillingGeneration:(_request,_identity,handler)=>handler()},
     '@/lib/ai/gemini': { geminiConfiguration: () => ({ model: 'gemini-3.5-flash-lite', key: 'synthetic' }), createGeminiModel: () => model('gemini-3.5-flash-lite', { doStream: async () => { attempts++; return model('gemini-3.5-flash-lite').doStream(); } }) },
     '@/lib/server/project-access': { withVerifiedIdentity: (_identity, work) => work(), requireOwnedProject: async id => ({ id }), ownedProjectWhere: async id => ({ id }), projectAccessResponse: () => undefined },
     '@/lib/db': { prisma: { project: { findUnique: async () => ({ settings: { provider: 'google', model: 'google/old-selection' }, inspirationImages: [], styleGuide: null, sketchesData: '{"designTarget":"app"}' }) } } },

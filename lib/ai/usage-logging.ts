@@ -1,3 +1,4 @@
+import { billingCallSink, fundingScope } from '@/lib/billing/scope';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { randomUUID } from 'node:crypto';
 import { wrapLanguageModel, type LanguageModelMiddleware } from 'ai';
@@ -40,7 +41,7 @@ type Call = {
   statusCode: number | null; usage: TokenCounts; usageAvailable: boolean; usageComplete: boolean;
   generationRequestSent: boolean | null; extraBilling: boolean; logged: boolean; reportedCostUsd: number | null;
 };
-type Generation = { generationId: string; route: string; calls: Call[]; finished: boolean; designTarget: 'web' | 'app' | null };
+type Generation = { generationId: string; route: string; calls: Call[]; finished: boolean; billingSink?: ReturnType<typeof billingCallSink>; designTarget: 'web' | 'app' | null };
 const usageContext = new AsyncLocalStorage<Generation>();
 const providerCallContext = new AsyncLocalStorage<Call>();
 /** Transport distinguishes local/token-count rejections from generation requests. */
@@ -60,6 +61,7 @@ function costForCall(call: Call) {
 function recordCall(generation: Generation, call: Call) {
   if (call.logged) return;
   call.logged = true;
+  generation.billingSink?.({id:call.callId,provider:call.provider,model:call.model,status:call.status,usage:call.usage,sent:call.generationRequestSent});
   log({ event: 'ai_usage_call', generationId: generation.generationId, route: generation.route,
     callId: call.callId, provider: call.provider, model: call.model, requestedModel: call.requestedModel,
     upstreamProvider: call.upstreamProvider,
@@ -110,7 +112,7 @@ function finishGeneration(generation: Generation, status: string) {
 export async function withGenerationUsage(request: Request, handler: () => Promise<Response>): Promise<Response> {
   const route = new URL(request.url).pathname;
   if (!/^\/api\/generate(?:\/|$)/.test(route) || usageContext.getStore()) return handler();
-  const generation: Generation = { generationId: randomUUID(), route, calls: [], finished: false, designTarget: null };
+  const generation: Generation = { generationId: fundingScope.getStore()?.runId ?? randomUUID(), route, calls: [], finished: false, billingSink:billingCallSink(), designTarget: null };
   return usageContext.run(generation, async () => {
     const abort = () => finishGeneration(generation, 'aborted');
     request.signal.addEventListener('abort', abort, { once: true });

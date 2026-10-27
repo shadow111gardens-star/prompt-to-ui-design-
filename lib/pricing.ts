@@ -1,8 +1,9 @@
+import { PUBLIC_PLANS } from '@/lib/billing/plan-catalog';
 export type PricingPlan = 'plus' | 'pro' | 'lifetime';
 export type BillingPeriod = 'monthly' | 'yearly';
 
 export function getPricing(plan:PricingPlan,period:BillingPeriod) {
-  const monthlyCents=plan==='plus'?900:plan==='pro'?2500:3900;
+  const monthlyCents=PUBLIC_PLANS[plan].priceCents;
   const recurring=plan!=='lifetime';
   const yearly=recurring&&period==='yearly';
   const displayCents=yearly?Math.round(monthlyCents*0.7):monthlyCents;

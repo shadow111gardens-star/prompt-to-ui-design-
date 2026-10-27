@@ -1,3 +1,4 @@
+import { readGenerationBody } from '@/lib/ai/generation-request';
 import { generatedImageContext } from '@/lib/images/generation-context';
 import { createImageHydrator } from '@/lib/images/hydrate-html';
 import { prisma } from '@/lib/db';
@@ -19,7 +20,7 @@ export function hydrateImageStream(response:Response,hydrate:(source:string)=>Pr
 }
 export async function withGeneratedImages<T extends Request>(request:T,uid:string,handler:()=>Promise<Response>){
  const pathname=new URL(request.url).pathname;if(!/^\/api\/generate(?:\/|$)/.test(pathname)||/\/(?:convert|style|theme)$/.test(pathname))return handler();
- let projectId='',prompt='',moodboardMode=false;try{const clone=request.clone();if(clone.headers.get('content-type')?.includes('multipart/form-data')){const form=await clone.formData();projectId=String(form.get('projectId')||'');prompt=String(form.get('prompt')||'');moodboardMode=form.get('generationMode')==='moodboard';}else{const data=await clone.json();projectId=typeof data.projectId==='string'?data.projectId:'';prompt=String(data.prompt||data.userMessage||data.description||'');}}catch{return handler();}
+ let projectId='',prompt='',moodboardMode=false;try{const parsed=await readGenerationBody(request);if(parsed instanceof FormData){const form=parsed;projectId=String(form.get('projectId')||'');prompt=String(form.get('prompt')||'');moodboardMode=form.get('generationMode')==='moodboard';}else{const data=parsed;projectId=typeof data.projectId==='string'?data.projectId:'';prompt=String(data.prompt||data.userMessage||data.description||'');}}catch{return handler();}
  if(!projectId)return handler();let uploaded:string[]=[];
  const where=await requireOwnedProject(projectId);
  const project=await prisma.project.findUnique({where,select:{inspirationImages:{select:{filePath:true}},moodBoardImages:{select:{filePath:true}}}});

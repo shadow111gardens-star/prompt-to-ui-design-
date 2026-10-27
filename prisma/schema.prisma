@@ -58,3 +58,118 @@ model ProjectSettings {
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
+
+// Billing data is isolated by verified Firebase UID. Existing project data is unchanged.
+model CreditAccount {
+  uid String @id
+  plan String @default("local")
+  status String @default("inactive")
+  balance Int @default(0)
+  reservedCredits Int @default(0)
+  customerId String? @unique
+  subscriptionId String? @unique
+  currentPeriodId String?
+  gatewayKey String?
+  lastBillingAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  periods CreditPeriod[]
+  runs GenerationRun[]
+  entries CreditEntry[]
+}
+
+model CreditPeriod {
+  id String @id @default(cuid())
+  uid String
+  periodKey String
+  plan String
+  startsAt DateTime
+  endsAt DateTime
+  allocation Int
+  screenLimit Int
+  creditsUsed Int @default(0)
+  successfulScreens Int @default(0)
+  reservedScreens Int @default(0)
+  spendLimitMicros BigInt
+  spentMicros BigInt @default(0)
+  reservedSpendMicros BigInt @default(0)
+  createdAt DateTime @default(now())
+  account CreditAccount @relation(fields:[uid], references:[uid], onDelete:Restrict)
+  runs GenerationRun[]
+  @@unique([uid, periodKey])
+  @@index([uid, endsAt])
+}
+
+model GenerationRun {
+  id String @id @default(cuid())
+  uid String
+  requestId String
+  fingerprint String
+  projectId String
+  workflowId String
+  route String
+  funding String
+  periodId String?
+  status String @default("running")
+  reservedScreens Int @default(0)
+  reservedCostMicros BigInt @default(0)
+  costMicros BigInt?
+  inputTokens Int?
+  outputTokens Int?
+  totalTokens Int?
+  usageJson String @default("[]")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  completedAt DateTime?
+  account CreditAccount @relation(fields:[uid], references:[uid], onDelete:Restrict)
+  period CreditPeriod? @relation(fields:[periodId], references:[id], onDelete:Restrict)
+  screens ScreenGeneration[]
+  @@unique([uid, requestId])
+  @@index([uid, projectId, status])
+}
+
+model ScreenGeneration {
+  id String @id @default(cuid())
+  runId String
+  uid String
+  projectId String
+  workflowId String
+  screenKey String
+  screenId String?
+  status String @default("ready")
+  html String
+  digest String
+  creditsCharged Int @default(0)
+  inputTokens Int?
+  outputTokens Int?
+  costMicros BigInt?
+  createdAt DateTime @default(now())
+  acceptedAt DateTime?
+  run GenerationRun @relation(fields:[runId], references:[id], onDelete:Restrict)
+  @@unique([runId, screenKey])
+  @@index([uid, projectId, status])
+}
+
+model CreditEntry {
+  id String @id @default(cuid())
+  uid String
+  periodId String?
+  runId String?
+  screenId String?
+  type String
+  amount Int
+  balanceAfter Int
+  eventKey String
+  createdAt DateTime @default(now())
+  account CreditAccount @relation(fields:[uid], references:[uid], onDelete:Restrict)
+  @@unique([uid, eventKey])
+  @@index([uid, createdAt])
+}
+
+model DodoBillingEvent {
+  id String @id
+  type String
+  payloadHash String
+  uid String?
+  processedAt DateTime @default(now())
+}

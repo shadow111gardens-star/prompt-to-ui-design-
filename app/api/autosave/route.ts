@@ -1,3 +1,5 @@
+import { creditsEnabled, CreditError } from '@/lib/billing/policy';
+import { serverIdentity } from '@/lib/server/project-access';
 import { withProjectRoute, projectAccessResponse, ownedProjectWhere } from '@/lib/server/project-access';
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
@@ -15,6 +17,12 @@ export const POST = withProjectRoute(async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid shapesData format" }, { status: 400 });
     }
 
+    if(creditsEnabled()){
+      const {persistBilledCanvas,ensureCreditAccount}=await import('@/lib/billing/store');
+      await ensureCreditAccount(await serverIdentity());
+      const settled=await persistBilledCanvas((await serverIdentity()).sub,projectId,shapesData,viewportData);
+      return NextResponse.json({success:true,credits:settled});
+    }
     await prisma.project.update({
       where: await ownedProjectWhere(projectId),
       data: {
@@ -25,6 +33,7 @@ export const POST = withProjectRoute(async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    if(error instanceof CreditError)return NextResponse.json({error:error.message},{status:error.status});
     const denied = projectAccessResponse(error); if (denied) return denied;
     console.error("Autosave error:", error);
     return NextResponse.json({ error: "Autosave failed" }, { status: 500 });

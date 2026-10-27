@@ -81,7 +81,7 @@ export const styleGuideApi = createApi({
         headers: {
           "Content-Type": "application/json",
         },
-        body: { projectId },
+        body: { projectId, requestId: crypto.randomUUID() },
       }),
       invalidatesTags: ["StyleGuide"],
     }),

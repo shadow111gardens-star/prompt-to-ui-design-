@@ -6,7 +6,7 @@ Loaded Prisma config from prisma.config.ts.
 
 Prisma schema loaded from prisma\schema.prisma.
 
-✔ Generated Prisma Client (v7.8.0) to .\..\openui-main\node_modules\@prisma\client in 1.06s
+✔ Generated Prisma Client (v7.8.0) to .\..\openui-main\node_modules\@prisma\client in 598ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
@@ -17,15 +17,15 @@ Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
   ⨯ turbopackFileSystemCacheForDev
 
   Creating an optimized production build ...
-✓ Compiled successfully in 29.2s
+✓ Compiled successfully in 26.6s
   Running TypeScript ...
-  Finished TypeScript in 26.2s ...
+  Finished TypeScript in 59s ...
   Collecting page data using 7 workers ...
-  Generating static pages using 7 workers (0/45) ...
-  Generating static pages using 7 workers (11/45)
-  Generating static pages using 7 workers (22/45)
-  Generating static pages using 7 workers (33/45)
-✓ Generating static pages using 7 workers (45/45) in 1096ms
+  Generating static pages using 7 workers (0/50) ...
+  Generating static pages using 7 workers (12/50)
+  Generating static pages using 7 workers (24/50)
+  Generating static pages using 7 workers (37/50)
+✓ Generating static pages using 7 workers (50/50) in 2.4s
   Finalizing page optimization ...
 
 Route (app)
@@ -36,9 +36,14 @@ Route (app)
 │ ├ /pricing
 │ ├ /changelog
 │ └ [+12 more paths]
+├ ƒ /api/ai-credits
+├ ƒ /api/ai-gateway-key
 ├ ƒ /api/ai-provider-keys
 ├ ƒ /api/auth/session
 ├ ƒ /api/autosave
+├ ƒ /api/billing/checkout
+├ ƒ /api/billing/dodo-webhook
+├ ƒ /api/billing/portal
 ├ ƒ /api/debug-settings
 ├ ƒ /api/generate
 ├ ƒ /api/generate/convert

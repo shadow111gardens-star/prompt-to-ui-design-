@@ -4,7 +4,10 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { updateProfile } from 'firebase/auth';
 import ProviderKeysPreview from '@/components/projects/provider-keys-preview';
-import { planLabels } from '@/lib/account-plan';
+import BillingPanel from '@/components/billing/billing-panel';
+import GatewayKey from '@/components/billing/gateway-key';
+import { useCreditUsage } from '@/components/billing/use-credit-usage';
+import { accountPlan, planLabels } from '@/lib/account-plan';
 import { useAuth } from '@/components/auth/provider';
 import { authErrorMessage } from '@/lib/firebase/errors';
 import { UserRound, Layers, Sun, CreditCard } from 'lucide-react';
@@ -20,7 +23,9 @@ const tabs = [
 type Tab = typeof tabs[number]['id'];
 
 export default function WorkspaceSettings({ providers,onClose,previewLifetime=false }: { providers: string[];onClose?:()=>void;previewLifetime?:boolean }) {
-  const {user,plan='local'}=useAuth();
+  const {user,plan:firebasePlan='local'}=useAuth();
+  const credits=useCreditUsage();
+  const plan=accountPlan(credits.data?.plan??firebasePlan);
   const lifetime=plan==='lifetime';
   const showAI=lifetime||previewLifetime;
   const availableTabs=tabs.filter(item=>item.id!=='api'||showAI);
@@ -73,17 +78,12 @@ export default function WorkspaceSettings({ providers,onClose,previewLifetime=fa
         {tab==='api' && showAI && <div className="space-y-7">
           {previewLifetime&&<p role="status" className="rounded-xl border border-primary/30 bg-primary/5 p-3 text-xs text-primary">Local testing mode. Provider key tools are enabled for this authenticated development workspace; your paid plan is unchanged.</p>}
           <div className="flex flex-wrap items-start justify-between gap-3"><div><h2 className="text-base font-medium">AI Preferences</h2><p className="mt-2 text-sm text-muted-foreground">Manage your AI provider keys and models for design generation.</p></div><span className="rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-medium text-primary">Lifetime Plan</span></div>
+          <GatewayKey/>
           <ProviderKeysPreview/>
           <p className="text-xs text-muted-foreground">{providers.length ? `${providers.length} AI provider(s) configured on the server.` : 'No AI providers configured.'} Provider credentials remain on the server.</p>
           {notice && <p role="status" className="text-sm text-muted-foreground">{notice}</p>}
         </div>}
-        {tab==='billing' && <div className="space-y-6">
-          <div><h2 className="text-base font-medium">Billing</h2><p className="mt-2 text-sm text-muted-foreground">View your current plan and available upgrades.</p></div>
-          <div className="rounded-2xl border border-border bg-card/40 p-6"><div className="grid items-start gap-5 border-b border-border pb-7 2xl:grid-cols-[125px_minmax(0,1fr)_auto]"><p className="pt-2 text-sm">Current plan</p><div><span className="inline-block rounded-lg border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">{planLabels[plan]}</span><p className="mt-1 text-sm">{plan==='local'?'Self-hosted workspace':`${planLabels[plan]} plan`}</p><p className="mt-2 text-sm text-muted-foreground">Use your own AI providers with your local projects.</p></div><Link href="/#pricing" className="mt-4 min-w-44 rounded-xl bg-primary px-6 py-4 text-center text-sm font-medium text-primary-foreground">Upgrade plan</Link></div>
-            <dl className="mt-7 grid grid-cols-1 gap-x-5 gap-y-4 text-sm sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]"><dt className="text-muted-foreground">Next billing date</dt><dd>Not applicable</dd><dt className="text-muted-foreground">Amount</dt><dd>No subscription connected</dd><dt className="text-muted-foreground">Status</dt><dd className="flex items-center gap-3"><span className="size-3 rounded-full bg-primary"/>Local workspace</dd></dl>
-          </div>
-          <p className="text-xs text-muted-foreground">Paid checkout is not connected. Upgrade opens the pricing page; no payment is taken here.</p>
-        </div>}
+        {tab==='billing' && <BillingPanel/>}
       </section>
   </div>;
 }

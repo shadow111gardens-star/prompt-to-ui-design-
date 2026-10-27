@@ -81,6 +81,7 @@ export async function parseSSEStream(
     if (!parsed || parsed.streamId !== activeStreamId) return;
     if (parsed.type === "error") throw new Error(parsed.error || "UI generation failed. Please try again.");
     if(parsed.type==='image-status'){if(Array.isArray(parsed.warnings)&&typeof window!=='undefined'&&typeof window.dispatchEvent==='function')window.dispatchEvent(new CustomEvent('openui-image-status',{detail:parsed.warnings.filter(value=>typeof value==='string').slice(0,5)}));return;}
+    if(parsed.type==='billing'){if(typeof window!=='undefined')window.dispatchEvent(new Event('openui-credits-changed'));return;}
     if (parsed.type === "usage") {
       if (parsed.finishReason === "error") throw new Error("The AI provider failed to generate a design.");
       return;

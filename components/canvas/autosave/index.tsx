@@ -1,4 +1,5 @@
 "use client";
+import { reportSavedCredits } from '@/lib/billing/client';
 import { useAppSelector } from "@/redux/store";
 import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -19,7 +20,7 @@ const Autosave = () => {
     if(!projectId)return;
     const snapshot=snapshots.current[projectId];
     delete snapshots.current[projectId];
-    if(snapshot)void fetch('/api/autosave',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(snapshot)}).then(response=>{if(!response.ok)console.warn('Could not flush project changes when leaving the canvas.');}).catch(()=>console.warn('Could not flush project changes when leaving the canvas.'));
+    if(snapshot)void fetch('/api/autosave',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(snapshot)}).then(response=>{if(!response.ok)console.warn('Could not flush project changes when leaving the canvas.');else void reportSavedCredits(response);}).catch(()=>console.warn('Could not flush project changes when leaving the canvas.'));
   },[projectId]);
 
   const [isSaving, setIsSaving] = useState(false);
@@ -63,6 +64,7 @@ const Autosave = () => {
         throw new Error("Save request failed");
       }
 
+      await reportSavedCredits(response);
       setSaveStatus("saved");
       setTimeout(() => setSaveStatus("idle"), 2000);
     } catch (err) {

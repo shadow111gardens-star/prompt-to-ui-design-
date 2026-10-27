@@ -62,12 +62,12 @@ export const sitePages: Record<string, SitePage> = {
       "text": "Create an account or sign in to use your own project workspace. Keep generated screens, design settings and edits together under your authenticated account."
     },
     {
-      "title": "AI usage is separate",
-      "text": "Generation uses the model configured by this OpenUI service. Availability and usage depend on that provider; workspace access does not imply unlimited AI requests."
+      "title": "Credits and screen allowances",
+      "text": "Each accepted generated screen costs 15 credits. Unused credits remain in your account; current-period screen limits still apply. Lifetime usage is billed through your own AI Gateway account."
     },
     {
-      "title": "Paid plans are not available to purchase",
-      "text": "Subscription checkout is not connected in this build. No paid plan, renewal, credit rollover or support entitlement is promised by this page."
+      "title": "Subscription confirmation",
+      "text": "Dodo Payments confirms purchases and renewals. Credits are granted only after verified billing events; a checkout return page does not grant access."
     },
     {
       "title": "Before choosing a paid plan",

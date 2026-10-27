@@ -91,7 +91,7 @@ export default function DesignTokensEditor({
       const response = await fetch("/api/generate/theme", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: aiPrompt, projectId }),
+        body: JSON.stringify({ prompt: aiPrompt, projectId, requestId: crypto.randomUUID() }),
       });
       if (!response.ok) throw new Error("Failed to generate theme");
       const data = await response.json();
