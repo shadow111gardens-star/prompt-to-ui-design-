@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { tokenHarborConfiguration } from '@/lib/ai/tokenharbor';
+import { geminiConfiguration } from '@/lib/ai/gemini';
 const inFlight = new Set<string>();
 async function fingerprint(request: Request) {
   const copy = request.clone();
@@ -19,8 +19,8 @@ async function fingerprint(request: Request) {
   return createHash('sha256').update(JSON.stringify(body)).digest('hex');
 }
 export async function withFixedGeneration(request: Request, uid: string, handler: () => Promise<Response>) {
-  try { tokenHarborConfiguration(); }
-  catch (error) { return Response.json({ error: error instanceof Error ? error.message : 'TokenHarbor configuration is unavailable.' }, { status: 503 }); }
+  try { geminiConfiguration(); }
+  catch (error) { return Response.json({ error: error instanceof Error ? error.message : 'Gemini configuration is unavailable.' }, { status: 503 }); }
   let hash: string;
   try { hash = await fingerprint(request); } catch { return Response.json({ error: 'Invalid generation request.' }, { status: 400 }); }
   const key = `${uid}:${new URL(request.url).pathname}:${hash}`;

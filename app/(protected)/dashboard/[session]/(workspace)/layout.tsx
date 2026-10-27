@@ -1,6 +1,6 @@
 import Navbar from "@/components/navbar";
 import React from "react";
-import { tokenHarborConfigurationError } from '@/lib/ai/tokenharbor';
+import { geminiConfigurationError } from '@/lib/ai/gemini';
 
 type Props = {
   children: React.ReactNode;
@@ -9,7 +9,7 @@ type Props = {
 const Layout = async ({ children }: Props) => {
   return (
     <div className="grid min-w-0 grid-cols-1">
-      <Navbar modelConfigurationError={tokenHarborConfigurationError()} />
+      <Navbar modelConfigurationError={geminiConfigurationError()} />
       {children}
     </div>
   );

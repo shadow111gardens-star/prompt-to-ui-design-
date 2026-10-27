@@ -13,13 +13,13 @@ test('Moodboard references read persisted project-owned bytes with MIME types an
 });
 
 test('Moodboard selection uses only the fixed model and never an active personal override',async()=>{
- const modules=loader({'@/lib/ai/tokenharbor':{tokenHarborConfiguration:()=>({model:'deepseek-v4.1-flash:free'})},'@/lib/ai/provider-registry':{getLanguageModel:()=>({modelId:'deepseek-v4.1-flash:free'})}}),{getMoodboardModel}=modules('lib/ai/moodboard-model.ts'),{personalProviderContext}=modules('lib/ai/personal-provider-context.ts');
- for(const provider of ['google','openrouter','ollama']){const result=await getMoodboardModel({provider,model:'legacy'});assert.equal(result.provider,'tokenharbor');assert.equal(result.modelId,'deepseek-v4.1-flash:free');}
- await personalProviderContext.run({uid:'synthetic',settings:{active:'google',providers:{google:{key:'synthetic',model:'other',models:[]}}}},async()=>assert.equal((await getMoodboardModel()).provider,'tokenharbor'));
+ const modules=loader({'@/lib/ai/gemini':{geminiConfiguration:()=>({model:'gemini-3.5-flash-lite'})},'@/lib/ai/provider-registry':{getLanguageModel:()=>({modelId:'gemini-3.5-flash-lite'})}}),{getMoodboardModel}=modules('lib/ai/moodboard-model.ts'),{personalProviderContext}=modules('lib/ai/personal-provider-context.ts');
+ for(const provider of ['google','openrouter','ollama']){const result=await getMoodboardModel({provider,model:'legacy'});assert.equal(result.provider,'google');assert.equal(result.modelId,'gemini-3.5-flash-lite');}
+ await personalProviderContext.run({uid:'synthetic',settings:{active:'google',providers:{google:{key:'synthetic',model:'other',models:[]}}}},async()=>assert.equal((await getMoodboardModel()).provider,'google'));
 });
 
 test('missing fixed configuration fails before Moodboard generation instead of probing other catalogs',async()=>{
- const modules=loader({'@/lib/ai/tokenharbor':{tokenHarborConfiguration:()=>{throw Error('Set TOKENHARBOR_MODEL');}},'@/lib/ai/provider-registry':{getLanguageModel:()=>{throw Error('Should not resolve a model');}}});await assert.rejects(modules('lib/ai/moodboard-model.ts').getMoodboardModel({provider:'openrouter',model:'legacy'}),/TOKENHARBOR_MODEL/);
+ const modules=loader({'@/lib/ai/gemini':{geminiConfiguration:()=>{throw Error('Set GEMINI_MODEL');}},'@/lib/ai/provider-registry':{getLanguageModel:()=>{throw Error('Should not resolve a model');}}});await assert.rejects(modules('lib/ai/moodboard-model.ts').getMoodboardModel({provider:'openrouter',model:'legacy'}),/GEMINI_MODEL/);
 });
 
 test('existing generation route forwards actual Moodboard image parts and inspiration instructions without altering normal mode',async()=>{
@@ -58,6 +58,6 @@ test('save failure retains the added screen and retry saves it without another A
 });
 
 test('fixed model metadata does not trigger an unrelated vision catalog request',async()=>{
- let calls=0;const modules=loader({'@/lib/ai/tokenharbor':{tokenHarborConfiguration:()=>({model:'deepseek-v4.1-flash:free'})},'@/lib/ai/provider-registry':{getLanguageModel:()=>{calls++;return {modelId:'deepseek-v4.1-flash:free'};}}});
- const selected=await modules('lib/ai/moodboard-model.ts').getMoodboardModel({provider:'google',model:'legacy'});assert.equal(selected.provider,'tokenharbor');assert.equal(selected.modelId,'deepseek-v4.1-flash:free');assert.equal(calls,1);
+ let calls=0;const modules=loader({'@/lib/ai/gemini':{geminiConfiguration:()=>({model:'gemini-3.5-flash-lite'})},'@/lib/ai/provider-registry':{getLanguageModel:()=>{calls++;return {modelId:'gemini-3.5-flash-lite'};}}});
+ const selected=await modules('lib/ai/moodboard-model.ts').getMoodboardModel({provider:'google',model:'legacy'});assert.equal(selected.provider,'google');assert.equal(selected.modelId,'gemini-3.5-flash-lite');assert.equal(calls,1);
 });

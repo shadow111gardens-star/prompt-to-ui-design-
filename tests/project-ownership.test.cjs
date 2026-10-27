@@ -75,7 +75,7 @@ function fixture() {
   }
   const prisma = { project, moodBoardImage: childDelegate(images, 'moodboard'), inspirationImage: childDelegate([], 'inspiration'), projectSettings: childDelegate(settings, 'settings') };
   const load = loader({
-    '@/lib/ai/tokenharbor': { tokenHarborConfiguration: () => ({ model: 'deepseek-v4.1-flash:free', key: 'synthetic' }) },
+    '@/lib/ai/gemini': { geminiConfiguration: () => ({ model: 'gemini-3.5-flash-lite', key: 'synthetic' }) },
     '@/lib/firebase/verify-token': { ...verifier, verifyFirebaseToken: value => verifier.verifyFirebaseToken(value, options) },
     'next/headers': { cookies: async () => ({ get: () => serverToken ? { value: serverToken } : undefined }) },
     '@/lib/db': { prisma },
@@ -293,7 +293,7 @@ test('owners retain nested style/model/thumbnail edits and upload/project deleti
   const style = f.load('app/api/projects/[id]/style-guide/route.ts');
   assert.equal((await style.PUT(req('/api/projects/pa/style-guide','alice','PUT',{styleGuide:{theme:'Owner theme'}}),params('pa'))).status,200);
   assert.equal((await style.GET(req('/api/projects/pa/style-guide'),params('pa'))).status,200);
-  assert.equal((await f.load('app/api/models/select/route.ts').POST(req('/api/models/select','alice','POST',{projectId:'pa',provider:'tokenharbor',model:'deepseek-v4.1-flash:free'}))).status,200);
+  assert.equal((await f.load('app/api/models/select/route.ts').POST(req('/api/models/select','alice','POST',{projectId:'pa',provider:'google',model:'gemini-3.5-flash-lite'}))).status,200);
   assert.equal(f.settings.find(row=>row.projectId==='pa').model,'gpt-test','fixed selection must leave historical settings untouched');
   assert.equal((await f.load('app/api/projects/[id]/thumbnail/route.ts').POST(req('/api/projects/pa/thumbnail','alice','POST',{thumbnail:'data:image/png;base64,AAA'}),params('pa'))).status,200);
   assert.equal((await f.load('app/api/upload/route.ts').DELETE(req('/api/upload?id=m-pa&type=moodboard','alice','DELETE'))).status,200);

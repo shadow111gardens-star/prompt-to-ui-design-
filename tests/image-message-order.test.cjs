@@ -19,17 +19,18 @@ test('image instructions follow leading system instructions and precede new or e
  const model={};assert.equal(context.withImageContract(model),model);
 });
 
-test('fixed TokenHarbor adapter preserves leading image-contract instructions and chronological conversation',async()=>{
- let captured;const {createOpenAI}=require('@ai-sdk/openai');const raw=createOpenAI({apiKey:'synthetic',baseURL:'https://tokenharbor.ai/v1',fetch:async(_url,options)=>{captured=JSON.parse(options.body);throw Error('Stop before network');}}).chat('deepseek-v4.1-flash:free');
- const modules=loader({'@/lib/ai/tokenharbor':{createTokenHarborModel:()=>raw}}),{getLanguageModel}=modules('lib/ai/provider-registry.ts'),{generatedImageContext}=modules('lib/images/generation-context.ts');
+test('fixed Gemini adapter preserves leading image-contract instructions and chronological conversation',async()=>{
+ let captured;const {createGoogleGenerativeAI}=require('@ai-sdk/google');const raw=createGoogleGenerativeAI({apiKey:'synthetic',fetch:async(url,options)=>{assert.ok(String(url).includes('gemini-3.5-flash-lite'));captured=JSON.parse(options.body);throw Error('Stop before network');}})('gemini-3.5-flash-lite');
+ const modules=loader({'@/lib/ai/gemini':{createGeminiModel:()=>raw}}),{getLanguageModel}=modules('lib/ai/provider-registry.ts'),{generatedImageContext}=modules('lib/images/generation-context.ts');
  for(const conversation of [[user('new conversation')],history]){
   await generatedImageContext.run(imageContext,async()=>{await assert.rejects(getLanguageModel('google','old').doStream({prompt:[{role:'system',content:'BASE_RULES'},...conversation],maxOutputTokens:32}));});
-  assert.equal(captured.model,'deepseek-v4.1-flash:free');const messages=captured.messages;let started=false;for(const message of messages){if(['system','developer'].includes(message.role))assert.equal(started,false);else started=true;}
-  assert.deepEqual(messages.filter(m=>!['system','developer'].includes(m.role)).map(m=>m.role),conversation.map(m=>m.role));assert.match(JSON.stringify(messages),/data-image-query/);
+  assert.match(JSON.stringify(captured.systemInstruction),/BASE_RULES/);assert.match(JSON.stringify(captured.systemInstruction),/data-image-query/);
+  assert.deepEqual(captured.contents.map(m=>m.role),conversation.map(m=>m.role==='assistant'?'model':m.role));
+  assert.deepEqual(captured.contents.map(m=>m.parts[0].text),conversation.map(m=>m.content[0].text));
  }
 });
 
 test('regression reproduces the old trailing-system failure before transport and the fixed registry path reaches transport',async()=>{
- let called=false;const {createGoogleGenerativeAI}=require('@ai-sdk/google');const model=createGoogleGenerativeAI({apiKey:'synthetic',fetch:async()=>{called=true;throw Error('No live request');}})('gemini-2.5-flash');
+ let called=false;const {createGoogleGenerativeAI}=require('@ai-sdk/google');const model=createGoogleGenerativeAI({apiKey:'synthetic',fetch:async()=>{called=true;throw Error('No live request');}})('gemini-3.5-flash-lite');
  await assert.rejects(()=>model.doStream({prompt:[{role:'system',content:'Base rules'},user('Build a page'),{role:'system',content:'Image instructions'}]}),/system messages are only supported at the beginning of the conversation/);assert.equal(called,false);
 });

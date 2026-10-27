@@ -40,10 +40,10 @@ test('parallel generations remain isolated', async () => {
   const wire = [{streamId:'other', text:'wrong'}, {streamId:'ui', text:'<main>OK</main>'}].map(x => `data: ${JSON.stringify(x)}\n\n`).join('');
   assert.equal(await parseSSEStream(readerFor(wire), 'ui', () => {}), '<main>OK</main>');
 });
-test('legacy selections are mapped to the one fixed TokenHarbor model',()=>{
- const registry=load('lib/ai/provider-registry.ts',{'@/lib/ai/tokenharbor':{createTokenHarborModel:()=>({modelId:'deepseek-v4.1-flash:free'}),tokenHarborConfiguration:()=>({model:'deepseek-v4.1-flash:free'})}});
- for(const provider of ['nvidia','ollama','google','openai'])assert.equal(registry.getLanguageModel(provider,'legacy').modelId,'deepseek-v4.1-flash:free');
- assert.equal(registry.getFallbackSelection().provider,'tokenharbor');
+test('legacy selections are mapped to the one fixed Gemini model',()=>{
+ const registry=load('lib/ai/provider-registry.ts',{'@/lib/ai/gemini':{createGeminiModel:()=>({modelId:'gemini-3.5-flash-lite'}),geminiConfiguration:()=>({model:'gemini-3.5-flash-lite'})}});
+ for(const provider of ['nvidia','ollama','google','openai'])assert.equal(registry.getLanguageModel(provider,'legacy').modelId,'gemini-3.5-flash-lite');
+ assert.equal(registry.getFallbackSelection().provider,'google');
 });
 
 test('usage metadata does not contaminate generated HTML', async () => {

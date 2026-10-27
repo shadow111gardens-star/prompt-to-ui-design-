@@ -144,10 +144,10 @@ test('provider/model identity uses provider-returned model rather than requested
   assert.equal(logs.find(log => log.event === 'ai_usage_summary').totalTokens, 140);
 });
 
-test('actual redesign route logs one fixed TokenHarbor attempt and app target regardless of stale personal/project settings', async () => {
+test('actual redesign route logs one fixed Gemini attempt and app target regardless of stale personal/project settings', async () => {
   let attempts = 0;
   const modules = loader({
-    '@/lib/ai/tokenharbor': { tokenHarborConfiguration: () => ({ model: 'deepseek-v4.1-flash:free', key: 'synthetic' }), createTokenHarborModel: () => model('deepseek-v4.1-flash:free', { doStream: async () => { attempts++; return model('deepseek-v4.1-flash:free').doStream(); } }) },
+    '@/lib/ai/gemini': { geminiConfiguration: () => ({ model: 'gemini-3.5-flash-lite', key: 'synthetic' }), createGeminiModel: () => model('gemini-3.5-flash-lite', { doStream: async () => { attempts++; return model('gemini-3.5-flash-lite').doStream(); } }) },
     '@/lib/server/project-access': { withVerifiedIdentity: (_identity, work) => work(), requireOwnedProject: async id => ({ id }), ownedProjectWhere: async id => ({ id }), projectAccessResponse: () => undefined },
     '@/lib/db': { prisma: { project: { findUnique: async () => ({ settings: { provider: 'google', model: 'google/old-selection' }, inspirationImages: [], styleGuide: null, sketchesData: '{"designTarget":"app"}' }) } } },
     '@/lib/ai/personal-provider-auth': { personalProviderIdentity: async () => ({ sub: 'PRIVATE-uid', plan: 'lifetime' }), canUsePersonalProviders: () => true },
@@ -167,8 +167,8 @@ test('actual redesign route logs one fixed TokenHarbor attempt and app target re
   });
   const summary = logs.find(log => log.event === 'ai_usage_summary');
   assert.ok(summary); assert.equal(summary.route, '/api/generate/redesign'); assert.equal(summary.designTarget, 'app');
-  assert.equal(attempts, 1); assert.equal(summary.aiCalls, 1); assert.equal(summary.provider, 'tokenharbor');
-  assert.equal(summary.model, 'deepseek-v4.1-flash:free'); assert.equal(summary.usageComplete, true);
+  assert.equal(attempts, 1); assert.equal(summary.aiCalls, 1); assert.equal(summary.provider, 'google');
+  assert.equal(summary.model, 'gemini-3.5-flash-lite'); assert.equal(summary.usageComplete, true);
   assert.equal(JSON.stringify(logs).includes('PRIVATE'), false);
 });
 

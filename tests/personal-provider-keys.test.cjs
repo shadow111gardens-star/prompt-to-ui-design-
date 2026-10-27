@@ -36,9 +36,9 @@ test('provider API validates entitlement/origin, persists models, activates keys
  assert.equal((await api.DELETE(req('DELETE',{provider:'openai'}))).status,200);assert.equal((await store.read(uid)).active,undefined);
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
-test('saved personal provider keys cannot override fixed TokenHarbor generation',async()=>{
- const load=loader({'@/lib/ai/tokenharbor':{createTokenHarborModel:()=>({modelId:'deepseek-v4.1-flash:free'}),tokenHarborConfiguration:()=>({model:'deepseek-v4.1-flash:free'})}});const {personalProviderContext}=load('lib/ai/personal-provider-context.ts'),registry=load('lib/ai/provider-registry.ts');
- await Promise.all(['openai','google'].map(provider=>personalProviderContext.run({uid:'synthetic-'+provider,settings:{active:provider,providers:{[provider]:{key:'synthetic-personal',model:'other-model',models:[]}}}},async()=>{await new Promise(r=>setImmediate(r));assert.equal(registry.getLanguageModel(provider,'old').modelId,'deepseek-v4.1-flash:free');assert.equal(registry.getFallbackSelection().provider,'tokenharbor');})));assert.equal(personalProviderContext.getStore(),undefined);
+test('saved personal provider keys cannot override fixed Gemini generation',async()=>{
+ const load=loader({'@/lib/ai/gemini':{createGeminiModel:()=>({modelId:'gemini-3.5-flash-lite'}),geminiConfiguration:()=>({model:'gemini-3.5-flash-lite'})}});const {personalProviderContext}=load('lib/ai/personal-provider-context.ts'),registry=load('lib/ai/provider-registry.ts');
+ await Promise.all(['openai','google'].map(provider=>personalProviderContext.run({uid:'synthetic-'+provider,settings:{active:provider,providers:{[provider]:{key:'synthetic-personal',model:'other-model',models:[]}}}},async()=>{await new Promise(r=>setImmediate(r));assert.equal(registry.getLanguageModel(provider,'old').modelId,'gemini-3.5-flash-lite');assert.equal(registry.getFallbackSelection().provider,'google');})));assert.equal(personalProviderContext.getStore(),undefined);
 });
 
 test('localhost testing override works only in development, never for remote hosts or production',()=>{
