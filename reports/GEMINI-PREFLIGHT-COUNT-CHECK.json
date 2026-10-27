@@ -1,0 +1,10 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "fixture": "Synthetic text, not user project data",
+  "oldConservativeUnits": 18436,
+  "geminiCountedTokens": 3480,
+  "limit": 4000,
+  "accepted": true,
+  "countTokensOnly": true,
+  "generationRequestsSent": 0
+}

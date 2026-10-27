@@ -6,7 +6,7 @@ Loaded Prisma config from prisma.config.ts.
 
 Prisma schema loaded from prisma\schema.prisma.
 
-✔ Generated Prisma Client (v7.8.0) to .\..\openui-main\node_modules\@prisma\client in 632ms
+✔ Generated Prisma Client (v7.8.0) to .\..\openui-main\node_modules\@prisma\client in 825ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
@@ -17,15 +17,15 @@ Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
   ⨯ turbopackFileSystemCacheForDev
 
   Creating an optimized production build ...
-✓ Compiled successfully in 28.1s
+✓ Compiled successfully in 46s
   Running TypeScript ...
-  Finished TypeScript in 33.3s ...
+  Finished TypeScript in 28.7s ...
   Collecting page data using 7 workers ...
   Generating static pages using 7 workers (0/45) ...
   Generating static pages using 7 workers (11/45)
   Generating static pages using 7 workers (22/45)
   Generating static pages using 7 workers (33/45)
-✓ Generating static pages using 7 workers (45/45) in 1521ms
+✓ Generating static pages using 7 workers (45/45) in 1084ms
   Finalizing page optimization ...
 
 Route (app)

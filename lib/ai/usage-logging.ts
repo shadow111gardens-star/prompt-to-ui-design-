@@ -38,10 +38,15 @@ type Call = {
   modelSource: 'adapter_model_id' | 'provider_response'; operation: 'stream' | 'generate';
   status: 'pending' | 'completed' | 'failed' | 'cancelled'; error: string | null;
   statusCode: number | null; usage: TokenCounts; usageAvailable: boolean; usageComplete: boolean;
-  extraBilling: boolean; logged: boolean; reportedCostUsd: number | null;
+  generationRequestSent: boolean | null; extraBilling: boolean; logged: boolean; reportedCostUsd: number | null;
 };
 type Generation = { generationId: string; route: string; calls: Call[]; finished: boolean; designTarget: 'web' | 'app' | null };
 const usageContext = new AsyncLocalStorage<Generation>();
+const providerCallContext = new AsyncLocalStorage<Call>();
+/** Transport distinguishes local/token-count rejections from generation requests. */
+export function markProviderGenerationRequest(sent: boolean) {
+  const call = providerCallContext.getStore(); if (call) call.generationRequestSent = sent;
+}
 function log(value: unknown) {
   // No prompts, HTML, identifiers of users/projects, headers or raw provider errors.
   try { console.info(JSON.stringify(value)); } catch { /* Telemetry cannot break generation. */ }
@@ -58,7 +63,7 @@ function recordCall(generation: Generation, call: Call) {
   log({ event: 'ai_usage_call', generationId: generation.generationId, route: generation.route,
     callId: call.callId, provider: call.provider, model: call.model, requestedModel: call.requestedModel,
     upstreamProvider: call.upstreamProvider,
-    modelSource: call.modelSource, operation: call.operation, status: call.status,
+    generationRequestSent: call.generationRequestSent, modelSource: call.modelSource, operation: call.operation, status: call.status,
     ...call.usage, usageAvailable: call.usageAvailable, usageComplete: call.usageComplete,
     error: call.error, statusCode: call.statusCode,
     cost: costForCall(call) });
@@ -73,7 +78,7 @@ function finishGeneration(generation: Generation, status: string) {
     if (call.status === 'pending') { call.status = 'cancelled'; call.error = 'usage_not_received_before_generation_end'; }
     recordCall(generation, call);
   }
-  const calls = generation.calls;
+  const calls = generation.calls.filter(call => call.generationRequestSent !== false);
   function sum(key: keyof TokenCounts, complete: boolean) {
     const values = calls.map(call => call.usage[key]);
     if (!values.length || (complete && values.some(value => value === null))) return null;
@@ -89,12 +94,12 @@ function finishGeneration(generation: Generation, status: string) {
   log({ event: 'ai_usage_summary', generationId: generation.generationId, route: generation.route,
     designTarget: generation.designTarget, provider: providers.length === 1 ? providers[0] : providers.length ? 'mixed' : null,
     model: models.length === 1 ? models[0] : models.length ? 'mixed' : null,
-    models: calls.map(call => ({ provider: call.provider, model: call.model, callId: call.callId })), aiCalls: calls.length,
+    models: calls.map(call => ({ provider: call.provider, model: call.model, callId: call.callId })), aiCalls: calls.length, aiAttempts: generation.calls.length,
     inputTokens: sum('inputTokens', true), outputTokens: sum('outputTokens', true), totalTokens: sum('totalTokens', true),
     cachedInputTokens: sum('cachedInputTokens', true), cacheWriteTokens: sum('cacheWriteTokens', true), reasoningTokens: sum('reasoningTokens', true),
     knownInputTokens: sum('inputTokens', false), knownOutputTokens: sum('outputTokens', false), knownTotalTokens: sum('totalTokens', false),
     usageComplete: calls.length > 0 && calls.every(call => call.usageComplete),
-    status: status === 'completed' && calls.at(-1)?.status === 'failed' ? 'failed'
+    status: status === 'completed' && generation.calls.at(-1)?.status === 'failed' ? 'failed'
       : calls.some(call => call.status === 'failed') && status === 'completed' ? 'completed_with_failed_attempts' : status,
     cost: { status: costComplete ? (costs.every(cost => cost.status === 'provider_reported') ? 'provider_reported' : 'calculated') : 'unavailable',
       basis: 'per_call_provider_charge_or_explicit_published_rate_basis',
@@ -143,7 +148,7 @@ export function withUsageLogging<T>(model: T, provider: string): T {
       const generation = usageContext.getStore(); if (!generation || generation.finished) return doGenerate();
       const call = begin(generation, provider, model.modelId, 'generate', params);
       try {
-        const result = await doGenerate();
+        const result = await providerCallContext.run(call, doGenerate);
         update(call, result.usage, result.response?.modelId, result.providerMetadata);
         if (result.content.some(part => part.type === 'file')) call.extraBilling = true;
         call.status = 'completed'; recordCall(generation, call); return result;
@@ -153,7 +158,7 @@ export function withUsageLogging<T>(model: T, provider: string): T {
       const generation = usageContext.getStore(); if (!generation || generation.finished) return doStream();
       const call = begin(generation, provider, model.modelId, 'stream', params);
       try {
-        const result = await doStream(), reader = result.stream.getReader();
+        const result = await providerCallContext.run(call, doStream), reader = result.stream.getReader();
         const stream: typeof result.stream = new ReadableStream({
           async pull(controller) {
             try {
@@ -198,7 +203,7 @@ function begin(generation: Generation, provider: string, modelId: string, operat
     upstreamProvider: null,
     modelSource: 'adapter_model_id', operation, status: 'pending', error: null, statusCode: null,
     usage: normalizeProviderUsage(null), usageAvailable: false, usageComplete: false,
-    extraBilling: hasFiles || (Array.isArray(p.tools) && p.tools.length > 0) || Object.keys(object(p.providerOptions)).length > 0, logged: false, reportedCostUsd: null };
+    generationRequestSent: null, extraBilling: hasFiles || (Array.isArray(p.tools) && p.tools.length > 0) || Object.keys(object(p.providerOptions)).length > 0, logged: false, reportedCostUsd: null };
   generation.calls.push(call); return call;
 }
 function update(call: Call, usage: unknown, responseModel?: string, metadata?: unknown) {
@@ -218,5 +223,5 @@ function update(call: Call, usage: unknown, responseModel?: string, metadata?: u
 }
 function fail(generation: Generation, call: Call, error: unknown) {
   if (call.logged) return;
-  call.status = 'failed'; call.error = 'provider_call_failed'; call.statusCode = errorCode(error); recordCall(generation, call);
+  call.status = 'failed'; call.error = object(error).name === 'GeminiPreflightError' ? 'input_preflight_rejected_or_unavailable' : 'provider_call_failed'; call.statusCode = errorCode(error); recordCall(generation, call);
 }

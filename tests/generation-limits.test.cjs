@@ -2,22 +2,20 @@ const {test}=require('node:test'),assert=require('node:assert/strict'),fs=requir
 function loader(mocks={}){const cache=new Map();return function load(file){const name=path.resolve(file);if(cache.has(name))return cache.get(name).exports;const mod=new Module(name,module);cache.set(name,mod);mod.paths=Module._nodeModulePaths(path.dirname(name));mod.require=request=>Object.hasOwn(mocks,request)?mocks[request]:request.startsWith('@/')?load([request.slice(2)+'.ts',request.slice(2)+'.tsx',request.slice(2)+'/index.ts'].find(file=>fs.existsSync(file))):Module.prototype.require.call(mod,request);mod._compile(ts.transpileModule(fs.readFileSync(name,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText,name);return mod.exports;};}
 const load=loader({'@/lib/db':{prisma:{}}});
 test('preflight measures content once, separates schema/history/design and avoids JSON escape inflation',()=>{
- const {measureGeminiInput,validateGeminiInput}=load('lib/ai/gemini.ts');
+ const {measureGeminiInput}=load('lib/ai/gemini.ts');
  const requirement='Keep "quotes", \\paths,\nnewlines and Gujarati: નમસ્તે';
  const prompt=[{role:'system',content:'rules'},{role:'user',content:[{type:'text',text:'old request'}]},{role:'assistant',content:[{type:'text',text:'old reply'}]},{role:'user',content:[{type:'text',text:requirement},{type:'text',text:'DESIGN SYSTEM:\nrequired tokens'},{type:'text',text:'DEVICE RULES: mobile'}]}];
  const extra={responseFormat:{type:'json',schema:{type:'object'}},tools:[{name:'test'}]},snapshot=JSON.stringify(prompt),m=measureGeminiInput(prompt,extra),b=value=>Buffer.byteLength(value,'utf8');
  assert.equal(m.components.systemPrompt,b('rules'));assert.equal(m.components.conversationHistory,b('old requestold reply'));assert.equal(m.components.userPrompt,b(requirement));assert.equal(m.components.designContext,b('DESIGN SYSTEM:\nrequired tokensDEVICE RULES: mobile'));assert.equal(m.components.jsonSchema,b(JSON.stringify(extra.responseFormat)));assert.equal(m.components.tools,b(JSON.stringify(extra.tools)));assert.equal(m.upperBound,Object.values(m.components).reduce((a,b)=>a+b,0));assert.equal(JSON.stringify(prompt),snapshot);
  // HTTP JSON must escape these newlines/quotes, but those escape bytes are not model input.
- const quoted=[{role:'user',content:[{type:'text',text:'"\n'.repeat(1200)}]}];assert.ok(validateGeminiInput(quoted)<4000);assert.ok(Buffer.byteLength(JSON.stringify({prompt:quoted}))+512>4000);
- assert.throws(()=>validateGeminiInput([...prompt,{role:'assistant',content:[{type:'text',text:'history'.repeat(1000)}]}]),/conversationHistory/);
+ const quoted=[{role:'user',content:[{type:'text',text:'"\n'.repeat(1200)}]}];assert.ok(measureGeminiInput(quoted).upperBound<4000);assert.ok(Buffer.byteLength(JSON.stringify({prompt:quoted}))+512>4000);
+ assert.ok(measureGeminiInput([...prompt,{role:'assistant',content:[{type:'text',text:'history'.repeat(1000)}]}]).components.conversationHistory>4000);
 });
-test('4,000-token input bound accepts the boundary, rejects the next byte, includes schema/context and never edits requirements',()=>{
- const {validateGeminiInput}=load('lib/ai/gemini.ts'),constants=load('lib/ai/fixed-model.ts');assert.equal(constants.AI_INPUT_TOKEN_LIMIT,4000);assert.equal(constants.AI_MAX_OUTPUT_TOKENS,4000);
- const make=text=>[{role:'user',content:[{type:'text',text}]}],base=validateGeminiInput(make(''));
- const atLimit=make('x'.repeat(4000-base)),before=JSON.stringify(atLimit);assert.equal(validateGeminiInput(atLimit),4000);assert.equal(JSON.stringify(atLimit),before);
- assert.throws(()=>validateGeminiInput(make('x'.repeat(4001-base))),/4,000-token/);
- assert.throws(()=>validateGeminiInput(make('small'),{schema:'required schema'.repeat(1000)}),/4,000-token/);
- assert.throws(()=>validateGeminiInput(make('界'.repeat(2000))),/4,000-token/);
+test('4,000 actual-token boundary is enforced without changing request contents',async t=>{
+ const {validateGeminiRequest}=load('lib/ai/gemini.ts'),constants=load('lib/ai/fixed-model.ts');assert.equal(constants.AI_INPUT_TOKEN_LIMIT,4000);assert.equal(constants.AI_MAX_OUTPUT_TOKENS,4000);
+ const fetch=global.fetch;t.after(()=>global.fetch=fetch);const body={contents:[{role:'user',parts:[{text:'Required content'}]}],systemInstruction:{parts:[{text:'rules'}]},generationConfig:{responseSchema:{type:'object'},maxOutputTokens:4000}};const before=JSON.stringify(body);
+ for(const totalTokens of [3999,4000,4001]){global.fetch=async(_url,options)=>{const sent=JSON.parse(options.body).generateContentRequest;assert.deepEqual(sent,{...body,model:'models/gemini-3.5-flash-lite'});return Response.json({totalTokens});};if(totalTokens<=4000)assert.equal(await validateGeminiRequest(body,'synthetic'),totalTokens);else await assert.rejects(validateGeminiRequest(body,'synthetic'),/4,000-token/);}
+ assert.equal(JSON.stringify(body),before);
 });
 
 test('malformed, truncated and schema-invalid JSON never reaches renderable SSE text',async()=>{
