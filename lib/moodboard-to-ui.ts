@@ -1,3 +1,4 @@
+import { reportSavedCredits } from '@/lib/billing/client';
 import type { AppStore } from '@/redux/store';
 import { addGeneratedUI, selectShape, clearSelection, updateShape, type Shape, type GeneratedUIShape } from '@/redux/slice/shapes';
 import { restoreViewport } from '@/redux/slice/viewport';
@@ -22,6 +23,7 @@ export async function saveMoodboardCanvas(store: CanvasStore, projectId: string,
   const response = await fetch('/api/autosave', { method: 'POST', headers: { 'Content-Type': 'application/json' }, signal,
     body: JSON.stringify({ projectId, shapesData: state.shapes, viewportData: { scale: state.viewport.scale, translate: state.viewport.translate } }) });
   if (!response.ok) throw new Error('The screen was added to the canvas, but saving failed. Retry saving before leaving this page.');
+  await reportSavedCredits(response);
 }
 
 export class MoodboardSaveError extends Error {

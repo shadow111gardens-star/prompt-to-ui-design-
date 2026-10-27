@@ -1,28 +1,30 @@
+import { readGenerationBody, generationRequestFailure } from '@/lib/ai/generation-request';
 import { createHash } from 'node:crypto';
 import { geminiConfiguration } from '@/lib/ai/gemini';
+import { fundingScope } from '@/lib/billing/scope';
 const inFlight = new Set<string>();
-async function fingerprint(request: Request) {
-  const copy = request.clone();
+export async function generationFingerprint(request: Request) {
+  const parsed = await readGenerationBody(request);
   let body: unknown;
-  if (copy.headers.get('content-type')?.includes('multipart/form-data')) {
+  if (parsed instanceof FormData) {
     const entries: [string, string][] = [];
-    for (const [name, value] of await copy.formData()) {
+    for (const [name, value] of parsed) {
       if (name === 'streamId') continue;
       entries.push([name, typeof value === 'string' ? value : createHash('sha256').update(new Uint8Array(await value.arrayBuffer())).digest('hex')]);
     }
     body = entries.sort(([a], [b]) => a.localeCompare(b));
   } else {
-    const json = await copy.json();
+    const json = parsed;
     if (!json || typeof json !== 'object' || Array.isArray(json)) throw new Error();
     body = Object.fromEntries(Object.entries(json).filter(([name]) => name !== 'streamId').sort(([a], [b]) => a.localeCompare(b)));
   }
   return createHash('sha256').update(JSON.stringify(body)).digest('hex');
 }
 export async function withFixedGeneration(request: Request, uid: string, handler: () => Promise<Response>) {
-  try { geminiConfiguration(); }
+  try { if(!fundingScope.getStore()?.gatewayKey) geminiConfiguration(); }
   catch (error) { return Response.json({ error: error instanceof Error ? error.message : 'Gemini configuration is unavailable.' }, { status: 503 }); }
   let hash: string;
-  try { hash = await fingerprint(request); } catch { return Response.json({ error: 'Invalid generation request.' }, { status: 400 }); }
+  try { hash = await generationFingerprint(request); } catch (error) { return generationRequestFailure(request, error, 'fingerprint'); }
   const key = `${uid}:${new URL(request.url).pathname}:${hash}`;
   if (inFlight.has(key)) return Response.json({ error: 'This generation is already running. Wait for it to finish.' }, { status: 409 });
   inFlight.add(key);

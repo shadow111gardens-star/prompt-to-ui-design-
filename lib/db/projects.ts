@@ -342,6 +342,13 @@ export async function updateProjectSketches(
   sketchesData: Record<string, unknown>,
   viewportData?: Record<string, unknown>,
 ) {
+  const { creditsEnabled } = await import('@/lib/billing/policy');
+  if (creditsEnabled()) {
+    const identity = await serverIdentity();
+    const { ensureCreditAccount, persistBilledCanvas } = await import('@/lib/billing/store');
+    await ensureCreditAccount(identity);
+    return { success: true, credits: await persistBilledCanvas(identity.sub, id, sketchesData, viewportData) };
+  }
   const updateData: { sketchesData: string; viewportData?: string } = {
     sketchesData: JSON.stringify(sketchesData),
   };

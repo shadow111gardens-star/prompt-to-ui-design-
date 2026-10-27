@@ -1786,6 +1786,7 @@ export const useWorkflowGeneration = () => {
       const baseX = currentShape.x + currentShape.w + 100;
       const spacing = Math.max(currentShape.w + 50, 450);
 
+      const workflowBatchId = nanoid();
       const workflowPromises = Array.from({ length: pageCount }).map(
         async (_, index) => {
           const workflowId = nanoid();
@@ -1807,6 +1808,7 @@ export const useWorkflowGeneration = () => {
                 projectId,
                 pageIndex: index,
                 streamId: workflowId,
+                workflowId: workflowBatchId,
               }),
             });
 

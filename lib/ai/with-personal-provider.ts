@@ -1,3 +1,5 @@
+import { withBillingGeneration } from '@/lib/billing/generation';
+import { readGenerationBody, generationRequestFailure } from '@/lib/ai/generation-request';
 import { withGeneratedImages } from '@/lib/images/generation-pipeline';
 import { NextResponse } from 'next/server';
 import { personalProviderContext } from '@/lib/ai/personal-provider-context';
@@ -15,14 +17,13 @@ export function withPersonalProvider<T extends Request>(handler:(request:T)=>Pro
   let projectId:unknown;
   try{
    if(request.method==='GET')projectId=url.searchParams.get('projectId');
-   else if(request.headers.get('content-type')?.includes('multipart/form-data'))projectId=(await request.clone().formData()).get('projectId');
-   else projectId=(await request.clone().json()).projectId;
-  }catch{return NextResponse.json({error:'Invalid project request.'},{status:400});}
+   else { const body=await readGenerationBody(request);projectId=body instanceof FormData?body.get('projectId'):body.projectId; }
+  }catch(error){return generationRequestFailure(request,error,'body');}
   if(typeof projectId!=='string'||!projectId)return NextResponse.json({error:'A project ID is required.'},{status:400});
   try{await requireOwnedProject(projectId);}catch(error){const denied=projectAccessResponse(error);if(denied)return denied;throw error;}
  }
  const run=()=>withGenerationUsage(request,()=>withGeneratedImages(request,identity.sub,()=>handler(request)));
- if(url.pathname.startsWith('/api/generate'))return withFixedGeneration(request,identity.sub,run);
+ if(url.pathname.startsWith('/api/generate'))return withBillingGeneration(request,identity,()=>withFixedGeneration(request,identity.sub,run));
  if(url.pathname==='/api/models'||url.pathname==='/api/models/select')return run();
  if(!canUsePersonalProviders(identity,request))return run();
  let settings;try{settings=await personalProviderStore.read(identity.sub);}

@@ -1,4 +1,6 @@
 "use client";
+import CreditsCard from '@/components/billing/credits-card';
+
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -27,13 +29,7 @@ export default function WorkspaceDashboard({children}:{children:React.ReactNode}
       <h2 className="mb-3 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">All projects</h2>
       <ProjectsList compact/>
     </div>
-    {/* Temporary display values; connect to actual token accounting later. */}
-    <div className="mt-4 shrink-0 rounded-2xl border border-border/70 bg-card/25 px-3 py-3.5">
-      <div className="flex items-center justify-between gap-2 text-xs"><span className="flex items-center gap-1.5">AI Credits <Info size={13} className="text-muted-foreground"/></span><span className="text-muted-foreground">11d</span></div>
-      <p className="mt-2 flex items-baseline gap-1 font-heading"><span className="text-2xl font-semibold leading-none">820</span><span className="text-xs text-muted-foreground">/ 1,000</span></p>
-      <div role="progressbar" aria-label="AI credits used" aria-valuemin={0} aria-valuemax={1000} aria-valuenow={820} className="mt-3 h-1.5 overflow-hidden rounded-full bg-secondary"><div className="h-full w-[82%] rounded-full bg-primary"/></div>
-      <p className="mt-2 text-[11px] text-muted-foreground">Resets in 11 days</p>
-    </div>
+    <CreditsCard/>
     <Link href="/dashboard/workspace/settings" className="mt-2 flex min-h-10 shrink-0 items-center gap-3 rounded-lg px-3 text-xs text-foreground/85 hover:bg-secondary/60"><Settings size={18} strokeWidth={1.6}/>Settings</Link>
     <div className="shrink-0"><LogoutButton plain/></div>
   </>;

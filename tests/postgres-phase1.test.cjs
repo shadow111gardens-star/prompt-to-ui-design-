@@ -67,7 +67,9 @@ test('runtime uses pooled DATABASE_URL, retains the singleton and never falls ba
 
 test('PostgreSQL client preserves four models, string storage, identifiers and legacy SQLite history', () => {
   const { Prisma } = require('@prisma/client');
-  const models = Prisma.dmmf.datamodel.models;
+  const allModels = Prisma.dmmf.datamodel.models;
+  const models=allModels.filter(model=>['InspirationImage','MoodBoardImage','Project','ProjectSettings'].includes(model.name));
+  assert.deepEqual(allModels.filter(model=>!models.includes(model)).map(model=>model.name).sort(),['CreditAccount','CreditEntry','CreditPeriod','DodoBillingEvent','GenerationRun','ScreenGeneration']);
   assert.deepEqual(models.map(model => model.name).sort(), ['InspirationImage', 'MoodBoardImage', 'Project', 'ProjectSettings']);
   const schema = fs.readFileSync('prisma/schema.prisma', 'utf8');
   for (const model of models) { const id = model.fields.find(field => field.name === 'id');assert.equal(id.type, 'String');const body = schema.match(new RegExp('model ' + model.name + ' \\{([\\s\\S]*?)\\n\\}'))[1];assert.match(body, /id\s+String\s+@id\s+@default\(cuid\(\)\)/); }

@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-27",
+  "fullSuite": {
+    "runner": "node --test --test-concurrency=2 tests/*.test.cjs",
+    "tests": 250,
+    "passed": 250,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0
+  },
+  "typescript": {
+    "command": "npx tsc --noEmit",
+    "exitCode": 0
+  },
+  "build": {
+    "command": "node scripts/safe-production-build.cjs",
+    "npmCommand": "npm run build",
+    "exitCode": 0,
+    "staticPages": 50,
+    "syntheticConfigurationOnly": true
+  },
+  "databaseMigrationApplied": false,
+  "realDatabaseConcurrencyVerified": false,
+  "liveDodoVerified": false,
+  "authenticatedBrowserVerified": false,
+  "deployed": false,
+  "pushed": false
+}
