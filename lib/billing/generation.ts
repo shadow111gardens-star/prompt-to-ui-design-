@@ -1,3 +1,4 @@
+import { paymentsEnabled } from '@/lib/billing/feature-flags';
 import { readGenerationBody } from '@/lib/ai/generation-request';
 import { generationFingerprint } from '@/lib/ai/generation-guard';
 import { creditsEnabled, candidateScreens, CreditError } from '@/lib/billing/policy';
@@ -5,6 +6,7 @@ import { fundingScope } from '@/lib/billing/scope';
 import type { FirebaseIdentity } from '@/lib/firebase/verify-token';
 
 export async function withBillingGeneration(request:Request,identity:FirebaseIdentity,handler:()=>Promise<Response>):Promise<Response>{
+ if(!paymentsEnabled())return handler();
  if(!creditsEnabled()&&(!identity.plan||identity.plan==='local'))return handler();
  const {reserveRun,reserveProviderCall,finishRun}=await import('@/lib/billing/store');
  let reserved:Awaited<ReturnType<typeof reserveRun>>|undefined;

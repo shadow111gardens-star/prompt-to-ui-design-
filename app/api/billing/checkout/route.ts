@@ -1,3 +1,4 @@
+import { paymentsEnabled } from '@/lib/billing/feature-flags';
 import { PLAN_CONFIG, periodSpendLimitMicroUsd } from '@/lib/billing/plan-config';
 import { withProjectRoute, serverIdentity } from '@/lib/server/project-access';
 import { ensureCreditAccount, accountLock } from '@/lib/billing/store';
@@ -6,7 +7,7 @@ import { prisma } from '@/lib/db';
 import { CreditError } from '@/lib/billing/policy';
 import { z } from 'zod';
 const schema=z.object({plan:z.enum(['plus','pro','lifetime'])}).strict();
-export const POST=withProjectRoute(async(request:Request)=>{try{
+export const POST=withProjectRoute(async(request:Request)=>{if(!paymentsEnabled())return Response.json({error:'Payments are disabled for testing.'},{status:503});try{
  const identity=await serverIdentity(),{plan}=schema.parse(await request.json());let account=await ensureCreditAccount(identity);
  if(account.plan==='lifetime'&&account.status==='active')throw new CreditError('Your Lifetime entitlement is already active.',409);
  if(account.subscriptionId&&account.status==='active')throw new CreditError('Manage your existing subscription before purchasing another plan.',409);

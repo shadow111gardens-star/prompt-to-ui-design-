@@ -1,3 +1,5 @@
+// Exercise the preserved enabled billing flow explicitly.
+process.env.OPENUI_PAYMENTS_ENABLED='true';
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),Module=require('node:module'),ts=require('typescript');

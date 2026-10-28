@@ -1,3 +1,4 @@
+import { paymentsEnabled } from '@/lib/billing/feature-flags';
 import { createHash } from 'node:crypto';
 import { FIXED_AI_MODEL } from '@/lib/ai/fixed-model';
 import { AI_PRICING, PRICING_REVIEW, type TokenCounts } from '@/lib/ai/usage-pricing';
@@ -5,7 +6,7 @@ import { parseChatPlan } from '@/lib/project-chat';
 import { cleanStreamingHtml } from '@/lib/stream-utils';
 
 export class CreditError extends Error { constructor(message:string, public status=402) { super(message); } }
-export const creditsEnabled=()=>process.env.NODE_ENV==='production'||process.env.OPENUI_CREDITS_ENABLED==='true';
+export const creditsEnabled=()=>paymentsEnabled()&&(process.env.NODE_ENV==='production'||process.env.OPENUI_CREDITS_ENABLED==='true');
 const million=BigInt(1_000_000),zero=BigInt(0);
 // Provider maxima, not application token caps. No maxOutputTokens is sent.
 // https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite

@@ -1,5 +1,7 @@
 ﻿# AI Credits and Dodo Payments implementation
 
+**Testing pause (2026-10-28):** Payment/credit enforcement is temporarily OFF by default. `OPENUI_PAYMENTS_ENABLED=true` explicitly restores the preserved billing flow. While off, verified Firebase users generate without subscription/credit reservations, autosave skips deductions, usage UI shows testing mode, and checkout/portal/webhooks return 503 without processing payments. Existing billing data is unchanged. Webhooks are not acknowledged as processed, so deliveries can be retried/reconciled after re-enabling. This code toggle does not cancel subscriptions at Dodo. Normal AI provider API charges still apply. No real environment file was edited and no code was pushed/deployed for this pause. The implementation/rollout details below describe the enabled billing flow.
+
 Date: 2026-10-27. Local implementation; NOT deployed and NOT enabled against a live database. No migration, production/staging data change, owner assignment, secret rotation, push or deployment was performed. Real environment files were not changed. No dependency was added.
 
 ## Implemented policy
