@@ -1,2 +1,2 @@
-// Temporarily disabled for testing. Explicit server opt-in restores billing.
-export const paymentsEnabled = () => process.env.OPENUI_PAYMENTS_ENABLED === 'true';
+// Payments are enabled by default. An explicit false temporarily pauses billing.
+export const paymentsEnabled = () => process.env.OPENUI_PAYMENTS_ENABLED !== 'false';

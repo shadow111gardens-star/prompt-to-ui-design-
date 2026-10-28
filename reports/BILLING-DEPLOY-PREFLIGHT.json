@@ -1,0 +1,37 @@
+{
+  "target": {
+    "database": "neondb",
+    "branch": "br-calm-morning-b4md3ubx",
+    "endpoint": "ep-tiny-thunder-b4xpxxw4",
+    "read_only": "on"
+  },
+  "missingBillingTables": [],
+  "billingMigrationApplied": true,
+  "readOnly": true,
+  "checkedAt": "2026-10-28T08:50:22.473Z",
+  "vercelProject": "prompt-to-ui-design-hooj",
+  "vercelProjectId": "prj_Npaf18VzN843RYrF9XTxNN9PnEsu",
+  "missingProductionEnvironmentNames": [
+    "DODO_PAYMENTS_API_KEY",
+    "DODO_PAYMENTS_WEBHOOK_KEY",
+    "DODO_BUSINESS_ID",
+    "DODO_PAYMENTS_ENVIRONMENT",
+    "DODO_PLUS_PRODUCT_ID",
+    "DODO_PRO_PRODUCT_ID",
+    "DODO_LIFETIME_PRODUCT_ID",
+    "OPENUI_PUBLIC_ORIGIN",
+    "OPENUI_PRO_PERIOD_SPEND_LIMIT_USD",
+    "OPENUI_PROVIDER_KEYS_SECRET"
+  ],
+  "productionEnvironmentModified": false,
+  "productionDatabaseModified": false,
+  "deployed": false,
+  "pushed": false,
+  "blocker": "Payment-enabled production requires the missing server configuration. Main push would trigger deployment before checkout can work.",
+  "build": {
+    "passed": true,
+    "syntheticConfigurationOnly": true,
+    "command": "node scripts/safe-production-build.cjs",
+    "staticPages": 50
+  }
+}
