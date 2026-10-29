@@ -1,13 +1,30 @@
-import { paymentsEnabled } from '@/lib/billing/feature-flags';
+import { assertTestBillingUser, assertBillingRequestOrigin, testUserAllowlist } from '@/lib/billing/test-access';
 import { readGenerationBody } from '@/lib/ai/generation-request';
 import { generationFingerprint } from '@/lib/ai/generation-guard';
-import { creditsEnabled, candidateScreens, CreditError } from '@/lib/billing/policy';
+import { candidateScreens, CreditError } from '@/lib/billing/policy';
 import { fundingScope } from '@/lib/billing/scope';
 import type { FirebaseIdentity } from '@/lib/firebase/verify-token';
+import { randomUUID } from 'node:crypto';
 
 export async function withBillingGeneration(request:Request,identity:FirebaseIdentity,handler:()=>Promise<Response>):Promise<Response>{
- if(!paymentsEnabled())return handler();
- if(!creditsEnabled()&&(!identity.plan||identity.plan==='local'))return handler();
+ try{assertBillingRequestOrigin(request);}catch(error){return Response.json({error:error instanceof CreditError?error.message:'Billing origin is unavailable.',code:'billing_unavailable'},{status:error instanceof CreditError?error.status:503});}
+ if(process.env.OPENUI_PAYMENTS_ENABLED==='false'&&process.env.OPENUI_CREDITS_ENABLED==='false'){
+  try{
+   if(!testUserAllowlist().has(identity.sub))throw new CreditError('Generation is not available for this account.',403);
+   const body=await readGenerationBody(request),projectId=body instanceof FormData?body.get('projectId'):body.projectId;
+   if(typeof projectId!=='string'||!projectId)throw new CreditError('A project is required.',400);
+   const {prisma}=await import('@/lib/db');const {decryptGatewayKey}=await import('@/lib/billing/crypto');
+   const account=await prisma.creditAccount.findUnique({where:{uid:identity.sub},select:{plan:true,status:true,gatewayKey:true}});
+   if(!account||account.plan!=='lifetime'||account.status!=='active'||!account.gatewayKey)throw new CreditError('Platform-funded generation is unavailable while billing is disabled. An active Lifetime plan and your own AI Gateway key are required.',403);
+   if(!await prisma.project.findUnique({where:{id:projectId,ownerUid:identity.sub},select:{id:true}}))throw new CreditError('Project not found.',404);
+   const envelope=account.gatewayKey;let gatewayKey:string;try{gatewayKey=decryptGatewayKey(identity.sub,envelope);}catch{throw new CreditError('Your AI Gateway key could not be unlocked. Check your key settings.',503);}
+   if(!gatewayKey.trim())throw new CreditError('Your AI Gateway key is unavailable.',403);
+   const beforeCall=async()=>{if(!testUserAllowlist().has(identity.sub))throw new CreditError('Generation is not available for this account.',403);const current=await prisma.creditAccount.findUnique({where:{uid:identity.sub},select:{plan:true,status:true,gatewayKey:true}});if(!current||current.plan!=='lifetime'||current.status!=='active'||current.gatewayKey!==envelope||!await prisma.project.findUnique({where:{id:projectId,ownerUid:identity.sub},select:{id:true}}))throw new CreditError('Your Gateway authorization has changed.',403);};
+   return await fundingScope.run({uid:identity.sub,runId:randomUUID(),gatewayKey,calls:[],beforeCall},handler);
+  }catch(error){return Response.json({error:error instanceof CreditError?error.message:'Your AI Gateway authorization is unavailable.',code:'byok_unavailable'},{status:error instanceof CreditError?error.status:503});}
+ }
+ // A restricted Test Mode rollout must never fall through to unfunded generation.
+ try{assertTestBillingUser(identity.sub);}catch(error){return Response.json({error:error instanceof CreditError?error.message:'Billing is not ready.',code:'billing_unavailable'},{status:error instanceof CreditError?error.status:503});}
  const {reserveRun,reserveProviderCall,finishRun}=await import('@/lib/billing/store');
  let reserved:Awaited<ReturnType<typeof reserveRun>>|undefined;
  const calls:import('@/lib/billing/policy').BillingCall[]=[];

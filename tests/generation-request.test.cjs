@@ -4,6 +4,8 @@ const fs=require('node:fs'),path=require('node:path'),Module=require('node:modul
 function loader(mocks={}){const cache=new Map();return function load(file){const name=path.resolve(file);if(cache.has(name))return cache.get(name).exports;const mod=new Module(name,module);cache.set(name,mod);mod.paths=Module._nodeModulePaths(path.dirname(name));mod.require=request=>Object.hasOwn(mocks,request)?mocks[request]:request.startsWith('@/')?load([request.slice(2)+'.ts',request.slice(2)+'.tsx',request.slice(2)+'/index.ts'].find(file=>fs.existsSync(file))):Module.prototype.require.call(mod,request);mod._compile(ts.transpileModule(fs.readFileSync(name,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText,name);return mod.exports;};}
 
 function fixture(){let load;load=loader({
+ // This fixture isolates request/ownership/provider behavior; real billing is covered by dodo-full-flow and dodo-test-access.
+ '@/lib/billing/generation':{withBillingGeneration:(_request,_identity,work)=>work()},
  '@/lib/ai/gemini':{geminiConfiguration:()=>({model:'gemini-3.5-flash-lite',key:'synthetic'})},
  '@/lib/ai/personal-provider-auth':{personalProviderIdentity:async()=>({sub:'private-user'}),canUsePersonalProviders:()=>false},
  '@/lib/server/project-access':{withVerifiedIdentity:(_identity,work)=>work(),requireOwnedProject:async id=>{if(id!=='owned')throw Error('Unexpected project');},projectAccessResponse:()=>undefined},

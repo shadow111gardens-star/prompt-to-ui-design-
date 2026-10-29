@@ -1,3 +1,4 @@
+import { assertTestBillingUser } from '@/lib/billing/test-access';
 import { SCREEN_CREDIT_COST } from '@/lib/billing/plan-catalog';
 import { prisma } from '@/lib/db';
 import type { Prisma } from '@prisma/client';
@@ -8,7 +9,7 @@ import { decryptGatewayKey } from '@/lib/billing/crypto';
 const zero=BigInt(0);
 export type BillingTx=Prisma.TransactionClient;
 export async function accountLock(tx:BillingTx,uid:string){await tx.$queryRaw`SELECT "uid" FROM "CreditAccount" WHERE "uid" = ${uid} FOR UPDATE`;const account=await tx.creditAccount.findUnique({where:{uid}});if(!account)throw new CreditError('Billing account is not configured.',403);return account;}
-export async function ensureCreditAccount(identity:FirebaseIdentity){return prisma.creditAccount.upsert({where:{uid:identity.sub},update:{},create:{uid:identity.sub,plan:identity.plan==='lifetime'?'lifetime':'local',status:identity.plan==='lifetime'?'active':'inactive'}});}
+export async function ensureCreditAccount(identity:FirebaseIdentity){assertTestBillingUser(identity.sub);return prisma.creditAccount.upsert({where:{uid:identity.sub},update:{},create:{uid:identity.sub,plan:identity.plan==='lifetime'?'lifetime':'local',status:identity.plan==='lifetime'?'active':'inactive'}});}
 async function releaseExpiredScreens(tx:BillingTx,uid:string){
  const old=await tx.generationRun.findMany({where:{uid,status:{in:['running','ready']},updatedAt:{lt:new Date(Date.now()-3600000)},reservedScreens:{gt:0}}});
  for(const run of old){
@@ -46,6 +47,7 @@ export async function reserveRun(identity:FirebaseIdentity,input:{requestId:stri
  });
 }
 export async function reserveProviderCall(uid:string,id:string){
+ assertTestBillingUser(uid);
  return prisma.$transaction(async tx=>{
   const account=await accountLock(tx,uid);if(account.status!=='active')throw new CreditError('Your subscription is not active.',403);const run=await tx.generationRun.findFirst({where:{id,uid,status:'running'}});if(!run)throw new CreditError('Generation reservation is unavailable.',409);
   if(run.funding==='gateway_byok'){if(account.plan!=='lifetime')throw new CreditError('Lifetime entitlement is required.',403);return;}
@@ -56,6 +58,7 @@ export async function reserveProviderCall(uid:string,id:string){
  });
 }
 export async function finishRun(uid:string,id:string,candidates:Candidate[],calls:BillingCall[],failed:boolean){
+ assertTestBillingUser(uid);
  await prisma.$transaction(async tx=>{
   const account=await accountLock(tx,uid),run=await tx.generationRun.findFirst({where:{id,uid}});if(!run||run.status!=='running')return;
   const billable=run.funding==='platform',accepted=failed?[]:candidates;
@@ -76,6 +79,7 @@ export function canvasScreens(data:unknown):Array<{id:string;html:string}>{
 }
 /** Canvas persistence and per-screen charges share one DB transaction. No client balances/counts are trusted. */
 export async function persistBilledCanvas(uid:string,projectId:string,shapesData:unknown,viewportData:unknown){
+ assertTestBillingUser(uid);
  return prisma.$transaction(async tx=>{
   const account=await accountLock(tx,uid);const project=await tx.project.findUnique({where:{id:projectId,ownerUid:uid}});if(!project)throw new CreditError('Project not found.',404);
   let previous:unknown;try{previous=JSON.parse(project.sketchesData);}catch{previous={};}

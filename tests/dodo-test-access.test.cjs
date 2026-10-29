@@ -1,0 +1,44 @@
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const fs=require('node:fs'),path=require('node:path'),Module=require('node:module'),ts=require('typescript');
+const {createHmac}=require('node:crypto'),{billingDB}=require('./helpers/billing-db.cjs');
+const config=require('./helpers/test-billing-env.cjs');
+function loadFactory(mocks={}){const cache=new Map();return function load(file){const name=path.resolve(file);if(cache.has(name))return cache.get(name).exports;const mod=new Module(name,module);cache.set(name,mod);mod.paths=Module._nodeModulePaths(path.dirname(name));mod.require=id=>Object.hasOwn(mocks,id)?mocks[id]:id.startsWith('@/')?load(id.slice(2)+'.ts'):Module.prototype.require.call(mod,id);mod._compile(ts.transpileModule(fs.readFileSync(name,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,name);return mod.exports;};}
+async function fixture(t){const old={...process.env},fetch=global.fetch;Object.assign(process.env,config,{OPENUI_DODO_TEST_UID_ALLOWLIST:'alice',VERCEL_ENV:'production'});t.after(()=>{global.fetch=fetch;for(const key of Object.keys(process.env))if(!(key in old))delete process.env[key];Object.assign(process.env,old);});const {db,seed}=billingDB();await seed();await seed('bob');const load=loadFactory({'@/lib/db':{prisma:db},'@/lib/ai/personal-provider-auth':{personalProviderIdentity:async request=>{const uid=request.headers.get('x-synthetic-identity');if(!['alice','bob'].includes(uid))throw Error('Unauthenticated');return {sub:uid,email:'synthetic@example.test',plan:'local'};}}});return {db,load,guard:load('lib/billing/test-access.ts')};}
+function req(uid,body={plan:'plus'}){return new Request('https://prompt-to-ui-design-hooj.vercel.app/api/billing/checkout?uid=alice',{method:'POST',headers:{origin:'https://prompt-to-ui-design-hooj.vercel.app','content-type':'application/json',...(uid?{'x-synthetic-identity':uid}:{})},body:JSON.stringify(body)});}
+test('production and preview accept only their exact configured origin, independently of request host',async t=>{
+ const {guard}=await fixture(t),production='https://prompt-to-ui-design-hooj.vercel.app',preview='https://staging-example.vercel.app';
+ const request=origin=>new Request('https://attacker.example/api/billing/checkout',{method:'POST',headers:{origin}});
+ assert.equal(guard.configuredBillingOrigin(),production);assert.doesNotThrow(()=>guard.assertBillingRequestOrigin(request(production)));assert.throws(()=>guard.assertBillingRequestOrigin(request(preview)),e=>e.status===403);
+ process.env.OPENUI_PUBLIC_ORIGIN=preview;assert.throws(()=>guard.assertTestBillingConfigured(),e=>e.status===503);
+ process.env.VERCEL_ENV='preview';assert.equal(guard.configuredBillingOrigin(),preview);assert.doesNotThrow(()=>guard.assertTestBillingConfigured());assert.doesNotThrow(()=>guard.assertBillingRequestOrigin(request(preview)));assert.throws(()=>guard.assertBillingRequestOrigin(request(production)),e=>e.status===403);
+ process.env.OPENUI_PUBLIC_ORIGIN=production;assert.throws(()=>guard.assertTestBillingConfigured(),e=>e.status===503);
+ for(const value of ['', 'http://staging-example.vercel.app','https://*.vercel.app','https://user:password@staging-example.vercel.app','https://staging-example.vercel.app/','https://staging-example.vercel.app/path','https://staging-example.vercel.app?x=1','https://staging-example.vercel.app#x','https://staging-example.vercel.app.attacker.test/path']){process.env.OPENUI_PUBLIC_ORIGIN=value;assert.throws(()=>guard.configuredBillingOrigin(),e=>e.status===503);}
+});
+test('allowlist parser denies missing, empty, malformed and wildcard lists; never serializes UIDs',async t=>{
+ const {guard}=await fixture(t);assert.doesNotThrow(()=>guard.assertTestBillingUser('alice'));assert.throws(()=>guard.assertTestBillingUser('bob'),e=>e.status===403&&!e.message.includes('bob'));for(const raw of [undefined,'',' ', '*','alice,','alice,,bob','alice\nbob','a'.repeat(129)]){if(raw===undefined)delete process.env.OPENUI_DODO_TEST_UID_ALLOWLIST;else process.env.OPENUI_DODO_TEST_UID_ALLOWLIST=raw;assert.throws(()=>guard.assertTestBillingConfigured(),e=>e.status===503);}process.env.OPENUI_DODO_TEST_UID_ALLOWLIST=' alice , bob , alice ';assert.doesNotThrow(()=>guard.assertTestBillingUser('bob'));
+});
+test('missing required config/flags, invalid origin, and explicit Live Mode fail before provider transport',async t=>{
+ const {guard,load}=await fixture(t);let calls=0;global.fetch=async()=>{calls++;throw Error('No transport expected');};
+ for(const key of Object.keys(config)){const saved=process.env[key];delete process.env[key];assert.throws(()=>guard.assertTestBillingConfigured(),e=>e.status===503,key);process.env[key]=saved;}
+ for(const mode of ['live_mode','test','TEST_MODE','']){process.env.DODO_PAYMENTS_ENVIRONMENT=mode;await assert.rejects(()=>load('lib/billing/dodo.ts').dodoRequest('/products/product-plus'),e=>e.status===503);}
+ process.env.DODO_PAYMENTS_ENVIRONMENT='test_mode';for(const origin of ['https://prompt-to-ui-design-hooj.vercel.app/','https://prompt-to-ui-design-hooj.vercel.app?x=1','https://attacker.test']){process.env.OPENUI_PUBLIC_ORIGIN=origin;assert.throws(()=>guard.assertTestBillingConfigured());}assert.equal(calls,0);
+});
+test('verified non-allowlisted UID cannot spoof checkout, portal, key mutations, credit DTO or generation',async t=>{
+ const {db,load}=await fixture(t);const before=structuredClone(db.state);let calls=0;global.fetch=async()=>{calls++;throw Error('No transport expected');};
+ assert.equal((await load('app/api/billing/checkout/route.ts').POST(req())).status,401);
+ for(const body of [{plan:'plus'},{plan:'plus',uid:'alice'}])assert.equal((await load('app/api/billing/checkout/route.ts').POST(req('bob',body))).status,body.uid?400:403);
+ assert.equal((await load('app/api/billing/portal/route.ts').POST(req('bob'))).status,403);
+ const key=load('app/api/ai-gateway-key/route.ts');assert.equal((await key.PUT(req('bob',{key:'synthetic-key-1234'}))).status,403);assert.equal((await key.DELETE(req('bob'))).status,403);
+ const response=await load('app/api/ai-credits/route.ts').GET(req('bob'));const dto=await response.json();assert.deepEqual(dto.plans,[]);assert.doesNotMatch(JSON.stringify(dto),/alice|bob|ALLOWLIST/);
+ assert.equal((await load('lib/billing/generation.ts').withBillingGeneration(req('bob'),{sub:'bob',plan:'local'},async()=>{calls++;return Response.json({});})).status,403);
+ const store=load('lib/billing/store.ts');await assert.rejects(()=>store.ensureCreditAccount({sub:'bob',plan:'local'}),e=>e.status===403);await assert.rejects(()=>store.persistBilledCanvas('bob','project-bob',{},{}),e=>e.status===403);assert.equal(calls,0);assert.deepEqual(db.state,before);
+});
+test('validly signed webhook for an unlisted server-bound customer cannot grant despite forged metadata',async t=>{
+ const {db,load}=await fixture(t);const before=structuredClone(db.state);global.fetch=async url=>{assert.ok(String(url).startsWith('https://test.dodopayments.com/'));return Response.json({subscription_id:'sub-bob',status:'active',customer:{customer_id:'cus-bob'},product_id:'product-plus',metadata:{firebase_uid:'alice'}});};
+ const raw=JSON.stringify({business_id:'business',type:'subscription.active',timestamp:new Date().toISOString(),data:{subscription_id:'sub-bob',metadata:{firebase_uid:'alice'}}});const stamp=String(Math.floor(Date.now()/1000)),id='unauthorized-event';const signature=createHmac('sha256',Buffer.from(process.env.DODO_PAYMENTS_WEBHOOK_KEY.slice(6),'base64')).update(id+'.'+stamp+'.'+raw).digest('base64');
+ const request=new Request('https://prompt-to-ui-design-hooj.vercel.app/api/billing/dodo-webhook',{method:'POST',headers:{'webhook-id':id,'webhook-timestamp':stamp,'webhook-signature':'v1,'+signature},body:raw});assert.equal((await load('app/api/billing/dodo-webhook/route.ts').POST(request)).status,403);assert.deepEqual(db.state,before);
+});
+test('webhook handler rejects invalid signatures and signed malformed payloads without database changes',async t=>{
+ const {db,load}=await fixture(t),before=structuredClone(db.state);const route=load('app/api/billing/dodo-webhook/route.ts');const make=(raw,signed)=>{const stamp=String(Math.floor(Date.now()/1000)),id='malformed';return new Request('https://prompt-to-ui-design-hooj.vercel.app/api/billing/dodo-webhook',{method:'POST',body:raw,headers:{'webhook-id':id,'webhook-timestamp':stamp,'webhook-signature':signed?'v1,'+createHmac('sha256',Buffer.from(process.env.DODO_PAYMENTS_WEBHOOK_KEY.slice(6),'base64')).update(id+'.'+stamp+'.'+raw).digest('base64'):'v1,invalid'}});};
+ assert.equal((await route.POST(make('{}',false))).status,401);for(const raw of ['{','{}'])assert.equal((await route.POST(make(raw,true))).status,400);assert.deepEqual(db.state,before);
+});

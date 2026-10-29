@@ -1,6 +1,13 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),Module=require('node:module'),ts=require('typescript');const {generateKeyPairSync,sign}=require('node:crypto');
 function load(source,mocks={}){const filename=path.resolve(source),mod=new Module(filename,module);mod.filename=filename;mod.paths=Module._nodeModulePaths(path.dirname(filename));mod.require=function(request){if(Object.hasOwn(mocks,request))return mocks[request];if(request.startsWith('@/'))return load(request.slice(2)+'.ts',mocks);return Module.prototype.require.call(this,request);};mod._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,filename);return mod.exports;}
 const verifier=load('lib/firebase/verify-token.ts');
+test('only the exact Dodo webhook bypasses Firebase proxy authentication; billing APIs remain private',async()=>{
+ const {NextRequest}=require('next/server');let identityChecks=0;
+ const guard=load('proxy.ts',{'@/lib/firebase/verify-token':{...verifier,verifyFirebaseToken:async()=>{identityChecks++;throw Error('Unexpected Firebase check');}}});
+ const response=await guard.proxy(new NextRequest('http://localhost:3000/api/billing/dodo-webhook',{method:'POST',body:'{}'}));
+ assert.equal(response.status,200);assert.equal(response.headers.get('x-middleware-next'),'1');assert.equal(identityChecks,0);
+ for(const route of ['checkout','portal','dodo-webhook/other'])assert.equal((await guard.proxy(new NextRequest('http://localhost:3000/api/billing/'+route,{method:'POST',body:'{}'}))).status,401);
+});
 const keys=generateKeyPairSync('rsa',{modulusLength:2048});const now=Math.floor(Date.now()/1000);const project='test-project';
 function token(overrides={},header={alg:'RS256',kid:'test-key'}){const claims={aud:project,iss:'https://securetoken.google.com/'+project,sub:'test-uid',exp:now+3600,iat:now-1,auth_time:now-60,email:'test@example.test',email_verified:true,firebase:{sign_in_provider:'password'},...overrides};const payload=[header,claims].map(value=>Buffer.from(JSON.stringify(value)).toString('base64url')).join('.');return payload+'.'+sign('RSA-SHA256',Buffer.from(payload),keys.privateKey).toString('base64url');}
 const options={projectId:project,keys:{'test-key':keys.publicKey.export({type:'spki',format:'pem'})},now};

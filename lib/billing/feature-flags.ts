@@ -1,2 +1,2 @@
-// Payments are enabled by default. An explicit false temporarily pauses billing.
-export const paymentsEnabled = () => process.env.OPENUI_PAYMENTS_ENABLED !== 'false';
+// Rollouts require an explicit opt-in; absence must never enable checkout.
+export const paymentsEnabled = () => process.env.OPENUI_PAYMENTS_ENABLED === 'true';

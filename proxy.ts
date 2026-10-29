@@ -3,7 +3,9 @@ import { AUTH_COOKIE, EmailVerificationRequiredError, verifyFirebaseToken } from
 
 export async function proxy(request:NextRequest){
   const path=request.nextUrl.pathname;
-  if(path==='/api/auth/session'||path==='/api/integration/projects')return NextResponse.next();
+  // Dodo authenticates server-to-server callbacks using the route's signature check.
+  // It cannot supply a Firebase session cookie or browser Origin header.
+  if(path==='/api/auth/session'||path==='/api/integration/projects'||path==='/api/billing/dodo-webhook')return NextResponse.next();
   const token=request.cookies.get(AUTH_COOKIE)?.value;
   try{
     if(!token)throw new Error('Missing session');

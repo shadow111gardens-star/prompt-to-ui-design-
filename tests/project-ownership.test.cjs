@@ -75,6 +75,8 @@ function fixture() {
   }
   const prisma = { project, moodBoardImage: childDelegate(images, 'moodboard'), inspirationImage: childDelegate([], 'inspiration'), projectSettings: childDelegate(settings, 'settings') };
   const load = loader({
+ // This fixture isolates request/ownership/provider behavior; real billing is covered by dodo-full-flow and dodo-test-access.
+ '@/lib/billing/generation':{withBillingGeneration:(_request,_identity,work)=>work()},
     '@/lib/ai/gemini': { geminiConfiguration: () => ({ model: 'gemini-3.5-flash-lite', key: 'synthetic' }) },
     '@/lib/firebase/verify-token': { ...verifier, verifyFirebaseToken: value => verifier.verifyFirebaseToken(value, options) },
     'next/headers': { cookies: async () => ({ get: () => serverToken ? { value: serverToken } : undefined }) },
