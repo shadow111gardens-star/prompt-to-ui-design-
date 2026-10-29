@@ -344,6 +344,7 @@ export async function createProject(data: {
       thumbnail: data.thumbnail || null,
       isPublic: false,
     },
+    select: { id: true, name: true, projectNumber: true },
   });
 
   return {

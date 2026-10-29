@@ -14,10 +14,14 @@ export const GET = withProjectRoute(async function GET(_request: Request) {
 });
 
 export const POST = withProjectRoute(async function POST(request: Request) {
+  const started = performance.now();
   try {
     const body = await request.json();
+    const databaseStarted = performance.now();
     const result = await createProject(body);
-    return NextResponse.json(result);
+    const response = NextResponse.json(result);
+    response.headers.set('Server-Timing', `project-db;dur=${(performance.now() - databaseStarted).toFixed(1)}, project-handler;dur=${(performance.now() - started).toFixed(1)}`);
+    return response;
   } catch (error) {
     const denied = projectAccessResponse(error); if (denied) return denied;
     console.error("Error creating project:", error);
