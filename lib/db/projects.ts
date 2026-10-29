@@ -4,6 +4,22 @@ import { prisma } from "@/lib/db";
 import fs from "fs/promises";
 import path from "path";
 
+// The workspace sidebar only needs project labels and dates, not full canvas
+// documents or generated previews. Keep the owner filter on this query.
+export async function getSidebarProjects() {
+  const projects = await prisma.project.findMany({
+    where: await ownerFilter(),
+    orderBy: { lastModified: "desc" },
+    select: { id: true, name: true, projectNumber: true, lastModified: true, createdAt: true, isPublic: true },
+  });
+  return projects.map(({ id, lastModified, createdAt, ...project }) => ({
+    ...project,
+    _id: id,
+    lastModified: lastModified.getTime(),
+    createdAt: createdAt.getTime(),
+  }));
+}
+
 export async function getAllProjects() {
   const projects = await prisma.project.findMany({
     where: await ownerFilter(),
