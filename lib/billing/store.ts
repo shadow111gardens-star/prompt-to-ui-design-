@@ -37,7 +37,10 @@ export async function reserveRun(identity:FirebaseIdentity,input:{requestId:stri
   const period=await tx.creditPeriod.findUnique({where:{id:account.currentPeriodId}});
   if(!period||period.uid!==identity.sub||period.startsAt>new Date()||period.endsAt<=new Date())throw new CreditError('Your billing period needs a verified renewal. Open Billing or contact support.',403);
   if(period.spentMicros+period.reservedSpendMicros+maximumCallCost()>period.spendLimitMicros)throw new CreditError('Your AI spending allowance is reached or reserved. Upgrade or wait for the next billing period.');
-  const available=Math.min(Math.floor((account.balance-account.reservedCredits)/SCREEN_CREDIT_COST),period.screenLimit-period.successfulScreens-period.reservedScreens);
+  const screenLimit=Math.min(period.screenLimit,PLAN_CONFIG[account.plan].generationLimit);
+  const remainingScreens=screenLimit-period.successfulScreens-period.reservedScreens;
+  if(input.screen&&remainingScreens<1)throw new CreditError(`Your ${account.plan==='plus'?'Plus':'Pro'} billing-period screen allowance limit is reached or reserved across all projects. Wait for the next verified billing period or release pending screens.`);
+  const available=Math.min(Math.floor((account.balance-account.reservedCredits)/SCREEN_CREDIT_COST),remainingScreens);
   const slots=input.screen?(input.chat?Math.min(20,available):1):0;
   if(input.screen&&(available<1||slots<1))throw new CreditError('Your available credits or screen-generation allowance is exhausted or reserved.');
   await tx.creditAccount.update({where:{uid:identity.sub},data:{reservedCredits:{increment:slots*SCREEN_CREDIT_COST}}});
@@ -91,6 +94,8 @@ export async function persistBilledCanvas(uid:string,projectId:string,shapesData
    const candidate=pending.find(row=>!used.has(row.id)&&row.digest===digest);if(!candidate){if(pending.some(row=>!used.has(row.id)))throw new CreditError('Save the completed generated screens before editing their HTML. A pending result must match its validated output.',409);const expired=await tx.screenGeneration.findFirst({where:{uid,projectId,digest,status:'discarded'}});if(expired)throw new CreditError('The screen reservation expired. Regenerate it before accepting.',409);continue;}used.add(candidate.id);
    const billed=candidate.run.funding==='platform';if(billed){
     if(account.balance-charged<SCREEN_CREDIT_COST||candidate.run.reservedScreens<1)throw new CreditError('This screen no longer has a valid credit reservation.',409);
+    const period=await tx.creditPeriod.findUnique({where:{id:candidate.run.periodId!}});
+    if(!period||period.uid!==uid||account.currentPeriodId!==period.id||period.endsAt<=new Date())throw new CreditError('This screen belongs to an expired billing period. Regenerate it in the current period.',409);
     await tx.creditPeriod.update({where:{id:candidate.run.periodId!},data:{reservedScreens:{decrement:1},successfulScreens:{increment:1},creditsUsed:{increment:SCREEN_CREDIT_COST}}});
     await tx.generationRun.update({where:{id:candidate.runId},data:{reservedScreens:{decrement:1}}});
     charged+=SCREEN_CREDIT_COST;receipts.push({id:candidate.id,credits:SCREEN_CREDIT_COST});await tx.creditEntry.create({data:{uid,periodId:candidate.run.periodId,runId:candidate.runId,screenId:candidate.id,type:'deduction',amount:-SCREEN_CREDIT_COST,balanceAfter:account.balance-charged,eventKey:'screen:'+candidate.id}});
@@ -106,5 +111,6 @@ export async function publicUsage(uid:string){
  const account=await prisma.creditAccount.findUnique({where:{uid}});if(!account)return {plan:'local',status:'inactive',funding:null};
  if(account.plan==='lifetime')return {plan:'lifetime',status:account.status,funding:'gateway_byok',gatewayConfigured:!!account.gatewayKey};
  const period=account.currentPeriodId?await prisma.creditPeriod.findFirst({where:{id:account.currentPeriodId,uid}}):null;
- return {plan:account.plan,status:account.status,funding:'platform',creditsRemaining:account.balance,creditsReserved:account.reservedCredits,creditsUsed:period?.creditsUsed??0,allocation:period?.allocation??0,successfulScreens:period?.successfulScreens??0,screenLimit:period?.screenLimit??0,periodStart:period?.startsAt.toISOString()??null,resetAt:period?.endsAt.toISOString()??null};
+ const screenLimit=period&&isMonthlyPlan(account.plan)?Math.min(period.screenLimit,PLAN_CONFIG[account.plan].generationLimit):0;
+ return {plan:account.plan,status:account.status,funding:'platform',creditsRemaining:account.balance,creditsReserved:account.reservedCredits,creditsUsed:period?.creditsUsed??0,allocation:period?.allocation??0,successfulScreens:period?.successfulScreens??0,screenLimit,screensRemaining:Math.max(0,screenLimit-(period?.successfulScreens??0)),screensReserved:period?.reservedScreens??0,periodStart:period?.startsAt.toISOString()??null,resetAt:period?.endsAt.toISOString()??null};
 }

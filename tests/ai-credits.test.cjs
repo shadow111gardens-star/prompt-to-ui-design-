@@ -23,6 +23,47 @@ test('disabled billing permits only authenticated allowlisted Lifetime Gateway B
 });
 const canvas=(...ids)=>({shapes:{entities:Object.fromEntries(ids.map(i=>['screen-'+i,{type:'generatedui',uiSpecData:html(i),isGenerating:false}]))}});
 
+test('Plus quota is shared across projects and rejects the 21st screen on new projects',async()=>{
+ const {db,store}=await fixture();
+ for(const id of ['B','C'])await db.project.create({data:{id,ownerUid:'alice',sketchesData:'{}'}});
+ async function batch(projectId,start,count){
+  const {run}=await store.reserveRun(identity(),{...input('batch-'+projectId,true),projectId});
+  await store.finishRun('alice',run.id,Array.from({length:count},(_,i)=>({key:String(start+i),html:html(start+i)})),[],false);
+  return store.persistBilledCanvas('alice',projectId,canvas(...Array.from({length:count},(_,i)=>start+i)),{});
+ }
+ assert.equal((await batch('project-alice',0,5)).charged,75);
+ assert.equal((await batch('B',5,15)).charged,225);
+ const usage=await store.publicUsage('alice');assert.equal(usage.successfulScreens,20);assert.equal(usage.screensRemaining,0);assert.equal(usage.creditsRemaining,0);
+ await assert.rejects(store.reserveRun(identity(),{...input('twenty-first'),projectId:'C'}),/screen allowance limit/);
+ for(let i=0;i<5;i++){const id='new-project-'+i;await db.project.create({data:{id,ownerUid:'alice',sketchesData:'{}'}});await assert.rejects(store.reserveRun(identity(),{...input('new-'+i),projectId:id}),/screen allowance limit/);}
+ assert.equal(db.state.creditEntry.filter(e=>e.type==='deduction').length,20);
+ assert.equal((await store.publicUsage('bob')).screensRemaining,20);
+});
+
+test('concurrent cross-project requests cannot reserve the same remaining account screen',async()=>{
+ const {db,store}=await fixture();await db.project.create({data:{id:'B',ownerUid:'alice',sketchesData:'{}'}});
+ db.state.creditPeriod[0].successfulScreens=19;db.state.creditAccount[0].balance=100;
+ const results=await Promise.allSettled([store.reserveRun(identity(),input('parallel-a')),store.reserveRun(identity(),{...input('parallel-b'),projectId:'B'})]);
+ assert.equal(results.filter(r=>r.status==='fulfilled').length,1);assert.equal(db.state.creditPeriod[0].reservedScreens,1);assert.equal(db.state.creditAccount[0].reservedCredits,15);
+});
+
+test('the configured plan limit cannot be bypassed by an inflated persisted period limit',async()=>{
+ for(const [plan,limit] of [['plus',20],['pro',50]]){
+  const {db,store}=await fixture(plan);const period=db.state.creditPeriod[0];
+  period.screenLimit=limit+100;period.successfulScreens=limit;db.state.creditAccount[0].balance=5000;
+  await assert.rejects(store.reserveRun(identity('alice',plan),input('inflated-'+plan)),/screen allowance limit/);
+  const usage=await store.publicUsage('alice');assert.equal(usage.screenLimit,limit);assert.equal(usage.screensRemaining,0);
+ }
+});
+
+test('a screen reserved in an expired billing period cannot be charged to a later period',async()=>{
+ const {db,store}=await fixture();const {run}=await store.reserveRun(identity(),input('old-period'));
+ await store.finishRun('alice',run.id,[{key:'old',html:html(0)}],[],false);
+ db.state.creditPeriod[0].endsAt=new Date(Date.now()-1);
+ await assert.rejects(store.persistBilledCanvas('alice','project-alice',canvas(0),{}),/expired billing period/);
+ assert.equal(db.state.creditAccount[0].balance,300);assert.equal(db.state.creditPeriod[0].successfulScreens,0);
+});
+
 test('four accepted screens charge 60 exactly once; persisted canvas and credit deductions are atomic',async()=>{
  const {db,store}=await fixture();const {run}=await store.reserveRun(identity(),input('workflow',true));await store.reserveProviderCall('alice',run.id);await store.finishRun('alice',run.id,[0,1,2,3].map(i=>({key:String(i),html:html(i)})),[call()],false);
  const saved=await store.persistBilledCanvas('alice','project-alice',canvas(0,1,2,3),{});assert.equal(saved.charged,60);assert.equal(saved.receipts.length,4);assert.equal((await store.publicUsage('alice')).creditsRemaining,240);assert.equal((await store.publicUsage('alice')).successfulScreens,4);
