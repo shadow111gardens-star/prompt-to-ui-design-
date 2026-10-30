@@ -1,0 +1,22 @@
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs'),path=require('node:path'),Module=require('node:module'),ts=require('typescript');
+const file=path.resolve('lib/billing/dodo-environment.ts'),mod=new Module(file,module);
+mod.filename=file;mod.paths=Module._nodeModulePaths(path.dirname(file));
+mod.require=id=>id==='@/lib/billing/policy'?{CreditError:class extends Error {constructor(message,status){super(message);this.status=status;}}}:Module.prototype.require.call(mod,id);
+mod._compile(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,file);
+const {activeDodoEnvironment,dodoEnvironmentConfig}=mod.exports;
+test('environment resolver separates live and test configuration and fails closed',t=>{
+ const old={...process.env};t.after(()=>{for(const k of Object.keys(process.env))if(!(k in old))delete process.env[k];Object.assign(process.env,old);});
+ for(const k of Object.keys(process.env))if(k.startsWith('DODO_'))delete process.env[k];
+ assert.throws(()=>activeDodoEnvironment());process.env.DODO_PAYMENTS_ENVIRONMENT='invalid';assert.throws(()=>activeDodoEnvironment());
+ Object.assign(process.env,{DODO_TEST_API_KEY:'test-key',DODO_TEST_WEBHOOK_KEY:'test-secret',DODO_TEST_BUSINESS_ID:'test-business',DODO_TEST_PLUS_PRODUCT_ID:'test-plus',DODO_TEST_PRO_PRODUCT_ID:'test-pro',DODO_TEST_LIFETIME_PRODUCT_ID:'test-life'});
+ process.env.DODO_PAYMENTS_ENVIRONMENT='test_mode';assert.equal(activeDodoEnvironment(),'test_mode');assert.equal(dodoEnvironmentConfig('test_mode').baseUrl,'https://test.dodopayments.com');assert.throws(()=>dodoEnvironmentConfig('live_mode'));
+ Object.assign(process.env,{DODO_LIVE_API_KEY:'live-key',DODO_LIVE_WEBHOOK_KEY:'live-secret',DODO_LIVE_BUSINESS_ID:'live-business',DODO_LIVE_PLUS_PRODUCT_ID:'live-plus',DODO_LIVE_PRO_PRODUCT_ID:'live-pro',DODO_LIVE_LIFETIME_PRODUCT_ID:'live-life'});
+ process.env.DODO_PAYMENTS_ENVIRONMENT='live_mode';const live=dodoEnvironmentConfig(activeDodoEnvironment());assert.equal(live.baseUrl,'https://live.dodopayments.com');assert.equal(live.apiKey,'live-key');assert.equal(live.products.plus,'live-plus');delete process.env.DODO_LIVE_API_KEY;assert.throws(()=>dodoEnvironmentConfig('live_mode'));
+ process.env.DODO_TEST_PRO_PRODUCT_ID='test-plus';assert.throws(()=>dodoEnvironmentConfig('test_mode'));
+ delete process.env.DODO_TEST_API_KEY;process.env.DODO_PAYMENTS_API_KEY='legacy-test-key';
+ process.env.DODO_TEST_PRO_PRODUCT_ID='test-pro';
+ assert.throws(()=>dodoEnvironmentConfig('test_mode'));
+ process.env.DODO_PAYMENTS_ENVIRONMENT='test_mode';assert.equal(dodoEnvironmentConfig('test_mode').apiKey,'legacy-test-key');
+});
