@@ -76,6 +76,30 @@ model CreditAccount {
   periods CreditPeriod[]
   runs GenerationRun[]
   entries CreditEntry[]
+  transitions BillingTransition[]
+}
+
+// Durable plan-switch intent; the partial unique index in the migration permits
+// only one unresolved transition per account.
+model BillingTransition {
+  id String @id @default(cuid())
+  uid String
+  requestKey String @unique
+  sourcePlan String
+  targetPlan String
+  customerId String
+  subscriptionId String
+  status String @default("initiated")
+  checkoutId String? @unique
+  paymentId String? @unique
+  lastError String?
+  retryCount Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  completedAt DateTime?
+  account CreditAccount @relation(fields: [uid], references: [uid], onDelete: Restrict)
+
+  @@index([uid, createdAt])
 }
 
 model CreditPeriod {

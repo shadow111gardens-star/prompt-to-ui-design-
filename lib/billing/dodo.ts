@@ -92,7 +92,11 @@ export async function processDodoEvent(id:string,raw:string){
    const subscriptionId=text(data,'subscription_id');
    if(account.subscriptionId&&account.subscriptionId!==subscriptionId)throw new CreditError('Subscription does not match the bound account.',409);
    if(plan!=='plus'&&plan!=='pro')throw new CreditError('Unknown Dodo subscription product.',409);
-   if(!older&&account.plan!=='lifetime'&&account.status!=='refund_review')await tx.creditAccount.update({where:{uid:owner.uid},data:{plan,subscriptionId,status:data.status==='active'?'active':String(data.status||'inactive'),lastBillingAt:occurred}});
+   // A provider subscription update alone is not proof that a different plan
+   // was paid for. Only the grant path above checks a successful full-period
+   // payment; until then keep the previously confirmed entitlement.
+   const planChangeAwaitingPayment=account.plan!==plan&&account.status==='active'&&!grantEvent;
+   if(!older&&!planChangeAwaitingPayment&&account.plan!=='lifetime'&&account.status!=='refund_review')await tx.creditAccount.update({where:{uid:owner.uid},data:{plan,subscriptionId,status:data.status==='active'?'active':String(data.status||'inactive'),lastBillingAt:occurred}});
    if(grantEvent&&!older&&account.plan!=='lifetime'&&account.status!=='refund_review'){
     if(data.payment_frequency_count!==1||String(data.payment_frequency_interval).toLowerCase()!=='month'||data.quantity!==1)throw new CreditError('Unexpected subscription billing interval or quantity.',409);
     const startsAt=new Date(text(data,'previous_billing_date')),endsAt=new Date(text(data,'next_billing_date'));
@@ -110,6 +114,10 @@ export async function processDodoEvent(id:string,raw:string){
   }else if(isPayment&&!data.subscription_id){
    const cart=Array.isArray(data.product_cart)?data.product_cart:[];
    if(!paidAmountMatches(data,PLAN_CONFIG.lifetime.priceCents)||cart.length!==1||dodoObject(cart[0]).product_id!==products.lifetime||dodoObject(cart[0]).quantity!==1)throw new CreditError('Unexpected one-time purchase.',409);
+   // Do not activate Lifetime while a recurring subscription may still bill.
+   // Until durable cancellation reconciliation is connected, fail closed so
+   // Dodo can retry the payment event without losing the existing entitlement.
+   if(account.subscriptionId&&account.status==='active'&&account.plan!=='lifetime')throw new CreditError('Lifetime payment requires subscription cancellation reconciliation.',503);
    if(!older&&account.status!=='refund_review')await tx.creditAccount.update({where:{uid:owner.uid},data:{plan:'lifetime',status:'active',lastBillingAt:occurred}});
   }
   await tx.dodoBillingEvent.create({data:{id,type:event.type,payloadHash:hash,uid:owner.uid}});

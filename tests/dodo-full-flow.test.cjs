@@ -50,6 +50,28 @@ async function fixture(t, plan='plus') {
 const html=i=>'<main><h1>Accepted screen '+i+'</h1><button>Continue</button></main>';
 const usage={id:'synthetic-call',provider:'google',model:'gemini-3.5-flash-lite',sent:true,status:'completed',usage:{inputTokens:100,outputTokens:50,totalTokens:150,cachedInputTokens:0,reasoningTokens:0,cacheWriteTokens:0}};
 
+test('an unverified subscription plan-change event cannot replace an active paid plan',async t=>{
+  const f=await fixture(t);
+  const account=f.db.state.creditAccount[0];
+  Object.assign(account,{plan:'plus',status:'active',subscriptionId:'sub-alice',balance:120});
+  f.subscription.product_id='product-pro';
+  assert.equal((await f.deliver('unpaid-plan-change','subscription.plan_changed')).status,200);
+  assert.equal(account.plan,'plus');
+  assert.equal(account.balance,120);
+  assert.equal(f.db.state.creditEntry.length,0);
+});
+
+test('a verified Lifetime payment cannot activate while an existing subscription is still active',async t=>{
+  const f=await fixture(t,'lifetime');
+  const account=f.db.state.creditAccount[0];
+  Object.assign(account,{plan:'plus',status:'active',subscriptionId:'sub-alice',balance:120});
+  const response=await f.deliver('lifetime-needs-cancellation');
+  assert.equal(response.status,503);
+  assert.equal(account.plan,'plus');
+  assert.equal(account.balance,120);
+  assert.equal(f.db.state.dodoBillingEvent.length,0);
+});
+
 test('synthetic authenticated checkout -> signed payment -> four accepted screens -> rollover renewal -> cancellation',async t=>{
   t.mock.timers.enable({apis:['Date'],now:Date.now()});
   const f=await fixture(t),checkout=f.load('app/api/billing/checkout/route.ts');
